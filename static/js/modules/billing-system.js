@@ -2892,8 +2892,7 @@ function initializeBillingSystem() {
         message += `• Balance Amount: AED ${balanceAmount}\n`;
         message += `*Total Amount: AED ${totalAmount}*\n\n`;
         message += `Your bill has been generated successfully. Please check the details above.\n\n`;
-        message += `*Note:* PDF invoice is available in the POS system.\n\n`;
-        message += `📄 PDF Invoice: ${pdfUrl}`;
+        message += `*Note:* PDF invoice is available in the POS system.`;
         
         // Encode the message for WhatsApp
         const encodedMessage = encodeURIComponent(message);
@@ -2925,11 +2924,6 @@ function initializeBillingSystem() {
         if (window.showSimpleToast) {
           window.showSimpleToast('Bill created! WhatsApp opened with detailed bill information!', 'success');
         }
-        
-        // Reset the billing form after successful WhatsApp bill generation
-        setTimeout(() => {
-          resetBillingForm();
-        }, 1000); // Small delay to ensure user sees the success message
         
       } else {
         if (window.showSimpleToast) {
