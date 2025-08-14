@@ -264,11 +264,12 @@ def init_db():
 
 @app.route('/')
 def index():
-    user_plan_info = get_user_plan_info()
-    return render_template('index.html', 
-                        user_plan_info=user_plan_info,
-                        get_user_language=get_user_language,
-                        get_translated_text=get_translated_text)
+    """Root route - redirect to app page."""
+    try:
+        return redirect('/app')
+    except Exception as e:
+        # Fallback to simple response if redirect fails
+        return f"Tajir POS is running! Go to <a href='/app'>/app</a> to access the system. Error: {str(e)}"
 
 @app.route('/health')
 def health_check():
@@ -317,11 +318,26 @@ def landing():
 
 @app.route('/app')
 def app_page():
-    user_plan_info = get_user_plan_info()
-    return render_template('app.html', 
-                        user_plan_info=user_plan_info,
-                        get_user_language=get_user_language,
-                        get_translated_text=get_translated_text)
+    """Main app page."""
+    try:
+        user_plan_info = get_user_plan_info()
+        return render_template('app.html', 
+                            user_plan_info=user_plan_info,
+                            get_user_language=get_user_language,
+                            get_translated_text=get_translated_text)
+    except Exception as e:
+        # Fallback to simple response if template rendering fails
+        return f"""
+        <html>
+        <head><title>Tajir POS</title></head>
+        <body>
+            <h1>Tajir POS System</h1>
+            <p>The system is running but there was an error loading the template.</p>
+            <p>Error: {str(e)}</p>
+            <p><a href="/test">Test Endpoint</a> | <a href="/health">Health Check</a></p>
+        </body>
+        </html>
+        """
 
 
 
