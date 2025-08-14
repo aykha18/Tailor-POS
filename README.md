@@ -564,5 +564,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Improved product tag display and tooltips in employee report
 - Refactored dropdown population code for reusability
 - Cleaned up debug logs and console statements
-- Added Shop Settings module with shop name, address, TRN, logo URL, and dynamic invoice template configuration #   R a i l w a y   d e p l o y m e n t   t r i g g e r  
- 
+- Added Shop Settings module with shop name, address, TRN, logo URL, and dynamic invoice template configuration 
