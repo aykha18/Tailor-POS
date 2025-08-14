@@ -264,12 +264,23 @@ def init_db():
 
 @app.route('/')
 def index():
-    """Root route - redirect to app page."""
-    try:
-        return redirect('/app')
-    except Exception as e:
-        # Fallback to simple response if redirect fails
-        return f"Tajir POS is running! Go to <a href='/app'>/app</a> to access the system. Error: {str(e)}"
+    """Root route - simple working page."""
+    return """
+    <html>
+    <head><title>Tajir POS</title></head>
+    <body style="font-family: Arial, sans-serif; padding: 20px; text-align: center;">
+        <h1>🚀 Tajir POS System</h1>
+        <p>Welcome to Tajir POS - Your Tailoring Business Management System</p>
+        <hr>
+        <h2>Quick Access:</h2>
+        <p><a href="/login" style="padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">🔐 Login</a></p>
+        <p><a href="/app" style="padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 5px;">📱 Main App</a></p>
+        <p><a href="/test" style="padding: 10px 20px; background: #ffc107; color: black; text-decoration: none; border-radius: 5px;">🧪 Test Page</a></p>
+        <hr>
+        <p><strong>Login:</strong> admin@tailorpos.com / admin123</p>
+    </body>
+    </html>
+    """
 
 @app.route('/health')
 def health_check():
@@ -5365,17 +5376,15 @@ if __name__ == '__main__':
         # Get port from environment
         port = int(os.environ.get('PORT', 5000))
         print(f"🌐 Starting server on port {port}")
-        print(f"🔗 Health check will be available at: http://0.0.0.0:{port}/health")
-        print(f"🔗 Main app will be available at: http://0.0.0.0:{port}/")
+        print(f"🔗 App will be available at: http://0.0.0.0:{port}/")
         
-        # Start Flask app with better error handling
+        # Start Flask app - simple and reliable
         print("🚀 Starting Flask application...")
         app.run(
             debug=False, 
             host='0.0.0.0', 
             port=port, 
-            threaded=True,
-            use_reloader=False
+            threaded=True
         )
         
     except Exception as e:
