@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Worker Debug</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button:hover {
+            background: #2563eb;
+        }
+        .button.danger {
+            background: #ef4444;
+        }
+        .button.danger:hover {
+            background: #dc2626;
+        }
+        .log {
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .status.success {
+            background: #065f46;
+            color: #d1fae5;
+        }
+        .status.error {
+            background: #7f1d1d;
+            color: #fecaca;
+        }
+        .status.info {
+            background: #1e3a8a;
+            color: #dbeafe;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Service Worker Debug Tool</h1>
+    
+    <div class="status info">
+        <strong>Instructions:</strong> Use this tool to debug and clear service worker cache issues.
+    </div>
+
+    <h2>Actions</h2>
+    <button class="button" onclick="checkServiceWorker()">Check Service Worker Status</button>
+    <button class="button" onclick="clearAllCaches()">Clear All Caches</button>
+    <button class="button" onclick="unregisterServiceWorker()">Unregister Service Worker</button>
+    <button class="button" onclick="forceUpdate()">Force Update Service Worker</button>
+    <button class="button danger" onclick="clearAll()">Clear Everything & Reload</button>
+
+    <h2>Status</h2>
+    <div id="status" class="status info">Click "Check Service Worker Status" to see current state</div>
+
+    <h2>Log</h2>
+    <div id="log" class="log">Ready to debug...</div>
+
+    <script>
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.textContent += `[${timestamp}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = `<strong>Status:</strong> ${message}`;
+        }
+
+        async function checkServiceWorker() {
+            log('🔍 Checking Service Worker Status...');
+            
+            if (!('serviceWorker' in navigator)) {
+                updateStatus('Service Worker not supported in this browser', 'error');
+                log('❌ Service Worker not supported');
+                return;
+            }
+
+            try {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                log(`📋 Found ${registrations.length} service worker registration(s)`);
+                
+                if (registrations.length === 0) {
+                    updateStatus('No service worker registered', 'info');
+                    log('ℹ️ No service worker registered');
+                } else {
+                    registrations.forEach((registration, index) => {
+                        log(`📝 Registration ${index + 1}:`);
+                        log(`   - Active: ${registration.active ? 'Yes' : 'No'}`);
+                        log(`   - Installing: ${registration.installing ? 'Yes' : 'No'}`);
+                        log(`   - Waiting: ${registration.waiting ? 'Yes' : 'No'}`);
+                        log(`   - Scope: ${registration.scope}`);
+                    });
+                    updateStatus(`${registrations.length} service worker(s) registered`, 'success');
+                }
+
+                // Check caches
+                const cacheNames = await caches.keys();
+                log(`🗂️ Found ${cacheNames.length} cache(s): ${cacheNames.join(', ')}`);
+                
+            } catch (error) {
+                updateStatus('Error checking service worker status', 'error');
+                log(`❌ Error: ${error.message}`);
+            }
+        }
+
+        async function clearAllCaches() {
+            log('🧹 Clearing all caches...');
+            
+            try {
+                const cacheNames = await caches.keys();
+                log(`🗑️ Deleting ${cacheNames.length} cache(s)...`);
+                
+                await Promise.all(
+                    cacheNames.map(cacheName => {
+                        log(`   - Deleting cache: ${cacheName}`);
+                        return caches.delete(cacheName);
+                    })
+                );
+                
+                updateStatus('All caches cleared successfully', 'success');
+                log('✅ All caches cleared');
+                
+            } catch (error) {
+                updateStatus('Error clearing caches', 'error');
+                log(`❌ Error: ${error.message}`);
+            }
+        }
+
+        async function unregisterServiceWorker() {
+            log('🔄 Unregistering service worker...');
+            
+            try {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                
+                if (registrations.length === 0) {
+                    updateStatus('No service worker to unregister', 'info');
+                    log('ℹ️ No service worker registered');
+                    return;
+                }
+                
+                await Promise.all(
+                    registrations.map(registration => {
+                        log(`   - Unregistering: ${registration.scope}`);
+                        return registration.unregister();
+                    })
+                );
+                
+                updateStatus('Service worker unregistered successfully', 'success');
+                log('✅ Service worker unregistered');
+                
+            } catch (error) {
+                updateStatus('Error unregistering service worker', 'error');
+                log(`❌ Error: ${error.message}`);
+            }
+        }
+
+        async function forceUpdate() {
+            log('🔄 Forcing service worker update...');
+            
+            try {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                
+                if (registrations.length === 0) {
+                    updateStatus('No service worker to update', 'info');
+                    log('ℹ️ No service worker registered');
+                    return;
+                }
+                
+                await Promise.all(
+                    registrations.map(registration => {
+                        log(`   - Updating: ${registration.scope}`);
+                        return registration.update();
+                    })
+                );
+                
+                updateStatus('Service worker update triggered', 'success');
+                log('✅ Service worker update triggered');
+                
+            } catch (error) {
+                updateStatus('Error updating service worker', 'error');
+                log(`❌ Error: ${error.message}`);
+            }
+        }
+
+        async function clearAll() {
+            log('🧹 Clearing everything...');
+            
+            try {
+                // Clear caches
+                await clearAllCaches();
+                
+                // Unregister service worker
+                await unregisterServiceWorker();
+                
+                updateStatus('Everything cleared, reloading page...', 'success');
+                log('🔄 Reloading page in 2 seconds...');
+                
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+                
+            } catch (error) {
+                updateStatus('Error during cleanup', 'error');
+                log(`❌ Error: ${error.message}`);
+            }
+        }
+
+        // Auto-check on load
+        window.addEventListener('load', () => {
+            log('🚀 Debug tool loaded');
+            setTimeout(checkServiceWorker, 1000);
+        });
+    </script>
+</body>
+</html>

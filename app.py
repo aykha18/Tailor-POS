@@ -1,4 +1,4 @@
-﻿from flask import Flask, render_template, request, jsonify, send_file, session, send_from_directory, redirect, url_for
+from flask import Flask, render_template, request, jsonify, send_file, session, send_from_directory, redirect, url_for
 import sqlite3
 import os
 from datetime import datetime, date, timedelta
@@ -10,7 +10,12 @@ from io import BytesIO
 from dotenv import load_dotenv
 load_dotenv()
 from num2words import num2words
-from plan_manager import plan_manager
+# from plan_manager import plan_manager  # Removed to fix Railway deployment issues
+
+def get_plan_manager():
+    """Get plan manager instance when needed to avoid import issues on Railway."""
+    from plan_manager import PlanManager
+    return PlanManager()
 import csv
 from io import StringIO
 from flask import Response
@@ -36,51 +41,41 @@ import logging.handlers
 import traceback
 import sys
 from pathlib import Path
+import os
+import sqlite3
+import json
+import csv
+import io
+from datetime import datetime, timedelta
+from flask import Flask, render_template, request, jsonify, send_file, redirect, url_for, session
+from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+import zipfile
+import shutil
+from plan_manager import PlanManager
+try:
+    from playwright.sync_api import sync_playwright
+    PDF_AVAILABLE = True
+except ImportError:
+    PDF_AVAILABLE = False
+    print("Warning: playwright not installed. PDF generation will be disabled.")
 
-# Configure comprehensive logging system
+# Configure simple logging system for Railway
 def setup_logging():
-    """Setup comprehensive logging for production."""
-    # Create logs directory if it doesn't exist
-    log_dir = Path("logs")
-    log_dir.mkdir(exist_ok=True)
-    
-    # Configure file logging
-    file_handler = logging.handlers.RotatingFileHandler(
-        'logs/tajir_pos.log',
-        maxBytes=10*1024*1024,  # 10MB
-        backupCount=5
-    )
-    file_handler.setLevel(logging.INFO)
-    
-    # Configure error file logging
-    error_handler = logging.handlers.RotatingFileHandler(
-        'logs/errors.log',
-        maxBytes=5*1024*1024,  # 5MB
-        backupCount=3
-    )
-    error_handler.setLevel(logging.ERROR)
-    
-    # Configure console logging for development
+    """Setup simple logging for Railway deployment."""
+    # Configure console logging only (no file logging on Railway)
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.INFO)
     
-    # Create formatters
-    file_formatter = logging.Formatter(
+    # Create formatter
+    formatter = logging.Formatter(
         '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
-    error_formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s'
-    )
-    
-    file_handler.setFormatter(file_formatter)
-    error_handler.setFormatter(error_formatter)
-    console_handler.setFormatter(file_formatter)
+    console_handler.setFormatter(formatter)
     
     # Configure root logger
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.INFO)
-    root_logger.addHandler(file_handler)
-    root_logger.addHandler(error_handler)
     root_logger.addHandler(console_handler)
     
     return root_logger
@@ -202,42 +197,59 @@ def get_user_plan_info():
         }
 
 def init_db():
-    need_init = False
-    if not os.path.exists(app.config['DATABASE']):
-        need_init = True
-    else:
-        # Check if main tables are empty
-        conn = get_db_connection()
-        try:
-            cur = conn.execute("SELECT COUNT(*) FROM product_types")
-            if cur.fetchone()[0] == 0:
-                need_init = True
-        except Exception:
-            # Table doesn't exist, need to initialize
-            need_init = True
-        conn.close()
-    if need_init:
-        with open('database_schema.sql', 'r') as f:
-            schema = f.read()
-        conn = get_db_connection()
-        try:
-            conn.executescript(schema)
-            conn.commit()
-            logger.info("Database initialized successfully with logging tables")
-        except Exception as e:
-            log_dml_error("INIT", "database", e)
-            raise e
-        finally:
-            conn.close()
-        print("Database initialized successfully!")
+    """Initialize database with error handling for Railway deployment."""
+    print("Starting database initialization...")
     
-    # Always ensure admin user exists
     try:
-        from setup_production_admin import setup_production_admin
-        setup_production_admin()
-        logger.info("Admin user setup completed")
+        need_init = False
+        if not os.path.exists(app.config['DATABASE']):
+            print("Database file not found, will initialize...")
+            need_init = True
+        else:
+            # Check if main tables are empty
+            try:
+                conn = get_db_connection()
+                cur = conn.execute("SELECT COUNT(*) FROM product_types")
+                if cur.fetchone()[0] == 0:
+                    print("Product types table is empty, will initialize...")
+                    need_init = True
+                conn.close()
+            except Exception as e:
+                print(f"Database check failed, will initialize: {e}")
+                need_init = True
+        
+        if need_init:
+            print("Initializing database schema...")
+            try:
+                with open('database_schema.sql', 'r') as f:
+                    schema = f.read()
+                conn = get_db_connection()
+                conn.executescript(schema)
+                conn.commit()
+                conn.close()
+                print("Database schema initialized successfully!")
+            except Exception as e:
+                print(f"Database schema initialization failed: {e}")
+                # Don't raise, continue with admin setup
+        
+        # Always ensure admin user exists
+        print("Setting up admin user...")
+        try:
+            from setup_production_admin import setup_production_admin
+            success = setup_production_admin()
+            if success:
+                print("Admin user setup completed successfully!")
+            else:
+                print("Admin user setup failed, but continuing...")
+        except Exception as e:
+            print(f"Admin user setup failed: {e}")
+            # Don't raise, continue with app startup
+        
+        print("Database initialization completed!")
+        
     except Exception as e:
-        logger.error(f"Failed to setup admin user: {e}")
+        print(f"Database initialization error: {e}")
+        # Don't raise, let the app continue
 
 @app.route('/')
 def index():
@@ -309,6 +321,14 @@ def expenses():
                         user_plan_info=user_plan_info,
                         get_user_language=get_user_language,
                         get_translated_text=get_translated_text)
+
+@app.route('/sw-debug')
+def sw_debug():
+    return send_file('sw_debug.html')
+
+@app.route('/test-dropdown')
+def test_dropdown():
+    return send_file('test_employee_dropdown.html')
 
 # Product Types API
 @app.route('/api/product-types', methods=['GET'])
@@ -865,25 +885,65 @@ def create_bill():
                 ))
                 customer_id = cursor.lastrowid
             
-            # Create bill
+            # Create bill with retry logic for duplicate bill numbers
             bill_uuid = str(uuid.uuid4())
-            cursor = conn.execute('''
-                INSERT INTO bills (
-                    user_id, bill_number, customer_id, customer_name, customer_phone, 
-                    customer_city, customer_area, customer_trn, customer_type, business_name, business_address,
-                    uuid, bill_date, delivery_date, payment_method, subtotal, vat_amount, total_amount, 
-                    advance_paid, balance_amount, status, master_id, trial_date, notes
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (
-                user_id, bill_data.get('bill_number'), customer_id, bill_data.get('customer_name'),
-                re.sub(r'\D', '', customer_phone), bill_data.get('customer_city'),
-                bill_data.get('customer_area'), bill_data.get('customer_trn', ''),
-                bill_data.get('customer_type', 'Individual'), bill_data.get('business_name', ''),
-                bill_data.get('business_address', ''), bill_uuid, bill_data.get('bill_date'), 
-                bill_data.get('delivery_date'), bill_data.get('payment_method', 'Cash'),
-                subtotal, vat_amount, total_amount, advance_paid, balance_amount,
-                'Pending', master_id, bill_data.get('trial_date'), notes
-            ))
+            max_retries = 3
+            bill_created = False
+            
+            for attempt in range(max_retries):
+                try:
+                    # Generate a unique bill number if needed
+                    bill_number = bill_data.get('bill_number', '').strip()
+                    if not bill_number or attempt > 0:
+                        # If no bill number provided or retrying, generate a new bill number
+                        today = datetime.now().strftime('%Y%m%d')
+                        import time
+                        timestamp = int(time.time() * 1000) % 10000
+                        bill_number = f'BILL-{today}-{timestamp:04d}'
+                    
+                    cursor = conn.execute('''
+                        INSERT INTO bills (
+                            user_id, bill_number, customer_id, customer_name, customer_phone, 
+                            customer_city, customer_area, customer_trn, customer_type, business_name, business_address,
+                            uuid, bill_date, delivery_date, payment_method, subtotal, vat_amount, total_amount, 
+                            advance_paid, balance_amount, status, master_id, trial_date, notes
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ''', (
+                        user_id, bill_number, customer_id, bill_data.get('customer_name'),
+                        re.sub(r'\D', '', customer_phone), bill_data.get('customer_city'),
+                        bill_data.get('customer_area'), bill_data.get('customer_trn', ''),
+                        bill_data.get('customer_type', 'Individual'), bill_data.get('business_name', ''),
+                        bill_data.get('business_address', ''), bill_uuid, bill_data.get('bill_date'), 
+                        bill_data.get('delivery_date'), bill_data.get('payment_method', 'Cash'),
+                        subtotal, vat_amount, total_amount, advance_paid, balance_amount,
+                        'Pending', master_id, bill_data.get('trial_date'), notes
+                    ))
+                    bill_created = True
+                    break
+                    
+                except sqlite3.IntegrityError as e:
+                    if "UNIQUE constraint failed: bills.user_id, bills.bill_number" in str(e):
+                        if attempt == max_retries - 1:
+                            # Last attempt failed
+                            conn.rollback()
+                            conn.close()
+                            return jsonify({'error': 'Failed to create bill due to duplicate bill number. Please try again.'}), 500
+                        # Continue to next attempt
+                        continue
+                    else:
+                        # Other integrity error
+                        conn.rollback()
+                        conn.close()
+                        return jsonify({'error': f'Database error: {str(e)}'}), 500
+                except Exception as e:
+                    conn.rollback()
+                    conn.close()
+                    return jsonify({'error': f'Error creating bill: {str(e)}'}), 500
+            
+            if not bill_created:
+                conn.rollback()
+                conn.close()
+                return jsonify({'error': 'Failed to create bill after multiple attempts'}), 500
             
             bill_id = cursor.lastrowid
             # print(f"DEBUG: Created bill_id: {bill_id}")
@@ -988,21 +1048,61 @@ def create_bill():
                 customer_id = cursor.lastrowid
                 print(f"DEBUG: Created new customer_id: {customer_id}")
             
-            # Create bill
+            # Create bill with retry logic for duplicate bill numbers
             bill_uuid = str(uuid.uuid4())
-            cursor = conn.execute('''
-                INSERT INTO bills (
-                    user_id, bill_number, customer_id, customer_name, customer_phone, 
-                    customer_city, customer_area, uuid, bill_date, delivery_date, 
-                    payment_method, subtotal, vat_amount, total_amount, 
-                    advance_paid, balance_amount, status, master_id, trial_date, notes
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (
-                user_id, request.form.get('bill_number'), customer_id, customer_name, customer_phone,
-                customer_city, customer_area, bill_uuid, bill_date, delivery_date,
-                payment_method, subtotal, vat_amount, total_amount,
-                advance_paid, balance_amount, 'Pending', master_id, trial_date, notes
-            ))
+            max_retries = 3
+            bill_created = False
+            
+            for attempt in range(max_retries):
+                try:
+                    # Generate a unique bill number if needed
+                    bill_number = request.form.get('bill_number', '').strip()
+                    if not bill_number or attempt > 0:
+                        # If no bill number provided or retrying, generate a new bill number
+                        today = datetime.now().strftime('%Y%m%d')
+                        import time
+                        timestamp = int(time.time() * 1000) % 10000
+                        bill_number = f'BILL-{today}-{timestamp:04d}'
+                    
+                    cursor = conn.execute('''
+                        INSERT INTO bills (
+                            user_id, bill_number, customer_id, customer_name, customer_phone, 
+                            customer_city, customer_area, uuid, bill_date, delivery_date, 
+                            payment_method, subtotal, vat_amount, total_amount, 
+                            advance_paid, balance_amount, status, master_id, trial_date, notes
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ''', (
+                        user_id, bill_number, customer_id, customer_name, customer_phone,
+                        customer_city, customer_area, bill_uuid, bill_date, delivery_date,
+                        payment_method, subtotal, vat_amount, total_amount,
+                        advance_paid, balance_amount, 'Pending', master_id, trial_date, notes
+                    ))
+                    bill_created = True
+                    break
+                    
+                except sqlite3.IntegrityError as e:
+                    if "UNIQUE constraint failed: bills.user_id, bills.bill_number" in str(e):
+                        if attempt == max_retries - 1:
+                            # Last attempt failed
+                            conn.rollback()
+                            conn.close()
+                            return jsonify({'error': 'Failed to create bill due to duplicate bill number. Please try again.'}), 500
+                        # Continue to next attempt
+                        continue
+                    else:
+                        # Other integrity error
+                        conn.rollback()
+                        conn.close()
+                        return jsonify({'error': f'Database error: {str(e)}'}), 500
+                except Exception as e:
+                    conn.rollback()
+                    conn.close()
+                    return jsonify({'error': f'Error creating bill: {str(e)}'}), 500
+            
+            if not bill_created:
+                conn.rollback()
+                conn.close()
+                return jsonify({'error': 'Failed to create bill after multiple attempts'}), 500
             
             bill_id = cursor.lastrowid
             print(f"DEBUG: Created bill_id: {bill_id}")
@@ -1526,22 +1626,60 @@ def delete_employee(employee_id):
 def get_next_bill_number():
     user_id = get_current_user_id()
     today = datetime.now().strftime('%Y%m%d')
-    conn = get_db_connection()
-    # Find all bills for today with the new format
-    bills = conn.execute("""
-        SELECT bill_number FROM bills WHERE bill_number LIKE ? AND user_id = ?
-    """, (f'BILL-{today}-%', user_id)).fetchall()
-    conn.close()
-    max_seq = 0
-    for b in bills:
-        parts = b['bill_number'].split('-')
-        if len(parts) == 3 and parts[1] == today and parts[2].isdigit():
-            seq = int(parts[2])
-            if seq > max_seq:
-                max_seq = seq
-    next_seq = max_seq + 1
-    bill_number = f'BILL-{today}-{next_seq:03d}'
-    return jsonify({'bill_number': bill_number})
+    
+    # Use a more robust approach with retry logic
+    max_retries = 5
+    for attempt in range(max_retries):
+        try:
+            conn = get_db_connection()
+            # Use a transaction to prevent race conditions
+            conn.execute('BEGIN TRANSACTION')
+            
+            # Find all bills for today with the new format
+            bills = conn.execute("""
+                SELECT bill_number FROM bills WHERE bill_number LIKE ? AND user_id = ?
+                ORDER BY bill_number DESC
+            """, (f'BILL-{today}-%', user_id)).fetchall()
+            
+            max_seq = 0
+            for b in bills:
+                parts = b['bill_number'].split('-')
+                if len(parts) == 3 and parts[1] == today and parts[2].isdigit():
+                    seq = int(parts[2])
+                    if seq > max_seq:
+                        max_seq = seq
+            
+            next_seq = max_seq + 1
+            bill_number = f'BILL-{today}-{next_seq:03d}'
+            
+            # Verify this bill number doesn't exist (double-check)
+            existing = conn.execute("""
+                SELECT COUNT(*) as count FROM bills WHERE bill_number = ? AND user_id = ?
+            """, (bill_number, user_id)).fetchone()
+            
+            if existing['count'] == 0:
+                conn.commit()
+                conn.close()
+                return jsonify({'bill_number': bill_number})
+            else:
+                # If bill number exists, increment and try again
+                max_seq += 1
+                next_seq = max_seq + 1
+                bill_number = f'BILL-{today}-{next_seq:03d}'
+                conn.commit()
+                conn.close()
+                return jsonify({'bill_number': bill_number})
+                
+        except Exception as e:
+            conn.rollback()
+            conn.close()
+            if attempt == max_retries - 1:
+                # Last attempt failed, generate a unique bill number with timestamp
+                import time
+                timestamp = int(time.time() * 1000) % 10000  # Last 4 digits of timestamp
+                bill_number = f'BILL-{today}-{timestamp:04d}'
+                return jsonify({'bill_number': bill_number})
+            time.sleep(0.1)  # Small delay before retry
 
 @app.route('/api/employee-analytics', methods=['GET'])
 def employee_analytics():
@@ -1612,17 +1750,18 @@ def get_plan_status():
         else:
             user_plan = dict(user_plan)
         
-        plan_status = plan_manager.get_user_plan_status(
+        pm = get_plan_manager()
+        plan_status = pm.get_user_plan_status(
             user_plan['plan_type'], 
             user_plan['plan_start_date']
         )
         
         # Add upgrade options
-        upgrade_options = plan_manager.get_upgrade_options(user_plan['plan_type'])
+        upgrade_options = pm.get_upgrade_options(user_plan['plan_type'])
         plan_status['upgrade_options'] = upgrade_options
         
         # Add expiry warnings
-        warnings = plan_manager.get_expiry_warnings(
+        warnings = pm.get_expiry_warnings(
             user_plan['plan_type'], 
             user_plan['plan_start_date']
         )
@@ -1682,7 +1821,8 @@ def get_enabled_features():
             return jsonify({'enabled_features': [], 'locked_features': []})
         
         user_plan = dict(user_plan)
-        plan_status = plan_manager.get_user_plan_status(
+        pm = get_plan_manager()
+        plan_status = pm.get_user_plan_status(
             user_plan['plan_type'], 
             user_plan['plan_start_date']
         )
@@ -1710,7 +1850,8 @@ def check_feature_access(feature):
             return jsonify({'enabled': False, 'reason': 'No active plan'})
         
         user_plan = dict(user_plan)
-        is_enabled = plan_manager.is_feature_enabled(
+        pm = get_plan_manager()
+        is_enabled = pm.is_feature_enabled(
             user_plan['plan_type'], 
             user_plan['plan_start_date'], 
             feature
@@ -1729,11 +1870,12 @@ def check_feature_access(feature):
 def get_plan_config():
     """Get plan configuration for frontend."""
     try:
+        pm = get_plan_manager()
         return jsonify({
-            'pricing_plans': plan_manager.config.get('pricing_plans', {}),
-            'feature_definitions': plan_manager.config.get('feature_definitions', {}),
-            'ui_settings': plan_manager.config.get('ui_settings', {}),
-            'upgrade_options': plan_manager.config.get('upgrade_options', {})
+            'pricing_plans': pm.config.get('pricing_plans', {}),
+            'feature_definitions': pm.config.get('feature_definitions', {}),
+            'ui_settings': pm.config.get('ui_settings', {}),
+            'upgrade_options': pm.config.get('upgrade_options', {})
         })
         
     except Exception as e:
@@ -1825,7 +1967,7 @@ def handle_setup_wizard():
         data = request.get_json()
         
         # Validate required fields
-        required_fields = ['shopType', 'shopName', 'contactNumber', 'selectedPlan']
+        required_fields = ['shopType', 'shopName', 'shopOwner', 'contactNumber', 'selectedPlan']
         for field in required_fields:
             if not data.get(field):
                 return jsonify({'success': False, 'message': f'Missing required field: {field}'})
@@ -1922,6 +2064,19 @@ def handle_setup_wizard():
             data.get('address', ''),
             f"Shop Type: {data['shopType']}",
             1  # Enable dynamic invoice template by default
+        ))
+        
+        # Create shop owner as employee with "Owner" position
+        conn.execute('''
+            INSERT INTO employees (user_id, name, phone, address, position, is_active)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', (
+            new_user_id,
+            data['shopOwner'],
+            contact_number_digits,
+            data.get('address', ''),
+            'Owner',
+            1
         ))
         
         # Create user plan for new user
@@ -2181,7 +2336,7 @@ def get_current_language():
 def report_invoices():
     """
     Returns filtered invoice data for the Advanced Reports section.
-    Accepts query parameters: from_date, to_date, products, employees, city, area, status
+    Accepts query parameters: from_date, to_date, products, employees, city, area, status, client_id
     """
     try:
         # Parse query parameters with defaults
@@ -2192,11 +2347,12 @@ def report_invoices():
         city = request.args.get('city', '')
         area = request.args.get('area', '')
         status = request.args.get('status', '')
+        client_id = request.args.get('client_id', '')
         
         # Build SQL query with filters
         base_query = """
             SELECT 
-                substr(b.bill_number,6) as bill_id,
+                b.bill_number,
                 b.bill_date,
                 b.customer_name,
                 b.customer_phone,
@@ -2220,7 +2376,12 @@ def report_invoices():
         conditions = []
         params = []
         
- # Date range filter
+        # Client ID filter (most important)
+        if client_id:
+            conditions.append("b.user_id = ?")
+            params.append(client_id)
+        
+        # Date range filter
         if from_date:
             conditions.append("b.bill_date >= ?")
             params.append(from_date)
@@ -2239,6 +2400,7 @@ def report_invoices():
             placeholders = ','.join(['?' for _ in employees])
             conditions.append(f"e.name IN ({placeholders})")
             params.extend(employees)
+        
         # City filter
         if city and city != "All":
             conditions.append("b.customer_city = ?")
@@ -2260,7 +2422,7 @@ def report_invoices():
             
         base_query += " GROUP BY b.bill_id ORDER BY b.bill_date DESC LIMIT 50"
         
-               # Execute query and fetch results
+        # Execute query and fetch results
         cursor = get_db_connection().cursor()
         cursor.execute(base_query, params)
         rows = cursor.fetchall()
@@ -2269,16 +2431,16 @@ def report_invoices():
         invoices_data = []
         for row in rows:
             invoice = {
-                'bill_id': row[0],
+                'bill_number': row[0],
                 'bill_date': row[1],
                 'customer_name': row[2],
                 'customer_phone': row[3],
                 'customer_city': row[4],
                 'customer_area': row[5],
                 'delivery_date': row[6],
-                'total_before_vat': round(float(row[7]), 2) if row[7] is not None else 0.0,
-                'vat': round(float(row[8]), 2) if row[8] is not None else 0.0,
-                'total_after_vat': round(float(row[9]), 2) if row[9] is not None else 0.0,
+                'subtotal': round(float(row[7]), 2) if row[7] is not None else 0.0,
+                'vat_amount': round(float(row[8]), 2) if row[8] is not None else 0.0,
+                'total_amount': round(float(row[9]), 2) if row[9] is not None else 0.0,
                 'status': row[10],
                 'master_id': row[11],
                 'employee_name': row[12],
@@ -2290,13 +2452,12 @@ def report_invoices():
         
         # Calculate summary statistics
         total_invoices = len(invoices_data)
-        # total_amount = sum(inv['total_amount'] for inv in invoices_data)
-        total_amount = sum(inv['total_after_vat'] for inv in invoices_data)
+        total_amount = sum(inv['total_amount'] for inv in invoices_data)
         paid_invoices = len([inv for inv in invoices_data if inv['status'] == 'Paid'])
         
         return jsonify({
             'success': True,
-            'data': invoices_data,
+            'invoices': invoices_data,  # Changed from 'data' to 'invoices'
             'summary': {
                 'total_invoices': total_invoices,
                 'total_amount': total_amount,
@@ -2307,10 +2468,11 @@ def report_invoices():
                 'from_date': from_date,
                 'to_date': to_date,
                 'products': products,
-                'employees': employees,  # Note: Not implemented in SQL yet
+                'employees': employees,
                 'city': city,
                 'area': area,
-                'status': status
+                'status': status,
+                'client_id': client_id
             }
         })
         
@@ -2331,6 +2493,7 @@ def download_invoices():
         city = request.args.get('city', '')
         area = request.args.get('area', '')
         status = request.args.get('status', '')
+        client_id = request.args.get('client_id', '2')  # Default to client_id 2 for testing
         base_query = """
             SELECT 
                 b.bill_number as bill_id,
@@ -2352,9 +2515,10 @@ def download_invoices():
             FROM bills b
             LEFT JOIN bill_items bi ON b.bill_id = bi.bill_id
             LEFT JOIN employees e ON b.master_id = e.employee_id
+            WHERE b.user_id = ?
         """
         conditions = []
-        params = []
+        params = [client_id]
         if from_date:
             conditions.append("b.bill_date >= ?")
             params.append(from_date)
@@ -2495,7 +2659,7 @@ def print_invoices():
 def report_employees():
     """
     Returns filtered employee report data for the Advanced Reports section.
-    Accepts query parameters: from_date, to_date, products, city, area, status
+    Accepts query parameters: from_date, to_date, products, city, area, status, client_id
     """
     try:
         from_date = request.args.get('from_date', '')
@@ -2504,6 +2668,7 @@ def report_employees():
         city = request.args.get('city', '')
         area = request.args.get('area', '')
         status = request.args.get('status', '')
+        client_id = request.args.get('client_id', '')
 
         base_query = """
             SELECT 
@@ -2519,6 +2684,11 @@ def report_employees():
 
         conditions = []
         params = []
+
+        # Client ID filter (most important)
+        if client_id:
+            conditions.append("e.user_id = ?")
+            params.append(client_id)
 
         if from_date:
             conditions.append("b.bill_date >= ?")
@@ -2552,22 +2722,23 @@ def report_employees():
         for row in rows:
             employees_data.append({
                 'employee_id': row[0],
-                'employee_name': row[1],
+                'name': row[1],  # Changed to match frontend expectation
                 'bills_handled': row[2] or 0,
                 'total_billed': round(float(row[3]), 2) if row[3] is not None else 0.0,
-                'products': row[4].split(',') if row[4] else []
+                'products_handled': row[4].split(',') if row[4] else []  # Changed to match frontend
             })
 
         return jsonify({
             'success': True,
-            'data': employees_data,
+            'employees': employees_data,  # Changed from 'data' to 'employees'
             'filters_applied': {
                 'from_date': from_date,
                 'to_date': to_date,
                 'products': products,
                 'city': city,
                 'area': area,
-                'status': status
+                'status': status,
+                'client_id': client_id
             }
         })
     except Exception as e:
@@ -2576,8 +2747,6 @@ def report_employees():
 @app.route('/api/reports/products', methods=['GET'])
 def report_products():
     try:
-        conn = get_db_connection()
-        
         # Get filter parameters
         from_date = request.args.get('from_date')
         to_date = request.args.get('to_date')
@@ -2585,6 +2754,7 @@ def report_products():
         city = request.args.get('city')
         area = request.args.get('area')
         status = request.args.get('status')
+        client_id = request.args.get('client_id', '')
         
         # Build base query
         base_query = """
@@ -2601,6 +2771,11 @@ def report_products():
         """
         
         params = []
+        
+        # Client ID filter (most important)
+        if client_id:
+            base_query += " AND b.user_id = ?"
+            params.append(client_id)
         
         # Add filters
         if from_date:
@@ -2629,18 +2804,18 @@ def report_products():
         
         base_query += " GROUP BY p.product_id, p.product_name, pt.type_name ORDER BY total_revenue DESC"
         
-        cursor = conn.execute(base_query, params)
+        cursor = get_db_connection().cursor()
+        cursor.execute(base_query, params)
+        rows = cursor.fetchall()
+        
         products = []
-        
-        for row in cursor:
+        for row in rows:
             products.append({
-                'product_name': row['product_name'],
-                'product_type': row['product_type'],
-                'total_quantity': row['total_quantity'],
-                'total_revenue': round(float(row['total_revenue']), 2)
+                'product_name': row[0],
+                'type_name': row[1],  # Changed to match frontend expectation
+                'total_quantity': row[2],
+                'total_revenue': round(float(row[3]), 2)
             })
-        
-        conn.close()
         
         return jsonify({
             'success': True,
@@ -2748,24 +2923,24 @@ def update_shop_settings():
 def number_to_arabic_words(number):
     """Convert number to Arabic words"""
     if number == 0:
-        return "صفر"
+        return "╪╡┘ü╪▒"
     
     # Arabic number words
     ones = {
-        0: "", 1: "واحد", 2: "اثنان", 3: "ثلاثة", 4: "أربعة", 5: "خمسة",
-        6: "ستة", 7: "سبعة", 8: "ثمانية", 9: "تسعة", 10: "عشرة",
-        11: "أحد عشر", 12: "اثنا عشر", 13: "ثلاثة عشر", 14: "أربعة عشر", 15: "خمسة عشر",
-        16: "ستة عشر", 17: "سبعة عشر", 18: "ثمانية عشر", 19: "تسعة عشر"
+        0: "", 1: "┘ê╪º╪¡╪»", 2: "╪º╪½┘å╪º┘å", 3: "╪½┘ä╪º╪½╪⌐", 4: "╪ú╪▒╪¿╪╣╪⌐", 5: "╪«┘à╪│╪⌐",
+        6: "╪│╪¬╪⌐", 7: "╪│╪¿╪╣╪⌐", 8: "╪½┘à╪º┘å┘è╪⌐", 9: "╪¬╪│╪╣╪⌐", 10: "╪╣╪┤╪▒╪⌐",
+        11: "╪ú╪¡╪» ╪╣╪┤╪▒", 12: "╪º╪½┘å╪º ╪╣╪┤╪▒", 13: "╪½┘ä╪º╪½╪⌐ ╪╣╪┤╪▒", 14: "╪ú╪▒╪¿╪╣╪⌐ ╪╣╪┤╪▒", 15: "╪«┘à╪│╪⌐ ╪╣╪┤╪▒",
+        16: "╪│╪¬╪⌐ ╪╣╪┤╪▒", 17: "╪│╪¿╪╣╪⌐ ╪╣╪┤╪▒", 18: "╪½┘à╪º┘å┘è╪⌐ ╪╣╪┤╪▒", 19: "╪¬╪│╪╣╪⌐ ╪╣╪┤╪▒"
     }
     
     tens = {
-        2: "عشرون", 3: "ثلاثون", 4: "أربعون", 5: "خمسون",
-        6: "ستون", 7: "سبعون", 8: "ثمانون", 9: "تسعون"
+        2: "╪╣╪┤╪▒┘ê┘å", 3: "╪½┘ä╪º╪½┘ê┘å", 4: "╪ú╪▒╪¿╪╣┘ê┘å", 5: "╪«┘à╪│┘ê┘å",
+        6: "╪│╪¬┘ê┘å", 7: "╪│╪¿╪╣┘ê┘å", 8: "╪½┘à╪º┘å┘ê┘å", 9: "╪¬╪│╪╣┘ê┘å"
     }
     
     hundreds = {
-        1: "مائة", 2: "مئتان", 3: "ثلاثمائة", 4: "أربعمائة", 5: "خمسمائة",
-        6: "ستمائة", 7: "سبعمائة", 8: "ثمانمائة", 9: "تسعمائة"
+        1: "┘à╪º╪ª╪⌐", 2: "┘à╪ª╪¬╪º┘å", 3: "╪½┘ä╪º╪½┘à╪º╪ª╪⌐", 4: "╪ú╪▒╪¿╪╣┘à╪º╪ª╪⌐", 5: "╪«┘à╪│┘à╪º╪ª╪⌐",
+        6: "╪│╪¬┘à╪º╪ª╪⌐", 7: "╪│╪¿╪╣┘à╪º╪ª╪⌐", 8: "╪½┘à╪º┘å┘à╪º╪ª╪⌐", 9: "╪¬╪│╪╣┘à╪º╪ª╪⌐"
     }
     
     def convert_less_than_one_thousand(n):
@@ -2779,13 +2954,13 @@ def number_to_arabic_words(number):
             if n % 10 == 0:
                 return tens[n // 10]
             else:
-                return ones[n % 10] + " و " + tens[n // 10]
+                return ones[n % 10] + " ┘ê " + tens[n // 10]
         
         if n < 1000:
             if n % 100 == 0:
                 return hundreds[n // 100]
             else:
-                return hundreds[n // 100] + " و " + convert_less_than_one_thousand(n % 100)
+                return hundreds[n // 100] + " ┘ê " + convert_less_than_one_thousand(n % 100)
     
     # Split into integer and decimal parts
     integer_part = int(number)
@@ -2793,7 +2968,7 @@ def number_to_arabic_words(number):
     
     # Convert integer part
     if integer_part == 0:
-        result = "صفر"
+        result = "╪╡┘ü╪▒"
     elif integer_part < 1000:
         result = convert_less_than_one_thousand(integer_part)
     else:
@@ -2802,28 +2977,28 @@ def number_to_arabic_words(number):
         remainder = integer_part % 1000
         
         if thousands_count == 1:
-            result = "ألف"
+            result = "╪ú┘ä┘ü"
         elif thousands_count == 2:
-            result = "ألفان"
+            result = "╪ú┘ä┘ü╪º┘å"
         elif thousands_count < 11:
-            result = ones[thousands_count] + " آلاف"
+            result = ones[thousands_count] + " ╪ó┘ä╪º┘ü"
         else:
-            result = convert_less_than_one_thousand(thousands_count) + " ألف"
+            result = convert_less_than_one_thousand(thousands_count) + " ╪ú┘ä┘ü"
         
         if remainder > 0:
-            result += " و " + convert_less_than_one_thousand(remainder)
+            result += " ┘ê " + convert_less_than_one_thousand(remainder)
     
     # Add currency
-    result += " درهم"
+    result += " ╪»╪▒┘ç┘à"
     
     # Add decimal part if exists
     if decimal_part > 0:
         if decimal_part == 1:
-            result += " و فلس واحد"
+            result += " ┘ê ┘ü┘ä╪│ ┘ê╪º╪¡╪»"
         else:
-            result += " و " + convert_less_than_one_thousand(decimal_part) + " فلس"
+            result += " ┘ê " + convert_less_than_one_thousand(decimal_part) + " ┘ü┘ä╪│"
     
-    result += " فقط"
+    result += " ┘ü┘é╪╖"
     return result
 
 def get_user_language():
@@ -3035,196 +3210,196 @@ def translate_text(text, language='en'):
         },
         'ar': {
             # Navigation
-            'app': 'التطبيق',
-            'pricing': 'الأسعار',
-            'professional_business_management': 'إدارة الأعمال الاحترافية',
-            'sign_in': 'تسجيل الدخول',
-            'sign_up': 'إنشاء حساب',
-            'logout': 'تسجيل الخروج',
+            'app': '╪º┘ä╪¬╪╖╪¿┘è┘é',
+            'pricing': '╪º┘ä╪ú╪│╪╣╪º╪▒',
+            'professional_business_management': '╪Ñ╪»╪º╪▒╪⌐ ╪º┘ä╪ú╪╣┘à╪º┘ä ╪º┘ä╪º╪¡╪¬╪▒╪º┘ü┘è╪⌐',
+            'sign_in': '╪¬╪│╪¼┘è┘ä ╪º┘ä╪»╪«┘ê┘ä',
+            'sign_up': '╪Ñ┘å╪┤╪º╪í ╪¡╪│╪º╪¿',
+            'logout': '╪¬╪│╪¼┘è┘ä ╪º┘ä╪«╪▒┘ê╪¼',
             
             # Dashboard
-            'dashboard': 'لوحة التحكم',
-            'total_revenue': 'إجمالي الإيرادات',
-            'total_bills': 'إجمالي الفواتير',
-            'total_customers': 'إجمالي العملاء',
-            'total_products': 'إجمالي المنتجات',
-            'recent_bills': 'الفواتير الحديثة',
-            'top_products': 'أفضل المنتجات',
-            'employee_performance': 'أداء الموظفين',
+            'dashboard': '┘ä┘ê╪¡╪⌐ ╪º┘ä╪¬╪¡┘â┘à',
+            'total_revenue': '╪Ñ╪¼┘à╪º┘ä┘è ╪º┘ä╪Ñ┘è╪▒╪º╪»╪º╪¬',
+            'total_bills': '╪Ñ╪¼┘à╪º┘ä┘è ╪º┘ä┘ü┘ê╪º╪¬┘è╪▒',
+            'total_customers': '╪Ñ╪¼┘à╪º┘ä┘è ╪º┘ä╪╣┘à┘ä╪º╪í',
+            'total_products': '╪Ñ╪¼┘à╪º┘ä┘è ╪º┘ä┘à┘å╪¬╪¼╪º╪¬',
+            'recent_bills': '╪º┘ä┘ü┘ê╪º╪¬┘è╪▒ ╪º┘ä╪¡╪»┘è╪½╪⌐',
+            'top_products': '╪ú┘ü╪╢┘ä ╪º┘ä┘à┘å╪¬╪¼╪º╪¬',
+            'employee_performance': '╪ú╪»╪º╪í ╪º┘ä┘à┘ê╪╕┘ü┘è┘å',
             
             # Operations
-            'operations': 'العمليات',
-            'billing': 'الفواتير',
-            'products': 'المنتجات',
-            'customers': 'العملاء',
-            'employees': 'الموظفون',
-            'vat_rates': 'معدلات الضريبة',
-            'advanced_reports': 'التقارير المتقدمة',
-            'shop_settings': 'إعدادات المتجر',
+            'operations': '╪º┘ä╪╣┘à┘ä┘è╪º╪¬',
+            'billing': '╪º┘ä┘ü┘ê╪º╪¬┘è╪▒',
+            'products': '╪º┘ä┘à┘å╪¬╪¼╪º╪¬',
+            'customers': '╪º┘ä╪╣┘à┘ä╪º╪í',
+            'employees': '╪º┘ä┘à┘ê╪╕┘ü┘ê┘å',
+            'vat_rates': '┘à╪╣╪»┘ä╪º╪¬ ╪º┘ä╪╢╪▒┘è╪¿╪⌐',
+            'advanced_reports': '╪º┘ä╪¬┘é╪º╪▒┘è╪▒ ╪º┘ä┘à╪¬┘é╪»┘à╪⌐',
+            'shop_settings': '╪Ñ╪╣╪»╪º╪»╪º╪¬ ╪º┘ä┘à╪¬╪¼╪▒',
             
             # Common Actions
-            'add': 'إضافة',
-            'edit': 'تعديل',
-            'delete': 'حذف',
-            'save': 'حفظ',
-            'cancel': 'إلغاء',
-            'close': 'إغلاق',
-            'search': 'بحث',
-            'filter': 'تصفية',
-            'download': 'تحميل',
-            'print': 'طباعة',
-            'preview': 'معاينة',
+            'add': '╪Ñ╪╢╪º┘ü╪⌐',
+            'edit': '╪¬╪╣╪»┘è┘ä',
+            'delete': '╪¡╪░┘ü',
+            'save': '╪¡┘ü╪╕',
+            'cancel': '╪Ñ┘ä╪║╪º╪í',
+            'close': '╪Ñ╪║┘ä╪º┘é',
+            'search': '╪¿╪¡╪½',
+            'filter': '╪¬╪╡┘ü┘è╪⌐',
+            'download': '╪¬╪¡┘à┘è┘ä',
+            'print': '╪╖╪¿╪º╪╣╪⌐',
+            'preview': '┘à╪╣╪º┘è┘å╪⌐',
             
             # Status
-            'pending': 'قيد الانتظار',
-            'completed': 'مكتمل',
-            'cancelled': 'ملغي',
-            'paid': 'مدفوع',
-            'unpaid': 'غير مدفوع',
+            'pending': '┘é┘è╪» ╪º┘ä╪º┘å╪¬╪╕╪º╪▒',
+            'completed': '┘à┘â╪¬┘à┘ä',
+            'cancelled': '┘à┘ä╪║┘è',
+            'paid': '┘à╪»┘ü┘ê╪╣',
+            'unpaid': '╪║┘è╪▒ ┘à╪»┘ü┘ê╪╣',
             
             # Messages
-            'success': 'نجح',
-            'error': 'خطأ',
-            'warning': 'تحذير',
-            'info': 'معلومات',
-            'loading': 'جاري التحميل...',
-            'no_data_found': 'لم يتم العثور على بيانات',
-            'are_you_sure': 'هل أنت متأكد؟',
-            'this_action_cannot_be_undone': 'لا يمكن التراجع عن هذا الإجراء',
+            'success': '┘å╪¼╪¡',
+            'error': '╪«╪╖╪ú',
+            'warning': '╪¬╪¡╪░┘è╪▒',
+            'info': '┘à╪╣┘ä┘ê┘à╪º╪¬',
+            'loading': '╪¼╪º╪▒┘è ╪º┘ä╪¬╪¡┘à┘è┘ä...',
+            'no_data_found': '┘ä┘à ┘è╪¬┘à ╪º┘ä╪╣╪½┘ê╪▒ ╪╣┘ä┘ë ╪¿┘è╪º┘å╪º╪¬',
+            'are_you_sure': '┘ç┘ä ╪ú┘å╪¬ ┘à╪¬╪ú┘â╪»╪ƒ',
+            'this_action_cannot_be_undone': '┘ä╪º ┘è┘à┘â┘å ╪º┘ä╪¬╪▒╪º╪¼╪╣ ╪╣┘å ┘ç╪░╪º ╪º┘ä╪Ñ╪¼╪▒╪º╪í',
             
             # Forms
-            'name': 'الاسم',
-            'phone': 'الهاتف',
-            'email': 'البريد الإلكتروني',
-            'address': 'العنوان',
-            'city': 'المدينة',
-            'area': 'المنطقة',
-            'position': 'المنصب',
-            'rate': 'السعر',
-            'quantity': 'الكمية',
-            'total': 'الإجمالي',
-            'subtotal': 'المجموع الفرعي',
-            'vat': 'الضريبة',
-            'discount': 'الخصم',
-            'advance_paid': 'المدفوع مسبقاً',
-            'balance': 'الرصيد',
-            'payment_method': 'طريقة الدفع',
-            'cash': 'نقداً',
-            'card': 'بطاقة',
-            'bank_transfer': 'تحويل بنكي',
+            'name': '╪º┘ä╪º╪│┘à',
+            'phone': '╪º┘ä┘ç╪º╪¬┘ü',
+            'email': '╪º┘ä╪¿╪▒┘è╪» ╪º┘ä╪Ñ┘ä┘â╪¬╪▒┘ê┘å┘è',
+            'address': '╪º┘ä╪╣┘å┘ê╪º┘å',
+            'city': '╪º┘ä┘à╪»┘è┘å╪⌐',
+            'area': '╪º┘ä┘à┘å╪╖┘é╪⌐',
+            'position': '╪º┘ä┘à┘å╪╡╪¿',
+            'rate': '╪º┘ä╪│╪╣╪▒',
+            'quantity': '╪º┘ä┘â┘à┘è╪⌐',
+            'total': '╪º┘ä╪Ñ╪¼┘à╪º┘ä┘è',
+            'subtotal': '╪º┘ä┘à╪¼┘à┘ê╪╣ ╪º┘ä┘ü╪▒╪╣┘è',
+            'vat': '╪º┘ä╪╢╪▒┘è╪¿╪⌐',
+            'discount': '╪º┘ä╪«╪╡┘à',
+            'advance_paid': '╪º┘ä┘à╪»┘ü┘ê╪╣ ┘à╪│╪¿┘é╪º┘ï',
+            'balance': '╪º┘ä╪▒╪╡┘è╪»',
+            'payment_method': '╪╖╪▒┘è┘é╪⌐ ╪º┘ä╪»┘ü╪╣',
+            'cash': '┘å┘é╪»╪º┘ï',
+            'card': '╪¿╪╖╪º┘é╪⌐',
+            'bank_transfer': '╪¬╪¡┘ê┘è┘ä ╪¿┘å┘â┘è',
             
             # Reports
-            'invoices': 'الفواتير',
-            'employees': 'الموظفون',
-            'products': 'المنتجات',
-            'from_date': 'من تاريخ',
-            'to_date': 'إلى تاريخ',
-            'bill_number': 'رقم الفاتورة',
-            'bill_date': 'تاريخ الفاتورة',
-            'delivery_date': 'تاريخ التسليم',
-            'customer_name': 'اسم العميل',
-            'status': 'الحالة',
-            'amount': 'المبلغ',
-            'revenue': 'الإيرادات',
-            'performance': 'الأداء',
+            'invoices': '╪º┘ä┘ü┘ê╪º╪¬┘è╪▒',
+            'employees': '╪º┘ä┘à┘ê╪╕┘ü┘ê┘å',
+            'products': '╪º┘ä┘à┘å╪¬╪¼╪º╪¬',
+            'from_date': '┘à┘å ╪¬╪º╪▒┘è╪«',
+            'to_date': '╪Ñ┘ä┘ë ╪¬╪º╪▒┘è╪«',
+            'bill_number': '╪▒┘é┘à ╪º┘ä┘ü╪º╪¬┘ê╪▒╪⌐',
+            'bill_date': '╪¬╪º╪▒┘è╪« ╪º┘ä┘ü╪º╪¬┘ê╪▒╪⌐',
+            'delivery_date': '╪¬╪º╪▒┘è╪« ╪º┘ä╪¬╪│┘ä┘è┘à',
+            'customer_name': '╪º╪│┘à ╪º┘ä╪╣┘à┘è┘ä',
+            'status': '╪º┘ä╪¡╪º┘ä╪⌐',
+            'amount': '╪º┘ä┘à╪¿┘ä╪║',
+            'revenue': '╪º┘ä╪Ñ┘è╪▒╪º╪»╪º╪¬',
+            'performance': '╪º┘ä╪ú╪»╪º╪í',
             
             # Setup Wizard
-            'shop_type': 'نوع المتجر',
-            'shop_name': 'اسم المتجر',
-            'contact_number': 'رقم الاتصال',
-            'choose_plan': 'اختر الخطة',
-            'trial': 'تجريبي',
-            'basic': 'أساسي',
-            'pro': 'احترافي',
-            'days': 'أيام',
-            'year': 'سنة',
-            'next': 'التالي',
-            'previous': 'السابق',
-            'finish': 'إنهاء',
+            'shop_type': '┘å┘ê╪╣ ╪º┘ä┘à╪¬╪¼╪▒',
+            'shop_name': '╪º╪│┘à ╪º┘ä┘à╪¬╪¼╪▒',
+            'contact_number': '╪▒┘é┘à ╪º┘ä╪º╪¬╪╡╪º┘ä',
+            'choose_plan': '╪º╪«╪¬╪▒ ╪º┘ä╪«╪╖╪⌐',
+            'trial': '╪¬╪¼╪▒┘è╪¿┘è',
+            'basic': '╪ú╪│╪º╪│┘è',
+            'pro': '╪º╪¡╪¬╪▒╪º┘ü┘è',
+            'days': '╪ú┘è╪º┘à',
+            'year': '╪│┘å╪⌐',
+            'next': '╪º┘ä╪¬╪º┘ä┘è',
+            'previous': '╪º┘ä╪│╪º╪¿┘é',
+            'finish': '╪Ñ┘å┘ç╪º╪í',
             
             # Plans
-            'trial_plan': 'الخطة التجريبية',
-            'basic_plan': 'الخطة الأساسية',
-            'pro_plan': 'الخطة الاحترافية',
-            'enterprise_plan': 'خطة المؤسسة',
-            'features': 'الميزات',
-            'upgrade': 'ترقية',
-            'current_plan': 'الخطة الحالية',
-            'plan_expires': 'تنتهي الخطة',
-            'unlimited': 'غير محدود',
-            'limited': 'محدود',
+            'trial_plan': '╪º┘ä╪«╪╖╪⌐ ╪º┘ä╪¬╪¼╪▒┘è╪¿┘è╪⌐',
+            'basic_plan': '╪º┘ä╪«╪╖╪⌐ ╪º┘ä╪ú╪│╪º╪│┘è╪⌐',
+            'pro_plan': '╪º┘ä╪«╪╖╪⌐ ╪º┘ä╪º╪¡╪¬╪▒╪º┘ü┘è╪⌐',
+            'enterprise_plan': '╪«╪╖╪⌐ ╪º┘ä┘à╪ñ╪│╪│╪⌐',
+            'features': '╪º┘ä┘à┘è╪▓╪º╪¬',
+            'upgrade': '╪¬╪▒┘é┘è╪⌐',
+            'current_plan': '╪º┘ä╪«╪╖╪⌐ ╪º┘ä╪¡╪º┘ä┘è╪⌐',
+            'plan_expires': '╪¬┘å╪¬┘ç┘è ╪º┘ä╪«╪╖╪⌐',
+            'unlimited': '╪║┘è╪▒ ┘à╪¡╪»┘ê╪»',
+            'limited': '┘à╪¡╪»┘ê╪»',
             
             # Settings
-            'settings': 'الإعدادات',
-            'logo_url': 'رابط الشعار',
-            'working_hours': 'ساعات العمل',
-            'static_info': 'معلومات ثابتة',
-            'invoice_template': 'قالب الفاتورة',
-            'dynamic_template': 'قالب ديناميكي',
-            'static_template': 'قالب ثابت',
+            'settings': '╪º┘ä╪Ñ╪╣╪»╪º╪»╪º╪¬',
+            'logo_url': '╪▒╪º╪¿╪╖ ╪º┘ä╪┤╪╣╪º╪▒',
+            'working_hours': '╪│╪º╪╣╪º╪¬ ╪º┘ä╪╣┘à┘ä',
+            'static_info': '┘à╪╣┘ä┘ê┘à╪º╪¬ ╪½╪º╪¿╪¬╪⌐',
+            'invoice_template': '┘é╪º┘ä╪¿ ╪º┘ä┘ü╪º╪¬┘ê╪▒╪⌐',
+            'dynamic_template': '┘é╪º┘ä╪¿ ╪»┘è┘å╪º┘à┘è┘â┘è',
+            'static_template': '┘é╪º┘ä╪¿ ╪½╪º╪¿╪¬',
             
             # Authentication
-            'login': 'تسجيل الدخول',
-            'password': 'كلمة المرور',
-            'confirm_password': 'تأكيد كلمة المرور',
-            'forgot_password': 'نسيت كلمة المرور؟',
-            'remember_me': 'تذكرني',
-            'dont_have_account': 'ليس لديك حساب؟',
-            'already_have_account': 'لديك حساب بالفعل؟',
-            'sign_up_here': 'إنشاء حساب هنا',
-            'sign_in_here': 'تسجيل الدخول هنا',
-            'mobile_login': 'تسجيل الدخول بالجوال',
-            'otp': 'رمز التحقق',
-            'send_otp': 'إرسال رمز التحقق',
-            'verify_otp': 'التحقق من الرمز',
-            'shop_code': 'رمز المتجر',
-            'enter_shop_code': 'أدخل رمز المتجر',
+            'login': '╪¬╪│╪¼┘è┘ä ╪º┘ä╪»╪«┘ê┘ä',
+            'password': '┘â┘ä┘à╪⌐ ╪º┘ä┘à╪▒┘ê╪▒',
+            'confirm_password': '╪¬╪ú┘â┘è╪» ┘â┘ä┘à╪⌐ ╪º┘ä┘à╪▒┘ê╪▒',
+            'forgot_password': '┘å╪│┘è╪¬ ┘â┘ä┘à╪⌐ ╪º┘ä┘à╪▒┘ê╪▒╪ƒ',
+            'remember_me': '╪¬╪░┘â╪▒┘å┘è',
+            'dont_have_account': '┘ä┘è╪│ ┘ä╪»┘è┘â ╪¡╪│╪º╪¿╪ƒ',
+            'already_have_account': '┘ä╪»┘è┘â ╪¡╪│╪º╪¿ ╪¿╪º┘ä┘ü╪╣┘ä╪ƒ',
+            'sign_up_here': '╪Ñ┘å╪┤╪º╪í ╪¡╪│╪º╪¿ ┘ç┘å╪º',
+            'sign_in_here': '╪¬╪│╪¼┘è┘ä ╪º┘ä╪»╪«┘ê┘ä ┘ç┘å╪º',
+            'mobile_login': '╪¬╪│╪¼┘è┘ä ╪º┘ä╪»╪«┘ê┘ä ╪¿╪º┘ä╪¼┘ê╪º┘ä',
+            'otp': '╪▒┘à╪▓ ╪º┘ä╪¬╪¡┘é┘é',
+            'send_otp': '╪Ñ╪▒╪│╪º┘ä ╪▒┘à╪▓ ╪º┘ä╪¬╪¡┘é┘é',
+            'verify_otp': '╪º┘ä╪¬╪¡┘é┘é ┘à┘å ╪º┘ä╪▒┘à╪▓',
+            'shop_code': '╪▒┘à╪▓ ╪º┘ä┘à╪¬╪¼╪▒',
+            'enter_shop_code': '╪ú╪»╪«┘ä ╪▒┘à╪▓ ╪º┘ä┘à╪¬╪¼╪▒',
             
             # Currency
-            'aed': 'درهم',
-            'dirhams': 'دراهم',
-            'fils': 'فلس',
-            'only': 'فقط',
+            'aed': '╪»╪▒┘ç┘à',
+            'dirhams': '╪»╪▒╪º┘ç┘à',
+            'fils': '┘ü┘ä╪│',
+            'only': '┘ü┘é╪╖',
             
             # Time
-            'today': 'اليوم',
-            'yesterday': 'أمس',
-            'this_week': 'هذا الأسبوع',
-            'this_month': 'هذا الشهر',
-            'this_year': 'هذا العام',
-            'last_week': 'الأسبوع الماضي',
-            'last_month': 'الشهر الماضي',
-            'last_year': 'العام الماضي',
+            'today': '╪º┘ä┘è┘ê┘à',
+            'yesterday': '╪ú┘à╪│',
+            'this_week': '┘ç╪░╪º ╪º┘ä╪ú╪│╪¿┘ê╪╣',
+            'this_month': '┘ç╪░╪º ╪º┘ä╪┤┘ç╪▒',
+            'this_year': '┘ç╪░╪º ╪º┘ä╪╣╪º┘à',
+            'last_week': '╪º┘ä╪ú╪│╪¿┘ê╪╣ ╪º┘ä┘à╪º╪╢┘è',
+            'last_month': '╪º┘ä╪┤┘ç╪▒ ╪º┘ä┘à╪º╪╢┘è',
+            'last_year': '╪º┘ä╪╣╪º┘à ╪º┘ä┘à╪º╪╢┘è',
             
             # Charts
-            'sales': 'المبيعات',
-            'revenue_chart': 'رسم بياني للإيرادات',
-            'sales_chart': 'رسم بياني للمبيعات',
-            'performance_chart': 'رسم بياني للأداء',
-            'heatmap': 'خريطة حرارية',
+            'sales': '╪º┘ä┘à╪¿┘è╪╣╪º╪¬',
+            'revenue_chart': '╪▒╪│┘à ╪¿┘è╪º┘å┘è ┘ä┘ä╪Ñ┘è╪▒╪º╪»╪º╪¬',
+            'sales_chart': '╪▒╪│┘à ╪¿┘è╪º┘å┘è ┘ä┘ä┘à╪¿┘è╪╣╪º╪¬',
+            'performance_chart': '╪▒╪│┘à ╪¿┘è╪º┘å┘è ┘ä┘ä╪ú╪»╪º╪í',
+            'heatmap': '╪«╪▒┘è╪╖╪⌐ ╪¡╪▒╪º╪▒┘è╪⌐',
             
             # Notifications
-            'notification': 'إشعار',
-            'notifications': 'الإشعارات',
-            'new_bill': 'فاتورة جديدة',
-            'payment_received': 'تم استلام الدفع',
-            'low_stock': 'المخزون منخفض',
-            'expiring_plan': 'الخطة تنتهي قريباً',
+            'notification': '╪Ñ╪┤╪╣╪º╪▒',
+            'notifications': '╪º┘ä╪Ñ╪┤╪╣╪º╪▒╪º╪¬',
+            'new_bill': '┘ü╪º╪¬┘ê╪▒╪⌐ ╪¼╪»┘è╪»╪⌐',
+            'payment_received': '╪¬┘à ╪º╪│╪¬┘ä╪º┘à ╪º┘ä╪»┘ü╪╣',
+            'low_stock': '╪º┘ä┘à╪«╪▓┘ê┘å ┘à┘å╪«┘ü╪╢',
+            'expiring_plan': '╪º┘ä╪«╪╖╪⌐ ╪¬┘å╪¬┘ç┘è ┘é╪▒┘è╪¿╪º┘ï',
             
             # Help
-            'help': 'المساعدة',
-            'support': 'الدعم',
-            'documentation': 'الوثائق',
-            'contact_us': 'اتصل بنا',
-            'feedback': 'التعليقات',
-            'bug_report': 'تقرير خطأ',
-            'feature_request': 'طلب ميزة',
+            'help': '╪º┘ä┘à╪│╪º╪╣╪»╪⌐',
+            'support': '╪º┘ä╪»╪╣┘à',
+            'documentation': '╪º┘ä┘ê╪½╪º╪ª┘é',
+            'contact_us': '╪º╪¬╪╡┘ä ╪¿┘å╪º',
+            'feedback': '╪º┘ä╪¬╪╣┘ä┘è┘é╪º╪¬',
+            'bug_report': '╪¬┘é╪▒┘è╪▒ ╪«╪╖╪ú',
+            'feature_request': '╪╖┘ä╪¿ ┘à┘è╪▓╪⌐',
             
             # Language
-            'language': 'اللغة',
-            'english': 'الإنجليزية',
-            'arabic': 'العربية',
-            'switch_language': 'تغيير اللغة',
+            'language': '╪º┘ä┘ä╪║╪⌐',
+            'english': '╪º┘ä╪Ñ┘å╪¼┘ä┘è╪▓┘è╪⌐',
+            'arabic': '╪º┘ä╪╣╪▒╪¿┘è╪⌐',
+            'switch_language': '╪¬╪║┘è┘è╪▒ ╪º┘ä┘ä╪║╪⌐',
             
             # Default text
             'default': text
@@ -3419,28 +3594,28 @@ def generate_email_template(bill_data, shop_settings, language='en'):
         <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8f9fa; padding: 20px;">
             <div style="background-color: white; border-radius: 10px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
                 <div style="text-align: center; margin-bottom: 30px;">
-                    <h1 style="color: #6f42c1; margin: 0; font-size: 28px;">فاتورة - {shop_settings.get('shop_name', 'Tajir')}</h1>
-                    <p style="color: #6c757d; margin: 10px 0;">رقم الفاتورة: {bill_data['bill_number']}</p>
-                    <p style="color: #6c757d; margin: 5px 0;">التاريخ: {bill_data['bill_date']}</p>
+                    <h1 style="color: #6f42c1; margin: 0; font-size: 28px;">┘ü╪º╪¬┘ê╪▒╪⌐ - {shop_settings.get('shop_name', 'Tajir')}</h1>
+                    <p style="color: #6c757d; margin: 10px 0;">╪▒┘é┘à ╪º┘ä┘ü╪º╪¬┘ê╪▒╪⌐: {bill_data['bill_number']}</p>
+                    <p style="color: #6c757d; margin: 5px 0;">╪º┘ä╪¬╪º╪▒┘è╪«: {bill_data['bill_date']}</p>
                 </div>
                 
                 <div style="margin-bottom: 20px;">
-                    <h3 style="color: #495057; border-bottom: 2px solid #6f42c1; padding-bottom: 10px;">تفاصيل العميل</h3>
-                    <p><strong>الاسم:</strong> {bill_data['customer_name']}</p>
-                    <p><strong>الهاتف:</strong> {bill_data['customer_phone']}</p>
-                    {f"<p><strong>المدينة:</strong> {bill_data['customer_city']}</p>" if bill_data.get('customer_city') else ""}
-                    {f"<p><strong>المنطقة:</strong> {bill_data['customer_area']}</p>" if bill_data.get('customer_area') else ""}
+                    <h3 style="color: #495057; border-bottom: 2px solid #6f42c1; padding-bottom: 10px;">╪¬┘ü╪º╪╡┘è┘ä ╪º┘ä╪╣┘à┘è┘ä</h3>
+                    <p><strong>╪º┘ä╪º╪│┘à:</strong> {bill_data['customer_name']}</p>
+                    <p><strong>╪º┘ä┘ç╪º╪¬┘ü:</strong> {bill_data['customer_phone']}</p>
+                    {f"<p><strong>╪º┘ä┘à╪»┘è┘å╪⌐:</strong> {bill_data['customer_city']}</p>" if bill_data.get('customer_city') else ""}
+                    {f"<p><strong>╪º┘ä┘à┘å╪╖┘é╪⌐:</strong> {bill_data['customer_area']}</p>" if bill_data.get('customer_area') else ""}
                 </div>
                 
                 <div style="margin-bottom: 20px;">
-                    <h3 style="color: #495057; border-bottom: 2px solid #6f42c1; padding-bottom: 10px;">تفاصيل الفاتورة</h3>
+                    <h3 style="color: #495057; border-bottom: 2px solid #6f42c1; padding-bottom: 10px;">╪¬┘ü╪º╪╡┘è┘ä ╪º┘ä┘ü╪º╪¬┘ê╪▒╪⌐</h3>
                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
                         <thead>
                             <tr style="background-color: #6f42c1; color: white;">
-                                <th style="padding: 12px; text-align: right; border: 1px solid #dee2e6;">المنتج</th>
-                                <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">السعر</th>
-                                <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">الكمية</th>
-                                <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">المجموع</th>
+                                <th style="padding: 12px; text-align: right; border: 1px solid #dee2e6;">╪º┘ä┘à┘å╪¬╪¼</th>
+                                <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">╪º┘ä╪│╪╣╪▒</th>
+                                <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">╪º┘ä┘â┘à┘è╪⌐</th>
+                                <th style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">╪º┘ä┘à╪¼┘à┘ê╪╣</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -3451,9 +3626,9 @@ def generate_email_template(bill_data, shop_settings, language='en'):
             template += f"""
                             <tr>
                                 <td style="padding: 12px; border: 1px solid #dee2e6;">{item['product_name']}</td>
-                                <td style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">{item['rate']:.2f} درهم</td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">{item['rate']:.2f} ╪»╪▒┘ç┘à</td>
                                 <td style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">{item['qty']}</td>
-                                <td style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">{item['total']:.2f} درهم</td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid #dee2e6;">{item['total']:.2f} ╪»╪▒┘ç┘à</td>
                             </tr>
             """
         
@@ -3464,25 +3639,25 @@ def generate_email_template(bill_data, shop_settings, language='en'):
                 
                 <div style="background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                        <span><strong>المجموع الفرعي:</strong></span>
-                        <span>{bill_data['subtotal']:.2f} درهم</span>
+                        <span><strong>╪º┘ä┘à╪¼┘à┘ê╪╣ ╪º┘ä┘ü╪▒╪╣┘è:</strong></span>
+                        <span>{bill_data['subtotal']:.2f} ╪»╪▒┘ç┘à</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                        <span><strong>الضريبة ({bill_data.get('vat_percent', 5)}%):</strong></span>
-                        <span>{bill_data['vat_amount']:.2f} درهم</span>
+                        <span><strong>╪º┘ä╪╢╪▒┘è╪¿╪⌐ ({bill_data.get('vat_percent', 5)}%):</strong></span>
+                        <span>{bill_data['vat_amount']:.2f} ╪»╪▒┘ç┘à</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                        <span><strong>المدفوع مسبقاً:</strong></span>
-                        <span>{bill_data.get('advance_paid', 0):.2f} درهم</span>
+                        <span><strong>╪º┘ä┘à╪»┘ü┘ê╪╣ ┘à╪│╪¿┘é╪º┘ï:</strong></span>
+                        <span>{bill_data.get('advance_paid', 0):.2f} ╪»╪▒┘ç┘à</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; color: #6f42c1;">
-                        <span><strong>المجموع النهائي:</strong></span>
-                        <span>{bill_data['total_amount']:.2f} درهم</span>
+                        <span><strong>╪º┘ä┘à╪¼┘à┘ê╪╣ ╪º┘ä┘å┘ç╪º╪ª┘è:</strong></span>
+                        <span>{bill_data['total_amount']:.2f} ╪»╪▒┘ç┘à</span>
                     </div>
                 </div>
                 
                 <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #dee2e6;">
-                    <p style="color: #6c757d; margin: 5px 0;">شكراً لتعاملكم معنا</p>
+                    <p style="color: #6c757d; margin: 5px 0;">╪┤┘â╪▒╪º┘ï ┘ä╪¬╪╣╪º┘à┘ä┘â┘à ┘à╪╣┘å╪º</p>
                     <p style="color: #6c757d; margin: 5px 0;">{shop_settings.get('shop_name', 'Tajir')}</p>
                     {f"<p style='color: #6c757d; margin: 5px 0;'>{shop_settings.get('address', '')}</p>" if shop_settings.get('address') else ""}
                     {f"<p style='color: #6c757d; margin: 5px 0;'>{shop_settings.get('phone', '')}</p>" if shop_settings.get('phone') else ""}
@@ -3677,7 +3852,8 @@ def send_bill_email(bill_id):
             return jsonify({'success': False, 'error': 'Invalid email address format'}), 400
         
         # Check if user has email feature access
-        if not plan_manager.check_feature_access(get_current_user_id(), 'email_integration'):
+        pm = get_plan_manager()
+        if not pm.check_feature_access(get_current_user_id(), 'email_integration'):
             return jsonify({'success': False, 'error': 'Email integration not available in your plan'}), 403
         
         result = send_email_invoice(bill_id, recipient_email, language)
@@ -3722,7 +3898,7 @@ def test_email_config():
                 
                 <div style="margin-bottom: 20px;">
                     <h3 style="color: #495057; border-bottom: 2px solid #6f42c1; padding-bottom: 10px;">Test Results</h3>
-                    <p><strong>Status:</strong> ✅ Email configuration is working correctly!</p>
+                    <p><strong>Status:</strong> Γ£à Email configuration is working correctly!</p>
                     <p><strong>From:</strong> {email_config['from_name']} &lt;{email_config['from_email']}&gt;</p>
                     <p><strong>SMTP Server:</strong> {email_config['smtp_server']}:{email_config['smtp_port']}</p>
                     <p><strong>Test Time:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
@@ -3795,34 +3971,34 @@ def generate_whatsapp_message(bill_data, shop_settings, language='en'):
     """Generate WhatsApp message for invoice"""
     if language == 'ar':
         # Arabic message
-        message = f"""فاتورة - {shop_settings.get('shop_name', 'Tajir')}
+        message = f"""┘ü╪º╪¬┘ê╪▒╪⌐ - {shop_settings.get('shop_name', 'Tajir')}
 
-رقم الفاتورة: {bill_data['bill_number']}
-التاريخ: {bill_data['bill_date']}
+╪▒┘é┘à ╪º┘ä┘ü╪º╪¬┘ê╪▒╪⌐: {bill_data['bill_number']}
+╪º┘ä╪¬╪º╪▒┘è╪«: {bill_data['bill_date']}
 
-تفاصيل العميل:
-الاسم: {bill_data['customer_name']}
-الهاتف: {bill_data['customer_phone']}
-{f"المدينة: {bill_data['customer_city']}" if bill_data.get('customer_city') else ""}
-{f"المنطقة: {bill_data['customer_area']}" if bill_data.get('customer_area') else ""}
+╪¬┘ü╪º╪╡┘è┘ä ╪º┘ä╪╣┘à┘è┘ä:
+╪º┘ä╪º╪│┘à: {bill_data['customer_name']}
+╪º┘ä┘ç╪º╪¬┘ü: {bill_data['customer_phone']}
+{f"╪º┘ä┘à╪»┘è┘å╪⌐: {bill_data['customer_city']}" if bill_data.get('customer_city') else ""}
+{f"╪º┘ä┘à┘å╪╖┘é╪⌐: {bill_data['customer_area']}" if bill_data.get('customer_area') else ""}
 
-تفاصيل الفاتورة:
+╪¬┘ü╪º╪╡┘è┘ä ╪º┘ä┘ü╪º╪¬┘ê╪▒╪⌐:
 """
         
         # Add items
         for item in bill_data['items']:
-            message += f"• {item['product_name']} - {item['qty']} × {item['rate']:.2f} درهم = {item['total']:.2f} درهم\n"
+            message += f"ΓÇó {item['product_name']} - {item['qty']} ├ù {item['rate']:.2f} ╪»╪▒┘ç┘à = {item['total']:.2f} ╪»╪▒┘ç┘à\n"
         
         message += f"""
-المجموع الفرعي: {bill_data['subtotal']:.2f} درهم
-الضريبة ({bill_data.get('vat_percent', 5)}%): {bill_data['vat_amount']:.2f} درهم
-المدفوع مسبقاً: {bill_data.get('advance_paid', 0):.2f} درهم
-المجموع النهائي: {bill_data['total_amount']:.2f} درهم
+╪º┘ä┘à╪¼┘à┘ê╪╣ ╪º┘ä┘ü╪▒╪╣┘è: {bill_data['subtotal']:.2f} ╪»╪▒┘ç┘à
+╪º┘ä╪╢╪▒┘è╪¿╪⌐ ({bill_data.get('vat_percent', 5)}%): {bill_data['vat_amount']:.2f} ╪»╪▒┘ç┘à
+╪º┘ä┘à╪»┘ü┘ê╪╣ ┘à╪│╪¿┘é╪º┘ï: {bill_data.get('advance_paid', 0):.2f} ╪»╪▒┘ç┘à
+╪º┘ä┘à╪¼┘à┘ê╪╣ ╪º┘ä┘å┘ç╪º╪ª┘è: {bill_data['total_amount']:.2f} ╪»╪▒┘ç┘à
 
-شكراً لتعاملكم معنا!
+╪┤┘â╪▒╪º┘ï ┘ä╪¬╪╣╪º┘à┘ä┘â┘à ┘à╪╣┘å╪º!
 {shop_settings.get('shop_name', 'Tajir')}
-{f"العنوان: {shop_settings.get('address', '')}" if shop_settings.get('address') else ""}
-{f"الهاتف: {shop_settings.get('phone', '')}" if shop_settings.get('phone') else ""}"""
+{f"╪º┘ä╪╣┘å┘ê╪º┘å: {shop_settings.get('address', '')}" if shop_settings.get('address') else ""}
+{f"╪º┘ä┘ç╪º╪¬┘ü: {shop_settings.get('phone', '')}" if shop_settings.get('phone') else ""}"""
     else:
         # English message
         message = f"""Invoice - {shop_settings.get('shop_name', 'Tajir')}
@@ -3841,7 +4017,7 @@ Invoice Details:
         
         # Add items
         for item in bill_data['items']:
-            message += f"• {item['product_name']} - {item['qty']} × AED {item['rate']:.2f} = AED {item['total']:.2f}\n"
+            message += f"ΓÇó {item['product_name']} - {item['qty']} ├ù AED {item['rate']:.2f} = AED {item['total']:.2f}\n"
         
         message += f"""
 Subtotal: AED {bill_data['subtotal']:.2f}
@@ -3897,7 +4073,8 @@ def send_bill_whatsapp(bill_id):
             user_id = get_current_user_id()
             print(f"DEBUG: User ID: {user_id}")
             
-            if not plan_manager.check_feature_access(user_id, 'whatsapp_integration'):
+            pm = get_plan_manager()
+            if not pm.check_feature_access(user_id, 'whatsapp_integration'):
                 return jsonify({'success': False, 'error': 'WhatsApp integration not available in your plan'}), 403
         except Exception as e:
             print(f"DEBUG: Plan manager error: {e}")
@@ -4020,6 +4197,138 @@ def test_whatsapp_config():
         
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/bills/<int:bill_id>/pdf', methods=['GET'])
+def generate_bill_pdf(bill_id):
+    """Generate PDF invoice for bill using exact HTML template"""
+    try:
+        # Check if playwright is available
+        if not PDF_AVAILABLE:
+            return jsonify({'error': 'PDF generation is not available. Please install playwright: pip install playwright && playwright install chromium'}), 500
+
+        # Get bill data using the same logic as print_bill
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Get bill details with all necessary information
+        cursor.execute("""
+            SELECT b.*, c.name as customer_name, c.phone as customer_phone, c.address as customer_address,
+                   c.city as customer_city, c.area as customer_area, c.trn as customer_trn,
+                   c.customer_type, c.business_name, c.business_address,
+                   e.name as master_name
+            FROM bills b
+            LEFT JOIN customers c ON b.customer_id = c.customer_id
+            LEFT JOIN employees e ON b.master_id = e.employee_id
+            WHERE b.bill_id = ? AND b.user_id = ?
+        """, (bill_id, get_current_user_id()))
+        
+        bill_row = cursor.fetchone()
+        if not bill_row:
+            return jsonify({'error': 'Bill not found'}), 404
+        
+        bill = dict(bill_row)
+        
+        # Get bill items with all details
+        cursor.execute("""
+            SELECT bi.*, p.product_name
+            FROM bill_items bi
+            LEFT JOIN products p ON bi.product_id = p.product_id
+            WHERE bi.bill_id = ?
+        """, (bill_id,))
+        
+        items_rows = cursor.fetchall()
+        items = [dict(item_row) for item_row in items_rows]
+        
+        # Get shop settings
+        cursor.execute("""
+            SELECT * FROM shop_settings WHERE user_id = ?
+        """, (get_current_user_id(),))
+        
+        shop_settings_row = cursor.fetchone()
+        shop_settings = dict(shop_settings_row) if shop_settings_row else {}
+        
+        conn.close()
+
+        # Generate amount in words (same logic as print_bill)
+        try:
+            amount_in_words = num2words(bill['total_amount'])
+            arabic_amount_in_words = "╪º┘ä┘à╪¿┘ä╪║ ╪¿╪º┘ä┘â┘ä┘à╪º╪¬ ╪║┘è╪▒ ┘à╪¬┘ê┘ü╪▒"
+        except Exception:
+            amount_in_words = "Amount in words not available"
+            arabic_amount_in_words = "╪º┘ä┘à╪¿┘ä╪║ ╪¿╪º┘ä┘â┘ä┘à╪º╪¬ ╪║┘è╪▒ ┘à╪¬┘ê┘ü╪▒"
+        
+        # Generate QR code for FTA compliance (same as print_bill)
+        qr_code_base64 = None
+        try:
+            # Generate QR code data for FTA compliance
+            qr_data = {
+                'seller_name': shop_settings.get('shop_name', ''),
+                'seller_trn': shop_settings.get('trn', ''),
+                'timestamp': bill['bill_date'],
+                'total_amount': str(bill['total_amount']),
+                'vat_amount': str(bill['vat_amount'])
+            }
+            
+            import qrcode
+            import base64
+            from io import BytesIO
+            
+            qr = qrcode.QRCode(version=1, box_size=10, border=5)
+            qr.add_data(str(qr_data))
+            qr.make(fit=True)
+            
+            img = qr.make_image(fill_color="black", back_color="white")
+            buffer = BytesIO()
+            img.save(buffer, format='PNG')
+            qr_code_base64 = base64.b64encode(buffer.getvalue()).decode()
+        except Exception as e:
+            app.logger.warning(f"QR code generation failed: {str(e)}")
+        
+        # Prepare template variables (exactly same as print_bill)
+        template_vars = {
+            'bill': bill,
+            'items': items,
+            'shop_settings': shop_settings,
+            'amount_in_words': amount_in_words,
+            'arabic_amount_in_words': arabic_amount_in_words,
+            'qr_code_base64': qr_code_base64
+        }
+        
+        # Render the HTML template (exactly same as print_bill)
+        html_content = render_template('print_bill.html', **template_vars)
+        
+        # Use Playwright to render HTML to PDF
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True)
+            page = browser.new_page()
+            
+            # Set content and wait for it to load
+            page.set_content(html_content, wait_until='networkidle')
+            
+            # Generate PDF with proper settings
+            pdf_buffer = page.pdf(
+                format='A4',
+                print_background=True,
+                margin={
+                    'top': '20px',
+                    'right': '20px',
+                    'bottom': '20px',
+                    'left': '20px'
+                }
+            )
+            
+            browser.close()
+        
+        # Return PDF as response
+        response = make_response(pdf_buffer)
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = f'attachment; filename=bill_{bill_id}.pdf'
+        
+        return response
+        
+    except Exception as e:
+        app.logger.error(f"Error generating PDF: {str(e)}")
+        return jsonify({'error': f'Error generating PDF: {str(e)}'}), 500
 
 
 
@@ -4923,6 +5232,56 @@ def admin_setup():
             'message': f'Admin setup failed: {str(e)}'
         }), 500
 
+@app.route('/health')
+def health_check():
+    """Simple health check endpoint for Railway deployment."""
+    return jsonify({
+        'status': 'healthy', 
+        'timestamp': datetime.now().isoformat(),
+        'message': 'Tajir POS is running!'
+    })
+
+@app.route('/test')
+def test_endpoint():
+    """Simple test endpoint."""
+    return f"""
+    <html>
+    <head><title>Tajir POS - Test</title></head>
+    <body style="font-family: Arial, sans-serif; padding: 20px;">
+        <h1>🚀 Tajir POS is Working!</h1>
+        <p><strong>Status:</strong> ✅ Application is running successfully</p>
+        <p><strong>Timestamp:</strong> {datetime.now().isoformat()}</p>
+        <hr>
+        <h2>Available Endpoints:</h2>
+        <ul>
+            <li><a href="/">Root (redirects to /app)</a></li>
+            <li><a href="/app">Main Application</a></li>
+            <li><a href="/health">Health Check</a></li>
+            <li><a href="/test">Test Page</a></li>
+        </ul>
+        <hr>
+        <p><strong>Login Credentials:</strong></p>
+        <p>Email: admin@tailorpos.com<br>Password: admin123</p>
+    </body>
+    </html>
+    """
+
 if __name__ == '__main__':
-    init_db()
-    app.run(debug=True, host='0.0.0.0', port=5000) 
+    print("🚀 Starting Tajir POS Application...")
+    print(f"Database path: {app.config['DATABASE']}")
+    print(f"Secret key configured: {'Yes' if app.secret_key != 'your-secret-key-here-change-in-production' else 'No'}")
+    
+    try:
+        init_db()
+        print("✅ Database initialization completed")
+    except Exception as e:
+        print(f"⚠️ Database initialization failed: {e}")
+        print("Continuing with app startup...")
+    
+    try:
+        port = int(os.environ.get('PORT', 5000))
+        print(f"🌐 Starting server on port {port}")
+        app.run(debug=False, host='0.0.0.0', port=port)
+    except Exception as e:
+        print(f"❌ Failed to start server: {e}")
+        sys.exit(1) 

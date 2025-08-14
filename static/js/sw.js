@@ -1,12 +1,13 @@
-const CACHE_NAME = 'tajir-pos-v1.0.0';
-const STATIC_CACHE = 'tajir-static-v1.0.0';
-const DYNAMIC_CACHE = 'tajir-dynamic-v1.0.0';
+const CACHE_NAME = 'tajir-pos-v1.0.1';
+const STATIC_CACHE = 'tajir-static-v1.0.1';
+const DYNAMIC_CACHE = 'tajir-dynamic-v1.0.1';
 
 const STATIC_ASSETS = [
   '/',
   '/app',
   '/static/css/main.css',
   '/static/css/animations.css',
+  '/static/css/mobile-enhancements.css',
   '/static/js/app.js',
   '/static/js/modules/billing-system.js',
   '/static/js/modules/customers.js',
@@ -18,7 +19,10 @@ const STATIC_ASSETS = [
   '/static/js/modules/vat.js',
   '/static/js/modules/plan-management.js',
   '/static/js/modules/product-types.js',
+  '/static/js/modules/expenses.js',
+  '/static/js/modules/mobile-navigation.js',
   '/templates/app.html',
+  '/templates/expenses.html',
   '/static/manifest.json'
 ];
 
@@ -29,7 +33,15 @@ self.addEventListener('install', event => {
     caches.open(STATIC_CACHE)
       .then(cache => {
         console.log('Service Worker: Caching static assets');
-        return cache.addAll(STATIC_ASSETS);
+        // Cache assets one by one to handle missing files gracefully
+        const cachePromises = STATIC_ASSETS.map(url => {
+          return cache.add(url).catch(error => {
+            console.warn('Service Worker: Failed to cache', url, error);
+            // Continue with other assets even if one fails
+            return Promise.resolve();
+          });
+        });
+        return Promise.all(cachePromises);
       })
       .then(() => {
         console.log('Service Worker: Installation completed');
@@ -37,6 +49,8 @@ self.addEventListener('install', event => {
       })
       .catch(error => {
         console.error('Service Worker: Installation failed', error);
+        // Still try to skip waiting even if caching fails
+        return self.skipWaiting();
       })
   );
 });
@@ -82,14 +96,44 @@ self.addEventListener('fetch', event => {
           // Cache successful API responses
           if (response.ok) {
             caches.open(DYNAMIC_CACHE)
-              .then(cache => cache.put(request, responseClone));
+              .then(cache => cache.put(request, responseClone))
+              .catch(error => {
+                console.error('Service Worker: Failed to cache API response', error);
+              });
           }
           
           return response;
         })
-        .catch(() => {
-          console.log('Service Worker: Serving API from cache', request.url);
-          return caches.match(request);
+        .catch(error => {
+          console.log('Service Worker: API fetch failed, serving from cache', request.url, error);
+          return caches.match(request)
+            .then(cachedResponse => {
+              if (cachedResponse) {
+                return cachedResponse;
+              }
+              // Return a basic error response if no cache available
+              return new Response('Network error', { status: 503, statusText: 'Service Unavailable' });
+            });
+        })
+    );
+    return;
+  }
+  
+  // Route-based requests (like /expenses, /app) - network first, no caching
+  if (url.pathname === '/expenses' || url.pathname === '/app' || url.pathname === '/') {
+    event.respondWith(
+      fetch(request)
+        .catch(error => {
+          console.error('Service Worker: Route fetch failed', request.url, error);
+          // For routes, try to serve from cache as fallback
+          return caches.match(request)
+            .then(cachedResponse => {
+              if (cachedResponse) {
+                return cachedResponse;
+              }
+              // Return a basic error response if no cache available
+              return new Response('Network error', { status: 503, statusText: 'Service Unavailable' });
+            });
         })
     );
     return;
@@ -115,10 +159,23 @@ self.addEventListener('fetch', event => {
             // Clone the response before caching
             const responseToCache = response.clone();
             caches.open(DYNAMIC_CACHE)
-              .then(cache => cache.put(request, responseToCache));
+              .then(cache => cache.put(request, responseToCache))
+              .catch(error => {
+                console.error('Service Worker: Failed to cache static asset', error);
+              });
             
             return response;
+          })
+          .catch(error => {
+            console.error('Service Worker: Fetch failed for static asset', request.url, error);
+            // Return a basic error response
+            return new Response('Network error', { status: 503, statusText: 'Service Unavailable' });
           });
+      })
+      .catch(error => {
+        console.error('Service Worker: Cache match failed', request.url, error);
+        // Return a basic error response
+        return new Response('Cache error', { status: 503, statusText: 'Service Unavailable' });
       })
   );
 });

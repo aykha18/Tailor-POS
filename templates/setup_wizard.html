@@ -135,11 +135,20 @@
             <div id="step2" class="step-panel hidden">
                 <h2 class="text-2xl font-semibold mb-6">Shop Details</h2>
                 <form id="shopDetailsForm" class="space-y-6">
+                    <!-- Row 1: Shop Information -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-neutral-300 mb-2">Shop Name *</label>
                             <input type="text" id="shopName" required class="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                         </div>
+                        <div>
+                            <label class="block text-sm font-medium text-neutral-300 mb-2">Shop Owner Name *</label>
+                            <input type="text" id="shopOwner" required class="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="Enter owner's full name">
+                        </div>
+                    </div>
+                    
+                    <!-- Row 2: Contact Information -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-neutral-300 mb-2">Contact Number *</label>
                             <input type="tel" id="contactNumber" required class="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
@@ -148,14 +157,18 @@
                             <label class="block text-sm font-medium text-neutral-300 mb-2">Email Address</label>
                             <input type="email" id="emailAddress" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                         </div>
+                    </div>
+                    
+                    <!-- Row 3: Business Information -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-neutral-300 mb-2">TRN (Tax Registration Number)</label>
                             <input type="text" id="shopTRN" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                         </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-neutral-300 mb-2">Shop Address</label>
-                        <textarea id="shopAddress" rows="3" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"></textarea>
+                        <div>
+                            <label class="block text-sm font-medium text-neutral-300 mb-2">Shop Address</label>
+                            <textarea id="shopAddress" rows="3" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"></textarea>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -544,11 +557,16 @@
                     break;
                 case 2:
                     const shopName = document.getElementById('shopName').value.trim();
+                    const shopOwner = document.getElementById('shopOwner').value.trim();
                     const contactNumber = document.getElementById('contactNumber').value.trim();
                     const emailAddress = document.getElementById('emailAddress').value.trim();
                     
                     if (!shopName) {
                         showToast('Please enter your shop name', 'error');
+                        return false;
+                    }
+                    if (!shopOwner) {
+                        showToast('Please enter the shop owner name', 'error');
                         return false;
                     }
                     if (!contactNumber) {
@@ -564,6 +582,7 @@
                     
                     setupData.shopInfo = {
                         name: shopName,
+                        owner: shopOwner,
                         contactNumber: contactNumber,
                         email: emailAddress,
                         trn: document.getElementById('shopTRN').value.trim(),
@@ -586,6 +605,7 @@
                 const backendData = {
                     shopType: setupData.shopType,
                     shopName: setupData.shopInfo.name,
+                    shopOwner: setupData.shopInfo.owner,
                     contactNumber: setupData.shopInfo.contactNumber,
                     selectedPlan: setupData.selectedPlan,
                     emailAddress: setupData.shopInfo.email || '',

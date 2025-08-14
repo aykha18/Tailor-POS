@@ -1,13 +1,66 @@
 // Reports Module
 
 function initializeReports() {
+  // Initialize tab switching functionality
+  initializeTabSwitching();
+  
   // Initialize all report sections
   initializeInvoicesReport();
   initializeEmployeesReport();
   initializeProductsReport();
 }
 
+function initializeTabSwitching() {
+  const tabButtons = document.querySelectorAll('.report-tab-btn');
+  const tabContents = document.querySelectorAll('.report-tab-content');
+  
+  // Hide all tab contents initially
+  tabContents.forEach(content => {
+    content.style.display = 'none';
+  });
+  
+  // Show the first tab by default
+  if (tabContents.length > 0) {
+    tabContents[0].style.display = 'block';
+    if (tabButtons.length > 0) {
+      tabButtons[0].classList.add('text-indigo-400', 'border-indigo-400');
+      tabButtons[0].classList.remove('text-neutral-300', 'border-transparent');
+    }
+  }
+  
+  // Add click event listeners to tab buttons
+  tabButtons.forEach(button => {
+    button.addEventListener('click', function() {
+             const targetTab = this.getAttribute('data-tab');
+       
+       // Remove active state from all buttons
+      tabButtons.forEach(btn => {
+        btn.classList.remove('text-indigo-400', 'border-indigo-400');
+        btn.classList.add('text-neutral-300', 'border-transparent');
+      });
+      
+      // Add active state to clicked button
+      this.classList.add('text-indigo-400', 'border-indigo-400');
+      this.classList.remove('text-neutral-300', 'border-transparent');
+      
+      // Hide all tab contents
+      tabContents.forEach(content => {
+        content.style.display = 'none';
+      });
+      
+             // Show target tab content
+       const targetContent = document.getElementById(targetTab);
+       if (targetContent) {
+         targetContent.style.display = 'block';
+       }
+    });
+  });
+}
+
 function initializeInvoicesReport() {
+  // Set default dates to current month
+  setDefaultDates();
+  
   // Populate filter dropdowns
   populateProducts('invProducts');
   populateEmployees('invEmployees');
@@ -23,8 +76,32 @@ function initializeInvoicesReport() {
     }
   });
   
+  // Add Preview button event listener
+  const previewBtn = document.getElementById('previewInvoicesBtn');
+  if (previewBtn) {
+    previewBtn.addEventListener('click', fetchAndRenderInvoices);
+  }
+  
   // Initial load
   fetchAndRenderInvoices();
+}
+
+function setDefaultDates() {
+  const today = new Date();
+  const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+  const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  
+  const fromDateInput = document.getElementById('invFromDate');
+  const toDateInput = document.getElementById('invToDate');
+  
+  if (fromDateInput) {
+    fromDateInput.value = firstDay.toISOString().split('T')[0];
+  }
+  if (toDateInput) {
+    toDateInput.value = lastDay.toISOString().split('T')[0];
+  }
+  
+  
 }
 
 function initializeEmployeesReport() {
@@ -134,19 +211,18 @@ async function populateAreas(selectId, city = null) {
 }
 
 async function fetchAndRenderInvoices() {
-  const table = document.getElementById('invoicesTable');
-  const tbody = table?.querySelector('tbody');
+  const tbody = document.getElementById('invoices-table-body');
   if (!tbody) return;
   
-  // Show loading state
-  tbody.innerHTML = `
-    <tr>
-      <td colspan="6" class="px-6 py-8 text-center">
-        <div class="w-8 h-8 mx-auto mb-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-        <p class="text-neutral-400">Loading invoices...</p>
-      </td>
-    </tr>
-  `;
+     // Show loading state
+   tbody.innerHTML = `
+     <tr>
+       <td colspan="9" class="px-6 py-8 text-center">
+         <div class="w-8 h-8 mx-auto mb-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+         <p class="text-neutral-400">Loading invoices...</p>
+       </td>
+     </tr>
+   `;
   
   try {
     // Build query parameters
@@ -165,6 +241,9 @@ async function fetchAndRenderInvoices() {
     if (area && area !== 'All') params.append('area', area);
     if (status && status !== 'All') params.append('status', status);
     
+    // Add client_id for testing (you can make this dynamic later)
+    params.append('client_id', '2');
+    
     const selectedProducts = Array.from(productsSelect?.selectedOptions || [])
       .map(opt => opt.value)
       .filter(val => val && val !== 'All');
@@ -181,60 +260,62 @@ async function fetchAndRenderInvoices() {
     if (data.success) {
       const invoices = data.invoices || [];
       
-      tbody.innerHTML = invoices.length
-        ? invoices.map((invoice, index) => `
-          <tr class="hover:bg-neutral-800/50 transition-colors" style="animation-delay: ${index * 0.1}s;">
-            <td class="px-4 py-3">${invoice.bill_number}</td>
-            <td class="px-4 py-3">${invoice.customer_name}</td>
-            <td class="px-4 py-3">${invoice.bill_date}</td>
-            <td class="px-4 py-3">${invoice.delivery_date}</td>
-            <td class="px-4 py-3">AED ${parseFloat(invoice.total_amount).toFixed(2)}</td>
-            <td class="px-4 py-3">
-              <span class="px-2 py-1 rounded-full text-xs font-medium ${
-                invoice.status === 'Completed' ? 'bg-green-500/20 text-green-400' :
-                invoice.status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400' :
-                'bg-red-500/20 text-red-400'
-              }">${invoice.status}</span>
-            </td>
-          </tr>
-        `).join('')
-        : `
-          <tr>
-            <td colspan="6" class="px-6 py-8 text-center">
-              <div class="w-16 h-16 mx-auto mb-4 bg-neutral-800/50 rounded-full flex items-center justify-center">
-                <svg class="w-8 h-8 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-              </div>
-              <p class="text-neutral-400 font-medium">No invoices found</p>
-              <p class="text-neutral-500 text-sm mt-1">Try adjusting your filters</p>
-            </td>
-          </tr>
-        `;
+             tbody.innerHTML = invoices.length
+         ? invoices.map((invoice, index) => `
+           <tr class="hover:bg-neutral-800/50 transition-colors" style="animation-delay: ${index * 0.1}s;">
+             <td class="px-4 py-3">${invoice.bill_number}</td>
+             <td class="px-4 py-3">${invoice.bill_date}</td>
+             <td class="px-4 py-3">${invoice.customer_name}</td>
+             <td class="px-4 py-3">${invoice.delivery_date}</td>
+             <td class="px-4 py-3">AED ${parseFloat(invoice.subtotal || invoice.total_amount).toFixed(2)}</td>
+             <td class="px-4 py-3">AED ${parseFloat(invoice.vat_amount || 0).toFixed(2)}</td>
+             <td class="px-4 py-3">AED ${parseFloat(invoice.total_amount).toFixed(2)}</td>
+             <td class="px-4 py-3">
+               <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                 invoice.status === 'Completed' ? 'bg-green-500/20 text-green-400' :
+                 invoice.status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400' :
+                 'bg-red-500/20 text-red-400'
+               }">${invoice.status}</span>
+             </td>
+             <td class="px-4 py-3">${invoice.products || 'N/A'}</td>
+           </tr>
+         `).join('')
+                 : `
+           <tr>
+             <td colspan="9" class="px-6 py-8 text-center">
+               <div class="w-16 h-16 mx-auto mb-4 bg-neutral-800/50 rounded-full flex items-center justify-center">
+                 <svg class="w-8 h-8 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                 </svg>
+               </div>
+               <p class="text-neutral-400 font-medium">No invoices found</p>
+               <p class="text-neutral-500 text-sm mt-1">Try adjusting your filters</p>
+             </td>
+           </tr>
+         `;
     } else {
       throw new Error(data.error || 'Failed to load invoices');
     }
   } catch (error) {
     console.error('Error loading invoices:', error);
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="6" class="px-6 py-8 text-center">
-          <div class="w-16 h-16 mx-auto mb-4 bg-red-500/20 rounded-full flex items-center justify-center">
-            <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-            </svg>
-          </div>
-          <p class="text-red-400 font-medium">Failed to load invoices</p>
-          <p class="text-neutral-500 text-sm mt-1">Please try again later</p>
-        </td>
-      </tr>
-    `;
+         tbody.innerHTML = `
+       <tr>
+         <td colspan="9" class="px-6 py-8 text-center">
+           <div class="w-16 h-16 mx-auto mb-4 bg-red-500/20 rounded-full flex items-center justify-center">
+             <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+             </svg>
+           </div>
+           <p class="text-red-400 font-medium">Failed to load invoices</p>
+           <p class="text-neutral-500 text-sm mt-1">Please try again later</p>
+         </td>
+       </tr>
+     `;
   }
 }
 
 async function fetchAndRenderEmployees() {
-  const table = document.getElementById('employeesTable');
-  const tbody = table?.querySelector('tbody');
+  const tbody = document.getElementById('employees-table-body');
   if (!tbody) return;
   
   // Show loading state
@@ -262,6 +343,9 @@ async function fetchAndRenderEmployees() {
     if (city && city !== 'All') params.append('city', city);
     if (area && area !== 'All') params.append('area', area);
     if (status && status !== 'All') params.append('status', status);
+    
+    // Add client_id for testing
+    params.append('client_id', '2');
     
     const selectedProducts = Array.from(productsSelect?.selectedOptions || [])
       .map(opt => opt.value)
@@ -331,8 +415,7 @@ async function fetchAndRenderEmployees() {
 }
 
 async function fetchAndRenderProducts() {
-  const table = document.getElementById('productsTable');
-  const tbody = table?.querySelector('tbody');
+  const tbody = document.getElementById('products-table-body');
   if (!tbody) return;
   
   // Show loading state
@@ -359,6 +442,9 @@ async function fetchAndRenderProducts() {
     if (city && city !== 'All') params.append('city', city);
     if (area && area !== 'All') params.append('area', area);
     if (status && status !== 'All') params.append('status', status);
+    
+    // Add client_id for testing
+    params.append('client_id', '2');
     
     const response = await fetch(`/api/reports/products?${params.toString()}`);
     const data = await response.json();
@@ -410,12 +496,17 @@ async function fetchAndRenderProducts() {
 }
 
 function initializeDownloadAndPrint() {
-  // Download button functionality - make selector more specific
-  const downloadBtn = document.querySelector('#advancedReportsSec .bg-green-600, #advancedReportsSec button[data-download="invoices"]');
-  const spinner = document.querySelector('#advancedReportsSec .animate-spin');
+  console.log('initializeDownloadAndPrint called');
+  // Download button functionality - use specific ID
+  const downloadBtn = document.getElementById('downloadInvoicesBtn');
+  const spinner = document.getElementById('download-spinner');
+  console.log('Download button found:', !!downloadBtn);
+  console.log('Spinner found:', !!spinner);
   
   if (downloadBtn && spinner) {
+    console.log('Download button and spinner found, adding event listener');
     downloadBtn.addEventListener('click', function() {
+      console.log('Download button clicked');
       spinner.classList.remove('hidden');
       setTimeout(() => {
         spinner.classList.add('hidden');
@@ -441,7 +532,10 @@ function initializeDownloadAndPrint() {
       if (status && status !== 'All') params.append('status', status);
       selectedProducts.forEach(p => params.append('products[]', p));
       selectedEmployees.forEach(e => params.append('employees[]', e));
-      window.location = '/api/reports/invoices/download?' + params.toString();
+      params.append('client_id', '2'); // Add client_id for testing
+      const downloadUrl = '/api/reports/invoices/download?' + params.toString();
+      console.log('Download URL:', downloadUrl);
+      window.location = downloadUrl;
     });
   }
 

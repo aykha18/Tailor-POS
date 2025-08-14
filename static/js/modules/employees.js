@@ -610,18 +610,31 @@ async function employeeTableClickHandler(e) {
 // Edit employee function
 async function editEmployee(id) {
   try {
+    console.log('🔍 Fetching employee data for ID:', id);
+    
     const response = await fetch(`/api/employees/${id}`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    
     const employee = await response.json();
     
     if (employee) {
+      console.log('✅ Employee data received:', employee);
+      
       const nameEl = document.getElementById('employeeName');
       const mobileEl = document.getElementById('employeeMobile');
       const addressEl = document.getElementById('employeeAddress');
+      const roleEl = document.getElementById('employeeRole');
+      
       if (nameEl) nameEl.value = employee.name || '';
       if (mobileEl) mobileEl.value = employee.phone || '';
       if (addressEl) addressEl.value = employee.address || '';
-      const roleEl = document.getElementById('employeeRole');
-      if (roleEl) roleEl.value = employee.position || '';
+      if (roleEl) {
+        roleEl.value = employee.position || '';
+        console.log('🎯 Set role to:', employee.position);
+      }
       
       editingEmployeeId = id;
       
@@ -635,9 +648,26 @@ async function editEmployee(id) {
           Update Employee
         `;
       }
+      
+      // Show success message
+      if (window.showToast) {
+        window.showToast('Employee loaded for editing', 'success');
+      }
+    } else {
+      throw new Error('No employee data received');
     }
   } catch (error) {
     console.error('Error editing employee:', error);
+    
+    // Show user-friendly error message
+    if (window.showToast) {
+      window.showToast(`Failed to load employee: ${error.message}`, 'error');
+    } else {
+      alert(`Failed to load employee: ${error.message}`);
+    }
+    
+    // Reset form to clear any partial data
+    resetEmployeeForm();
   }
 }
 

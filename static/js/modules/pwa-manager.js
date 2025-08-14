@@ -47,11 +47,33 @@ class PWAManager {
       // Handle controller change
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         console.log('PWA Manager: Service Worker controller changed');
-        window.location.reload();
+        // Don't reload if we're intentionally clearing cache
+        if (!window.isClearingCache) {
+          window.location.reload();
+        } else {
+          console.log('PWA Manager: Skipping automatic reload due to cache clearing');
+        }
       });
+
+      // Check for updates periodically
+      setInterval(() => {
+        this.swRegistration.update();
+      }, 60000); // Check every minute
 
     } catch (error) {
       console.error('PWA Manager: Service Worker registration failed', error);
+    }
+  }
+
+  async forceUpdateServiceWorker() {
+    if (this.swRegistration) {
+      console.log('PWA Manager: Forcing service worker update...');
+      try {
+        await this.swRegistration.update();
+        console.log('PWA Manager: Service worker update triggered');
+      } catch (error) {
+        console.error('PWA Manager: Failed to force update service worker', error);
+      }
     }
   }
 

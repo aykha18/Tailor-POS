@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dropdown Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ccc;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #333;
+            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+        }
+        .error {
+            border-left-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Employee Dropdown Test</h1>
+        
+        <div class="form-group">
+            <label for="employeeRole">Role (Position)</label>
+            <select id="employeeRole">
+                <option value="">Select role (optional)</option>
+                <option value="Owner">Owner</option>
+                <option value="Manager">Manager</option>
+                <option value="Tailor">Tailor</option>
+                <option value="Assistant">Assistant</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="testInput">Test Input</label>
+            <input type="text" id="testInput" placeholder="Type something to test">
+        </div>
+        
+        <button onclick="testDropdown()" style="background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+            Test Dropdown
+        </button>
+        
+        <div id="result" class="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        function testDropdown() {
+            const dropdown = document.getElementById('employeeRole');
+            const result = document.getElementById('result');
+            
+            console.log('Dropdown element:', dropdown);
+            console.log('Dropdown options:', dropdown.options);
+            console.log('Selected value:', dropdown.value);
+            console.log('Selected text:', dropdown.options[dropdown.selectedIndex]?.text);
+            
+            let html = '<h3>Dropdown Test Results:</h3>';
+            html += '<p><strong>Total options:</strong> ' + dropdown.options.length + '</p>';
+            html += '<p><strong>Selected value:</strong> ' + dropdown.value + '</p>';
+            html += '<p><strong>Selected text:</strong> ' + (dropdown.options[dropdown.selectedIndex]?.text || 'None') + '</p>';
+            
+            html += '<h4>All Options:</h4><ul>';
+            for (let i = 0; i < dropdown.options.length; i++) {
+                const option = dropdown.options[i];
+                html += '<li>Index ' + i + ': "' + option.value + '" - "' + option.text + '"</li>';
+            }
+            html += '</ul>';
+            
+            // Test if Owner option exists
+            const ownerOption = Array.from(dropdown.options).find(opt => opt.value === 'Owner');
+            if (ownerOption) {
+                html += '<p style="color: #4CAF50;">✅ Owner option found!</p>';
+            } else {
+                html += '<p style="color: #f44336;">❌ Owner option NOT found!</p>';
+            }
+            
+            result.innerHTML = html;
+            result.style.display = 'block';
+            
+            if (!ownerOption) {
+                result.classList.add('error');
+            } else {
+                result.classList.remove('error');
+            }
+        }
+        
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            setTimeout(testDropdown, 1000);
+        });
+    </script>
+</body>
+</html>
