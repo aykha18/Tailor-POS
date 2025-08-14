@@ -60,28 +60,48 @@ except ImportError:
     PDF_AVAILABLE = False
     print("Warning: playwright not installed. PDF generation will be disabled.")
 
-# Configure simple logging system for Railway
+# Configure logging system for both local development and Railway
 def setup_logging():
-    """Setup simple logging for Railway deployment."""
-    # Configure console logging only (no file logging on Railway)
+    """Setup logging for both local development and Railway deployment."""
+    # Create logs directory if it doesn't exist
+    logs_dir = Path('logs')
+    logs_dir.mkdir(exist_ok=True)
+    
+    # Configure console logging
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.INFO)
+    
+    # Configure file logging for local development
+    file_handler = logging.FileHandler('logs/tajir_pos.log')
+    file_handler.setLevel(logging.INFO)
     
     # Create formatter
     formatter = logging.Formatter(
         '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
     console_handler.setFormatter(formatter)
+    file_handler.setFormatter(formatter)
     
     # Configure root logger
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.INFO)
+    
+    # Clear any existing handlers to avoid duplicates
+    root_logger.handlers.clear()
+    
+    # Add handlers
     root_logger.addHandler(console_handler)
+    root_logger.addHandler(file_handler)
     
     return root_logger
 
 # Initialize logging
 logger = setup_logging()
+
+# Test logging on startup
+logger.info("=== APPLICATION STARTED ===")
+logger.info(f"Logging system initialized at: {datetime.now().isoformat()}")
+logger.info(f"Log file: logs/tajir_pos.log")
 
 def log_dml_error(operation, table, error, user_id=None, data=None):
     """Log DML failures to both file and database."""
@@ -1934,6 +1954,15 @@ def debug_plan():
                         user_plan_info=user_plan_info,
                         get_user_language=get_user_language,
                         get_translated_text=get_translated_text)
+
+@app.route('/test-logging')
+def test_logging():
+    """Test route to verify logging is working."""
+    logger.info("=== TEST LOGGING ROUTE ACCESSED ===")
+    logger.info(f"Test message at: {datetime.now().isoformat()}")
+    logger.warning("This is a test warning message")
+    logger.error("This is a test error message")
+    return jsonify({'success': True, 'message': 'Logging test completed. Check logs/tajir_pos.log'})
 
 @app.route('/login')
 def login():
