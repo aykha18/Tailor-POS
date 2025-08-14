@@ -51,9 +51,11 @@ from plan_manager import PlanManager
 try:
     from playwright.sync_api import sync_playwright
     PDF_AVAILABLE = True
+    print("✅ Playwright is available for PDF generation")
 except ImportError:
     PDF_AVAILABLE = False
-    print("Warning: playwright not installed. PDF generation will be disabled.")
+    print("⚠️ Warning: playwright not installed. PDF generation will be disabled.")
+    print("📝 You can install it later by running: pip install playwright && playwright install chromium")
 
 # Configure comprehensive logging system
 def setup_logging():
@@ -254,8 +256,11 @@ def init_db():
         from setup_production_admin import setup_production_admin
         setup_production_admin()
         logger.info("Admin user setup completed")
+        print("✅ Admin user setup completed")
     except Exception as e:
         logger.error(f"Failed to setup admin user: {e}")
+        print(f"⚠️ Warning: Failed to setup admin user: {e}")
+        # Don't fail the startup for admin setup issues
 
 @app.route('/')
 def index():
@@ -5301,6 +5306,25 @@ def admin_setup():
         }), 500
 
 if __name__ == '__main__':
-    init_db()
-    port = int(os.environ.get('PORT', 5000))
-    app.run(debug=False, host='0.0.0.0', port=port) 
+    try:
+        print("🚀 Starting Tajir POS application...")
+        print(f"📁 Working directory: {os.getcwd()}")
+        print(f"🐍 Python version: {sys.version}")
+        
+        # Initialize database
+        print("🗄️ Initializing database...")
+        init_db()
+        print("✅ Database initialized successfully")
+        
+        # Get port from environment
+        port = int(os.environ.get('PORT', 5000))
+        print(f"🌐 Starting server on port {port}")
+        
+        # Start Flask app
+        app.run(debug=False, host='0.0.0.0', port=port)
+        
+    except Exception as e:
+        print(f"💥 Failed to start application: {e}")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1) 
