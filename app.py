@@ -60,24 +60,25 @@ except ImportError:
     PDF_AVAILABLE = False
     print("Warning: playwright not installed. PDF generation will be disabled.")
 
-# Configure logging system for both local development and Railway
+# Configure logging system optimized for Railway deployment
 def setup_logging():
-    """Setup logging for both local development and Railway deployment."""
+    """Setup logging optimized for Railway deployment with immediate console output."""
     # Create logs directory if it doesn't exist
     logs_dir = Path('logs')
     logs_dir.mkdir(exist_ok=True)
     
-    # Configure console logging
-    console_handler = logging.StreamHandler()
+    # Configure console logging with immediate flush for Railway
+    console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setLevel(logging.INFO)
     
     # Configure file logging for local development
     file_handler = logging.FileHandler('logs/tajir_pos.log')
     file_handler.setLevel(logging.INFO)
     
-    # Create formatter
+    # Create formatter with Railway-friendly format
     formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        '[%(asctime)s] %(levelname)s: %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
     )
     console_handler.setFormatter(formatter)
     file_handler.setFormatter(formatter)
@@ -93,15 +94,24 @@ def setup_logging():
     root_logger.addHandler(console_handler)
     root_logger.addHandler(file_handler)
     
+    # Force immediate output for Railway
+    sys.stdout.flush()
+    
     return root_logger
 
 # Initialize logging
 logger = setup_logging()
 
-# Test logging on startup
+# Test logging on startup with immediate output
+print("=== RAILWAY STARTUP LOGGING TEST ===")
+print(f"Application starting at: {datetime.now().isoformat()}")
+print("Logging system initialized")
+print("=" * 50)
+
 logger.info("=== APPLICATION STARTED ===")
 logger.info(f"Logging system initialized at: {datetime.now().isoformat()}")
 logger.info(f"Log file: logs/tajir_pos.log")
+logger.info("Railway deployment detected - console logging active")
 
 def log_dml_error(operation, table, error, user_id=None, data=None):
     """Log DML failures to both file and database."""
@@ -1958,20 +1968,39 @@ def debug_plan():
 @app.route('/test-logging')
 def test_logging():
     """Test route to verify logging is working."""
+    # Force immediate output for Railway
+    print("=== RAILWAY TEST LOGGING ROUTE ===")
+    print(f"Test route accessed at: {datetime.now().isoformat()}")
+    
     logger.info("=== TEST LOGGING ROUTE ACCESSED ===")
     logger.info(f"Test message at: {datetime.now().isoformat()}")
     logger.warning("This is a test warning message")
     logger.error("This is a test error message")
-    return jsonify({'success': True, 'message': 'Logging test completed. Check logs/tajir_pos.log'})
+    
+    # Force flush
+    sys.stdout.flush()
+    
+    return jsonify({
+        'success': True, 
+        'message': 'Logging test completed. Check Railway console for logs.',
+        'timestamp': datetime.now().isoformat()
+    })
 
 @app.route('/login')
 def login():
     """Login page for multi-tenant system."""
+    # Force immediate output for Railway
+    print(f"=== LOGIN PAGE ACCESSED === {datetime.now().isoformat()}")
+    print(f"IP: {request.remote_addr}, User-Agent: {request.headers.get('User-Agent', 'Unknown')[:50]}...")
+    
     logger.info(f"=== LOGIN PAGE ACCESSED ===")
     logger.info(f"IP address: {request.remote_addr}")
     logger.info(f"User agent: {request.headers.get('User-Agent', 'Unknown')}")
     logger.info(f"Referer: {request.headers.get('Referer', 'Direct access')}")
     logger.info(f"Timestamp: {datetime.now().isoformat()}")
+    
+    # Force flush
+    sys.stdout.flush()
     
     return render_template('login.html',
                         get_user_language=get_user_language,
@@ -2154,6 +2183,10 @@ def auth_login():
         data = request.get_json()
         method = data.get('method')
         
+        # Force immediate output for Railway
+        print(f"=== LOGIN ATTEMPT STARTED === {datetime.now().isoformat()}")
+        print(f"Method: {method}, IP: {request.remote_addr}")
+        
         # Enhanced logging for login attempts
         logger.info(f"=== LOGIN ATTEMPT STARTED ===")
         logger.info(f"Login method: {method}")
@@ -2161,6 +2194,9 @@ def auth_login():
         logger.info(f"User agent: {request.headers.get('User-Agent', 'Unknown')}")
         logger.info(f"IP address: {request.remote_addr}")
         logger.info(f"Timestamp: {datetime.now().isoformat()}")
+        
+        # Force flush
+        sys.stdout.flush()
         
         # Log login attempt
         log_user_action("LOGIN_ATTEMPT", None, {
