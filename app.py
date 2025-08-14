@@ -265,6 +265,11 @@ def index():
                         get_user_language=get_user_language,
                         get_translated_text=get_translated_text)
 
+@app.route('/health')
+def health_check():
+    """Simple health check endpoint for Railway deployment."""
+    return jsonify({'status': 'healthy', 'timestamp': datetime.now().isoformat()})
+
 @app.route('/landing')
 def landing():
     user_plan_info = get_user_plan_info()
@@ -5297,4 +5302,5 @@ def admin_setup():
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True, host='0.0.0.0', port=5000) 
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port) 
