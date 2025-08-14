@@ -264,11 +264,12 @@ def init_db():
 
 @app.route('/')
 def index():
-    user_plan_info = get_user_plan_info()
-    return render_template('index.html', 
-                        user_plan_info=user_plan_info,
-                        get_user_language=get_user_language,
-                        get_translated_text=get_translated_text)
+    """Root route - redirect to app page."""
+    try:
+        return redirect('/app')
+    except Exception as e:
+        # Fallback to simple response if redirect fails
+        return f"Tajir POS is running! Go to <a href='/app'>/app</a> to access the system. Error: {str(e)}"
 
 @app.route('/health')
 def health_check():
@@ -298,8 +299,14 @@ def startup_test():
     return jsonify({
         'message': 'Tajir POS is running!',
         'timestamp': datetime.now().isoformat(),
-        'port': os.environ.get('PORT', '5000')
+        'port': os.environ.get('PORT', '5000'),
+        'status': 'success'
     })
+
+@app.route('/test')
+def test_endpoint():
+    """Simple test endpoint."""
+    return "Tajir POS is working! 🚀"
 
 @app.route('/landing')
 def landing():
@@ -311,11 +318,26 @@ def landing():
 
 @app.route('/app')
 def app_page():
-    user_plan_info = get_user_plan_info()
-    return render_template('app.html', 
-                        user_plan_info=user_plan_info,
-                        get_user_language=get_user_language,
-                        get_translated_text=get_translated_text)
+    """Main app page."""
+    try:
+        user_plan_info = get_user_plan_info()
+        return render_template('app.html', 
+                            user_plan_info=user_plan_info,
+                            get_user_language=get_user_language,
+                            get_translated_text=get_translated_text)
+    except Exception as e:
+        # Fallback to simple response if template rendering fails
+        return f"""
+        <html>
+        <head><title>Tajir POS</title></head>
+        <body>
+            <h1>Tajir POS System</h1>
+            <p>The system is running but there was an error loading the template.</p>
+            <p>Error: {str(e)}</p>
+            <p><a href="/test">Test Endpoint</a> | <a href="/health">Health Check</a></p>
+        </body>
+        </html>
+        """
 
 
 
@@ -5285,9 +5307,17 @@ if __name__ == '__main__':
         port = int(os.environ.get('PORT', 5000))
         print(f"🌐 Starting server on port {port}")
         print(f"🔗 Health check will be available at: http://0.0.0.0:{port}/health")
+        print(f"🔗 Main app will be available at: http://0.0.0.0:{port}/")
         
-        # Start Flask app
-        app.run(debug=False, host='0.0.0.0', port=port, threaded=True)
+        # Start Flask app with better error handling
+        print("🚀 Starting Flask application...")
+        app.run(
+            debug=False, 
+            host='0.0.0.0', 
+            port=port, 
+            threaded=True,
+            use_reloader=False
+        )
         
     except Exception as e:
         print(f"💥 Failed to start application: {e}")
