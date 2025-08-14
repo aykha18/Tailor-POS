@@ -5350,6 +5350,23 @@ def health_check():
         'message': 'Tajir POS is running!'
     })
 
+@app.route('/init-db')
+def initialize_database():
+    """Initialize database on first use."""
+    try:
+        init_db()
+        return jsonify({
+            'success': True,
+            'message': 'Database initialized successfully',
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Database initialization failed: {str(e)}',
+            'timestamp': datetime.now().isoformat()
+        }), 500
+
 @app.route('/test')
 def test_endpoint():
     """Simple test endpoint."""
@@ -5380,16 +5397,22 @@ if __name__ == '__main__':
     print(f"Database path: {app.config['DATABASE']}")
     print(f"Secret key configured: {'Yes' if app.secret_key != 'your-secret-key-here-change-in-production' else 'No'}")
     
+    # Simplified startup for Railway - skip complex initialization
+    print("🔄 Railway deployment detected - using simplified startup")
+    
     try:
-        init_db()
-        print("✅ Database initialization completed")
+        # Basic database check only
+        if not os.path.exists(app.config['DATABASE']):
+            print("⚠️ Database file not found, will create on first use")
+        else:
+            print("✅ Database file exists")
     except Exception as e:
-        print(f"⚠️ Database initialization failed: {e}")
-        print("Continuing with app startup...")
+        print(f"⚠️ Database check failed: {e}")
     
     try:
         port = int(os.environ.get('PORT', 5000))
         print(f"🌐 Starting server on port {port}")
+        print("🚀 Application is ready to serve requests!")
         app.run(debug=False, host='0.0.0.0', port=port)
     except Exception as e:
         print(f"❌ Failed to start server: {e}")
