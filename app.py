@@ -351,11 +351,20 @@ def app_page():
         return f"""
         <html>
         <head><title>Tajir POS</title></head>
-        <body>
-            <h1>Tajir POS System</h1>
+        <body style="font-family: Arial, sans-serif; padding: 20px;">
+            <h1>🚀 Tajir POS System</h1>
             <p>The system is running but there was an error loading the template.</p>
-            <p>Error: {str(e)}</p>
-            <p><a href="/test">Test Endpoint</a> | <a href="/health">Health Check</a></p>
+            <p><strong>Error:</strong> {str(e)}</p>
+            <hr>
+            <h2>Quick Access:</h2>
+            <ul>
+                <li><a href="/test">✅ Test Page</a> - Verify system is working</li>
+                <li><a href="/health">🏥 Health Check</a> - System status</li>
+                <li><a href="/login">🔐 Login Page</a> - Access the system</li>
+            </ul>
+            <hr>
+            <p><strong>Login Credentials:</strong></p>
+            <p>Email: admin@tailorpos.com<br>Password: admin123</p>
         </body>
         </html>
         """
@@ -2019,9 +2028,38 @@ def debug_plan():
 @app.route('/login')
 def login():
     """Login page for multi-tenant system."""
-    return render_template('login.html',
-                        get_user_language=get_user_language,
-                        get_translated_text=get_translated_text)
+    try:
+        return render_template('login.html',
+                            get_user_language=get_user_language,
+                            get_translated_text=get_translated_text)
+    except Exception as e:
+        # Fallback login page if template fails
+        return f"""
+        <html>
+        <head><title>Tajir POS - Login</title></head>
+        <body style="font-family: Arial, sans-serif; padding: 20px; max-width: 400px; margin: 50px auto;">
+            <h1>🔐 Tajir POS Login</h1>
+            <form method="POST" action="/api/auth/login" style="margin-top: 20px;">
+                <div style="margin-bottom: 15px;">
+                    <label for="email">Email:</label><br>
+                    <input type="email" id="email" name="email" required style="width: 100%; padding: 8px; margin-top: 5px;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label for="password">Password:</label><br>
+                    <input type="password" id="password" name="password" required style="width: 100%; padding: 8px; margin-top: 5px;">
+                </div>
+                <button type="submit" style="width: 100%; padding: 10px; background: #007bff; color: white; border: none; cursor: pointer;">
+                    Login
+                </button>
+            </form>
+            <hr style="margin: 20px 0;">
+            <p><strong>Default Login:</strong></p>
+            <p>Email: admin@tailorpos.com<br>Password: admin123</p>
+            <p><a href="/test">Test Page</a> | <a href="/app">Main App</a></p>
+            <p style="color: red;">Template Error: {str(e)}</p>
+        </body>
+        </html>
+        """
 
 @app.route('/setup-wizard')
 def setup_wizard():
