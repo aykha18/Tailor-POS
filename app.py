@@ -298,8 +298,14 @@ def startup_test():
     return jsonify({
         'message': 'Tajir POS is running!',
         'timestamp': datetime.now().isoformat(),
-        'port': os.environ.get('PORT', '5000')
+        'port': os.environ.get('PORT', '5000'),
+        'status': 'success'
     })
+
+@app.route('/test')
+def test_endpoint():
+    """Simple test endpoint."""
+    return "Tajir POS is working! 🚀"
 
 @app.route('/landing')
 def landing():
@@ -5285,9 +5291,17 @@ if __name__ == '__main__':
         port = int(os.environ.get('PORT', 5000))
         print(f"🌐 Starting server on port {port}")
         print(f"🔗 Health check will be available at: http://0.0.0.0:{port}/health")
+        print(f"🔗 Main app will be available at: http://0.0.0.0:{port}/")
         
-        # Start Flask app
-        app.run(debug=False, host='0.0.0.0', port=port, threaded=True)
+        # Start Flask app with better error handling
+        print("🚀 Starting Flask application...")
+        app.run(
+            debug=False, 
+            host='0.0.0.0', 
+            port=port, 
+            threaded=True,
+            use_reloader=False
+        )
         
     except Exception as e:
         print(f"💥 Failed to start application: {e}")
