@@ -1,12 +1,11 @@
-from flask import Flask, render_template, request, jsonify, send_file, session, send_from_directory, redirect, url_for
+from flask import Flask, render_template, request, jsonify, send_file, session, send_from_directory, redirect, url_for, Response
 import sqlite3
 import os
 from datetime import datetime, date, timedelta
 import json
 from decimal import Decimal
-
 import zipfile
-from io import BytesIO
+from io import BytesIO, StringIO
 from dotenv import load_dotenv
 load_dotenv()
 from num2words import num2words
@@ -16,15 +15,13 @@ def get_plan_manager():
     """Get plan manager instance when needed to avoid import issues on Railway."""
     from plan_manager import PlanManager
     return PlanManager()
+
 import csv
-from io import StringIO
-from flask import Response
 import bcrypt
 import random
 import string
 import base64
 import qrcode
-from io import BytesIO
 from PIL import Image
 import hashlib
 import hmac
@@ -41,18 +38,11 @@ import logging.handlers
 import traceback
 import sys
 from pathlib import Path
-import os
-import sqlite3
-import json
-import csv
-import io
-from datetime import datetime, timedelta
-from flask import Flask, render_template, request, jsonify, send_file, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-import zipfile
 import shutil
 from plan_manager import PlanManager
+
 try:
     from playwright.sync_api import sync_playwright
     PDF_AVAILABLE = True
