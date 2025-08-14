@@ -14970,3 +14970,338 @@
 2025-08-14 20:01:44,774 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:01:44] "[36mGET /sw.js HTTP/1.1[0m" 304 -
 2025-08-14 20:01:59,891 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:01:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
 2025-08-14 20:02:18,587 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:02:18] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:02:33,118 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Khana\\tailor_pos\\app.py', reloading
+2025-08-14 20:02:33,120 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Khana\\tailor_pos\\app.py', reloading
+2025-08-14 20:02:33,292 - werkzeug - INFO -  * Restarting with stat
+2025-08-14 20:02:33,305 - werkzeug - INFO -  * Restarting with stat
+2025-08-14 20:02:33,581 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Khana\\tailor_pos\\app.py', reloading
+2025-08-14 20:02:33,743 - werkzeug - INFO -  * Restarting with stat
+2025-08-14 20:02:34,075 - root - INFO - Admin user setup completed
+2025-08-14 20:02:34,083 - werkzeug - WARNING -  * Debugger is active!
+2025-08-14 20:02:34,083 - root - INFO - Admin user setup completed
+2025-08-14 20:02:34,087 - werkzeug - INFO -  * Debugger PIN: 107-126-000
+2025-08-14 20:02:34,091 - werkzeug - WARNING -  * Debugger is active!
+2025-08-14 20:02:34,095 - werkzeug - INFO -  * Debugger PIN: 107-126-000
+2025-08-14 20:02:34,471 - root - INFO - Admin user setup completed
+2025-08-14 20:02:34,476 - werkzeug - WARNING -  * Debugger is active!
+2025-08-14 20:02:34,480 - werkzeug - INFO -  * Debugger PIN: 107-126-000
+2025-08-14 20:02:42,926 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:02:42] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:02:59,899 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:02:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:03:18,585 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:03:18] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:03:42,586 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:03:42] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:03:59,912 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:03:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:04:18,585 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:04:18] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:04:42,893 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:04:42] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:04:59,898 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:04:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:05:18,594 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:05:18] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:05:42,598 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:05:42] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:05:59,903 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:05:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:06:42,894 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:06:42] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:06:59,599 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:06:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:07:42,592 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:07:42] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:07:59,895 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:07:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:08:42,900 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:08:42] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:08:59,587 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:08:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:09:43,370 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:09:43] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:09:43,900 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:09:43] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:09:55,020 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:09:55] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:09:59,906 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:09:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:11,264 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:11] "GET /app HTTP/1.1" 200 -
+2025-08-14 20:10:11,533 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:11] "[36mGET /static/css/main.css HTTP/1.1[0m" 304 -
+2025-08-14 20:10:11,585 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:11] "[36mGET /static/css/animations.css HTTP/1.1[0m" 304 -
+2025-08-14 20:10:11,586 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:11] "[36mGET /static/css/mobile-enhancements.css HTTP/1.1[0m" 304 -
+2025-08-14 20:10:11,591 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:11] "[36mGET /static/js/pwa-init.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:11,592 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:11] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:11,593 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:11] "[36mGET /static/js/modules/product-types.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:11,846 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:11] "[36mGET /static/js/modules/products.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:11,894 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:11] "[36mGET /static/js/modules/customers.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:11,895 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:11] "[36mGET /static/js/modules/vat.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:11,896 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:11] "[36mGET /static/js/modules/employees.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:11,902 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:11] "[36mGET /static/js/modules/plan-management.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:11,903 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:11] "[36mGET /static/js/modules/reports.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:12,158 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "[36mGET /static/js/modules/shop-settings.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:12,210 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "[36mGET /static/js/modules/dashboard.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:12,211 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "GET /static/js/modules/billing-system.js HTTP/1.1" 200 -
+2025-08-14 20:10:12,213 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "[36mGET /static/js/modules/mobile-enhancements.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:12,215 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "[36mGET /static/js/modules/mobile-screens.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:12,218 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "[36mGET /static/js/modules/account.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:12,626 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "GET /api/plan/config HTTP/1.1" 200 -
+2025-08-14 20:10:12,631 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "GET /api/plan/status HTTP/1.1" 200 -
+2025-08-14 20:10:12,633 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "GET /api/areas HTTP/1.1" 200 -
+2025-08-14 20:10:12,640 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "GET /api/products HTTP/1.1" 200 -
+2025-08-14 20:10:12,641 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "GET /api/employees HTTP/1.1" 200 -
+2025-08-14 20:10:12,642 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "GET /api/cities HTTP/1.1" 200 -
+2025-08-14 20:10:12,940 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "GET /api/reports/invoices?from_date=2025-07-31&to_date=2025-08-30&client_id=2 HTTP/1.1" 200 -
+2025-08-14 20:10:12,942 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "GET /api/reports/employees?client_id=2 HTTP/1.1" 200 -
+2025-08-14 20:10:12,949 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "GET /api/reports/products?client_id=2 HTTP/1.1" 200 -
+2025-08-14 20:10:12,949 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "GET /api/next-bill-number HTTP/1.1" 200 -
+2025-08-14 20:10:12,951 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "GET /api/customers/recent HTTP/1.1" 200 -
+2025-08-14 20:10:12,952 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:12] "GET /api/areas HTTP/1.1" 200 -
+2025-08-14 20:10:13,250 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:13] "GET /api/products HTTP/1.1" 200 -
+2025-08-14 20:10:13,251 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:13] "GET /api/employees HTTP/1.1" 200 -
+2025-08-14 20:10:13,259 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:13] "GET /api/cities HTTP/1.1" 200 -
+2025-08-14 20:10:13,260 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:13] "GET /api/areas HTTP/1.1" 200 -
+2025-08-14 20:10:13,262 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:13] "GET /api/products HTTP/1.1" 200 -
+2025-08-14 20:10:13,389 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:13] "GET /api/cities HTTP/1.1" 200 -
+2025-08-14 20:10:13,561 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:13] "GET /api/areas HTTP/1.1" 200 -
+2025-08-14 20:10:13,567 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:13] "[36mGET /static/js/modules/offline-storage.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:13,568 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:13] "GET /api/products HTTP/1.1" 200 -
+2025-08-14 20:10:13,581 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:13] "[36mGET /static/js/modules/sync-manager.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:13,894 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:13] "[36mGET /static/js/modules/pwa-manager.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:14,151 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:14] "[36mGET /static/js/modules/mobile-navigation.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:14,207 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:14] "[36mGET /static/js/modules/mobile-billing.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:14,526 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:14] "[36mGET /static/manifest.json HTTP/1.1[0m" 304 -
+2025-08-14 20:10:14,531 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:14] "[36mGET /static/icons/icon-144.png HTTP/1.1[0m" 304 -
+2025-08-14 20:10:16,533 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:16] "[36mGET /static/manifest.json HTTP/1.1[0m" 304 -
+2025-08-14 20:10:24,520 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:24] "POST /api/bills HTTP/1.1" 200 -
+2025-08-14 20:10:44,904 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:44] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:10:59,889 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:10:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:11:14,583 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:11:14] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:11:36,843 - root - INFO - Admin user setup completed
+2025-08-14 20:11:36,857 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.35:5000
+2025-08-14 20:11:36,858 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-08-14 20:11:36,860 - werkzeug - INFO -  * Restarting with stat
+2025-08-14 20:11:37,497 - root - INFO - Admin user setup completed
+2025-08-14 20:11:37,501 - werkzeug - WARNING -  * Debugger is active!
+2025-08-14 20:11:37,505 - werkzeug - INFO -  * Debugger PIN: 107-126-000
+2025-08-14 20:11:45,896 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:11:45] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:01,558 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:01] "GET /app HTTP/1.1" 200 -
+2025-08-14 20:12:01,582 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:01] "[36mGET /static/css/main.css HTTP/1.1[0m" 304 -
+2025-08-14 20:12:01,805 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:01] "[36mGET /static/css/animations.css HTTP/1.1[0m" 304 -
+2025-08-14 20:12:01,892 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:01] "[36mGET /static/css/mobile-enhancements.css HTTP/1.1[0m" 304 -
+2025-08-14 20:12:01,893 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:01] "[36mGET /static/js/pwa-init.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:01,894 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:01] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:01,895 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:01] "[36mGET /static/js/modules/product-types.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:01,900 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:01] "[36mGET /static/js/modules/products.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:02,110 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:02] "[36mGET /static/js/modules/customers.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:02,204 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:02] "[36mGET /static/js/modules/vat.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:02,206 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:02] "[36mGET /static/js/modules/employees.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:02,207 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:02] "[36mGET /static/js/modules/plan-management.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:02,211 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:02] "[36mGET /static/js/modules/reports.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:02,212 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:02] "[36mGET /static/js/modules/shop-settings.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:02,417 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:02] "[36mGET /static/js/modules/dashboard.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:02,515 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:02] "GET /static/js/modules/billing-system.js HTTP/1.1" 200 -
+2025-08-14 20:12:02,518 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:02] "[36mGET /static/js/modules/mobile-enhancements.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:02,520 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:02] "[36mGET /static/js/modules/mobile-screens.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:02,520 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:02] "[36mGET /static/js/modules/account.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:02,912 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:02] "GET /api/plan/config HTTP/1.1" 200 -
+2025-08-14 20:12:02,915 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:02] "GET /api/plan/status HTTP/1.1" 200 -
+2025-08-14 20:12:02,917 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:02] "GET /api/areas HTTP/1.1" 200 -
+2025-08-14 20:12:02,928 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:02] "GET /api/products HTTP/1.1" 200 -
+2025-08-14 20:12:02,929 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:02] "GET /api/cities HTTP/1.1" 200 -
+2025-08-14 20:12:02,935 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:02] "GET /api/employees HTTP/1.1" 200 -
+2025-08-14 20:12:03,226 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:03] "GET /api/reports/invoices?from_date=2025-07-31&to_date=2025-08-30&client_id=2 HTTP/1.1" 200 -
+2025-08-14 20:12:03,228 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:03] "GET /api/reports/employees?client_id=2 HTTP/1.1" 200 -
+2025-08-14 20:12:03,238 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:03] "GET /api/reports/products?client_id=2 HTTP/1.1" 200 -
+2025-08-14 20:12:03,239 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:03] "GET /api/next-bill-number HTTP/1.1" 200 -
+2025-08-14 20:12:03,242 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:03] "GET /api/customers/recent HTTP/1.1" 200 -
+2025-08-14 20:12:03,246 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:03] "GET /api/areas HTTP/1.1" 200 -
+2025-08-14 20:12:03,536 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:03] "GET /api/cities HTTP/1.1" 200 -
+2025-08-14 20:12:03,537 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:03] "GET /api/products HTTP/1.1" 200 -
+2025-08-14 20:12:03,546 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:03] "GET /api/employees HTTP/1.1" 200 -
+2025-08-14 20:12:03,551 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:03] "GET /api/areas HTTP/1.1" 200 -
+2025-08-14 20:12:03,552 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:03] "GET /api/cities HTTP/1.1" 200 -
+2025-08-14 20:12:03,682 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:03] "GET /api/products HTTP/1.1" 200 -
+2025-08-14 20:12:03,848 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:03] "GET /api/areas HTTP/1.1" 200 -
+2025-08-14 20:12:03,862 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:03] "GET /api/products HTTP/1.1" 200 -
+2025-08-14 20:12:03,994 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:03] "[36mGET /static/js/modules/offline-storage.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:04,306 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:04] "[36mGET /static/js/modules/sync-manager.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:04,562 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:04] "[36mGET /static/js/modules/pwa-manager.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:04,618 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:04] "[36mGET /static/js/modules/mobile-navigation.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:04,875 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:04] "[36mGET /static/js/modules/mobile-billing.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:05,187 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:05] "[36mGET /static/manifest.json HTTP/1.1[0m" 304 -
+2025-08-14 20:12:05,193 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:05] "[36mGET /static/icons/icon-144.png HTTP/1.1[0m" 304 -
+2025-08-14 20:12:07,195 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:07] "[36mGET /static/manifest.json HTTP/1.1[0m" 304 -
+2025-08-14 20:12:17,486 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:17] "POST /api/bills HTTP/1.1" 200 -
+2025-08-14 20:12:18,897 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:18] "GET /api/next-bill-number HTTP/1.1" 200 -
+2025-08-14 20:12:46,901 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:46] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:12:59,587 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:12:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:13:05,195 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:13:05] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:13:25,786 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:13:25] "POST /api/bills HTTP/1.1" 200 -
+2025-08-14 20:13:26,136 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:13:26] "GET /api/next-bill-number HTTP/1.1" 200 -
+2025-08-14 20:13:26,171 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:13:26] "GET /api/bills/1082/print HTTP/1.1" 200 -
+2025-08-14 20:13:27,732 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:13:27] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:13:47,906 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:13:47] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:13:53,620 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:13:53] "GET /api/bills/1081/print HTTP/1.1" 200 -
+2025-08-14 20:13:55,687 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:13:55] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:13:59,597 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:13:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:14:02,567 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:14:02] "GET /api/bills/1080/print HTTP/1.1" 200 -
+2025-08-14 20:14:04,105 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:14:04] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:14:05,590 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:14:05] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:14:48,895 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:14:48] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:14:59,904 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:14:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:15:05,584 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:15:05] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:15:49,896 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:15:49] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:15:59,901 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:15:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:16:05,589 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:16:05] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:16:50,904 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:16:50] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:16:59,892 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:16:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:17:05,593 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:17:05] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:17:51,901 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:17:51] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:17:59,906 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:17:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:18:05,593 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:18:05] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:18:52,905 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:18:52] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:18:59,900 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:18:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:19:53,889 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:19:53] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:19:59,587 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:19:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:20:27,283 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:20:27] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:20:36,438 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:20:36] "GET /api/bills HTTP/1.1" 200 -
+2025-08-14 20:20:45,791 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:20:45] "GET /api/bills/1082 HTTP/1.1" 200 -
+2025-08-14 20:20:48,220 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:20:48] "PUT /api/bills/1082/payment HTTP/1.1" 200 -
+2025-08-14 20:20:51,871 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:20:51] "GET /api/bills HTTP/1.1" 200 -
+2025-08-14 20:20:54,888 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:20:54] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:20:59,594 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:20:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:05,200 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:05] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:16,238 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:16] "POST /api/bills HTTP/1.1" 200 -
+2025-08-14 20:21:17,893 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:17] "GET /api/next-bill-number HTTP/1.1" 200 -
+2025-08-14 20:21:37,050 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:37] "GET /app HTTP/1.1" 200 -
+2025-08-14 20:21:37,353 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:37] "[36mGET /static/css/main.css HTTP/1.1[0m" 304 -
+2025-08-14 20:21:37,377 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:37] "[36mGET /static/css/animations.css HTTP/1.1[0m" 304 -
+2025-08-14 20:21:37,378 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:37] "[36mGET /static/css/mobile-enhancements.css HTTP/1.1[0m" 304 -
+2025-08-14 20:21:37,380 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:37] "[36mGET /static/js/pwa-init.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:37,381 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:37] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:37,384 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:37] "[36mGET /static/js/modules/product-types.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:37,659 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:37] "[36mGET /static/js/modules/products.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:37,689 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:37] "[36mGET /static/js/modules/customers.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:37,690 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:37] "[36mGET /static/js/modules/vat.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:37,694 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:37] "[36mGET /static/js/modules/employees.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:37,696 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:37] "[36mGET /static/js/modules/plan-management.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:37,697 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:37] "[36mGET /static/js/modules/reports.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:37,965 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:37] "[36mGET /static/js/modules/shop-settings.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:38,002 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:38] "[36mGET /static/js/modules/dashboard.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:38,002 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:38] "GET /static/js/modules/billing-system.js HTTP/1.1" 200 -
+2025-08-14 20:21:38,005 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:38] "[36mGET /static/js/modules/mobile-enhancements.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:38,007 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:38] "[36mGET /static/js/modules/mobile-screens.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:38,009 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:38] "[36mGET /static/js/modules/account.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:38,409 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:38] "GET /api/plan/config HTTP/1.1" 200 -
+2025-08-14 20:21:38,412 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:38] "GET /api/plan/status HTTP/1.1" 200 -
+2025-08-14 20:21:38,412 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:38] "GET /api/areas HTTP/1.1" 200 -
+2025-08-14 20:21:38,432 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:38] "GET /api/employees HTTP/1.1" 200 -
+2025-08-14 20:21:38,433 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:38] "GET /api/products HTTP/1.1" 200 -
+2025-08-14 20:21:38,434 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:38] "GET /api/cities HTTP/1.1" 200 -
+2025-08-14 20:21:38,724 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:38] "GET /api/reports/invoices?from_date=2025-07-31&to_date=2025-08-30&client_id=2 HTTP/1.1" 200 -
+2025-08-14 20:21:38,726 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:38] "GET /api/reports/products?client_id=2 HTTP/1.1" 200 -
+2025-08-14 20:21:38,728 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:38] "GET /api/reports/employees?client_id=2 HTTP/1.1" 200 -
+2025-08-14 20:21:38,751 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:38] "GET /api/next-bill-number HTTP/1.1" 200 -
+2025-08-14 20:21:38,752 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:38] "GET /api/areas HTTP/1.1" 200 -
+2025-08-14 20:21:38,754 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:38] "GET /api/customers/recent HTTP/1.1" 200 -
+2025-08-14 20:21:39,037 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:39] "GET /api/employees HTTP/1.1" 200 -
+2025-08-14 20:21:39,038 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:39] "GET /api/products HTTP/1.1" 200 -
+2025-08-14 20:21:39,039 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:39] "GET /api/cities HTTP/1.1" 200 -
+2025-08-14 20:21:39,064 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:39] "GET /api/areas HTTP/1.1" 200 -
+2025-08-14 20:21:39,064 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:39] "GET /api/products HTTP/1.1" 200 -
+2025-08-14 20:21:39,167 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:39] "GET /api/cities HTTP/1.1" 200 -
+2025-08-14 20:21:39,348 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:39] "GET /api/areas HTTP/1.1" 200 -
+2025-08-14 20:21:39,349 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:39] "GET /api/products HTTP/1.1" 200 -
+2025-08-14 20:21:39,370 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:39] "[36mGET /static/js/modules/offline-storage.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:39,380 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:39] "[36mGET /static/js/modules/sync-manager.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:39,694 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:39] "[36mGET /static/js/modules/pwa-manager.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:39,944 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:39] "[36mGET /static/js/modules/mobile-navigation.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:40,005 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:40] "[36mGET /static/js/modules/mobile-billing.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:40,319 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:40] "[36mGET /static/manifest.json HTTP/1.1[0m" 304 -
+2025-08-14 20:21:40,323 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:40] "[36mGET /static/icons/icon-144.png HTTP/1.1[0m" 304 -
+2025-08-14 20:21:42,332 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:42] "[36mGET /static/manifest.json HTTP/1.1[0m" 304 -
+2025-08-14 20:21:55,015 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:55] "POST /api/bills HTTP/1.1" 200 -
+2025-08-14 20:21:55,891 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:55] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:21:56,905 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:56] "GET /api/next-bill-number HTTP/1.1" 200 -
+2025-08-14 20:21:59,595 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:21:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:22:18,225 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:22:18] "GET /api/bills/1084/pdf HTTP/1.1" 200 -
+2025-08-14 20:22:19,238 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:22:19] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:22:40,586 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:22:40] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:22:56,891 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:22:56] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:22:59,891 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:22:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:23:40,587 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:23:40] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:23:57,891 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:23:57] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:23:59,892 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:23:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:24:40,587 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:24:40] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:24:58,912 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:24:58] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:24:59,907 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:24:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:25:40,590 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:25:40] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:25:59,891 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:25:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:25:59,897 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:25:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:26:40,592 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:26:40] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:26:57,510 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:26:57] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:26:59,906 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:26:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:27:40,597 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:27:40] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:27:42,892 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:27:42] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:27:59,901 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:27:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:28:43,905 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:28:43] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:28:59,595 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:28:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:29:40,907 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:29:40] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:29:44,893 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:29:44] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:29:59,584 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:29:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:30:40,892 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:30:40] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:30:45,890 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:30:45] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:30:59,597 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:30:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:31:40,893 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:31:40] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:31:46,889 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:31:46] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:31:59,586 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:31:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:32:47,910 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:32:47] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:32:59,901 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:32:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:33:48,896 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:33:48] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:33:50,085 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:33:50] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:33:59,896 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:33:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:34:40,590 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:34:40] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:34:49,889 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:34:49] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:34:59,902 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:34:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:35:40,587 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:35:40] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:35:50,899 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:35:50] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:35:59,890 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:35:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:36:51,906 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:36:51] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:36:59,583 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:36:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:37:52,903 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:37:52] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:37:59,902 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:37:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:38:40,992 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Khana\\tailor_pos\\setup_playwright.py', reloading
+2025-08-14 20:38:40,997 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Khana\\tailor_pos\\setup_playwright.py', reloading
+2025-08-14 20:38:41,204 - werkzeug - INFO -  * Restarting with stat
+2025-08-14 20:38:41,240 - werkzeug - INFO -  * Restarting with stat
+2025-08-14 20:38:41,523 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Khana\\tailor_pos\\setup_playwright.py', reloading
+2025-08-14 20:38:41,678 - werkzeug - INFO -  * Restarting with stat
+2025-08-14 20:38:41,788 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Khana\\tailor_pos\\setup_playwright.py', reloading
+2025-08-14 20:38:41,904 - werkzeug - INFO -  * Restarting with stat
+2025-08-14 20:38:41,959 - root - INFO - Admin user setup completed
+2025-08-14 20:38:41,964 - werkzeug - WARNING -  * Debugger is active!
+2025-08-14 20:38:41,966 - werkzeug - INFO -  * Debugger PIN: 107-126-000
+2025-08-14 20:38:41,976 - root - INFO - Admin user setup completed
+2025-08-14 20:38:41,983 - werkzeug - WARNING -  * Debugger is active!
+2025-08-14 20:38:41,986 - werkzeug - INFO -  * Debugger PIN: 107-126-000
+2025-08-14 20:38:42,345 - root - INFO - Admin user setup completed
+2025-08-14 20:38:42,352 - werkzeug - WARNING -  * Debugger is active!
+2025-08-14 20:38:42,356 - werkzeug - INFO -  * Debugger PIN: 107-126-000
+2025-08-14 20:38:42,553 - root - INFO - Admin user setup completed
+2025-08-14 20:38:42,558 - werkzeug - WARNING -  * Debugger is active!
+2025-08-14 20:38:42,561 - werkzeug - INFO -  * Debugger PIN: 107-126-000
+2025-08-14 20:38:53,939 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:38:53] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:38:59,909 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:38:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:39:35,311 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Khana\\tailor_pos\\setup_playwright.py', reloading
+2025-08-14 20:39:35,331 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Khana\\tailor_pos\\setup_playwright.py', reloading
+2025-08-14 20:39:35,472 - werkzeug - INFO -  * Restarting with stat
+2025-08-14 20:39:35,496 - werkzeug - INFO -  * Restarting with stat
+2025-08-14 20:39:35,707 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Khana\\tailor_pos\\setup_playwright.py', reloading
+2025-08-14 20:39:35,870 - werkzeug - INFO -  * Restarting with stat
+2025-08-14 20:39:35,914 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Khana\\tailor_pos\\setup_playwright.py', reloading
+2025-08-14 20:39:36,085 - werkzeug - INFO -  * Restarting with stat
+2025-08-14 20:39:36,209 - root - INFO - Admin user setup completed
+2025-08-14 20:39:36,214 - werkzeug - WARNING -  * Debugger is active!
+2025-08-14 20:39:36,216 - werkzeug - INFO -  * Debugger PIN: 107-126-000
+2025-08-14 20:39:36,240 - root - INFO - Admin user setup completed
+2025-08-14 20:39:36,244 - werkzeug - WARNING -  * Debugger is active!
+2025-08-14 20:39:36,247 - werkzeug - INFO -  * Debugger PIN: 107-126-000
+2025-08-14 20:39:36,586 - root - INFO - Admin user setup completed
+2025-08-14 20:39:36,592 - werkzeug - WARNING -  * Debugger is active!
+2025-08-14 20:39:36,596 - werkzeug - INFO -  * Debugger PIN: 107-126-000
+2025-08-14 20:39:36,731 - root - INFO - Admin user setup completed
+2025-08-14 20:39:36,736 - werkzeug - WARNING -  * Debugger is active!
+2025-08-14 20:39:36,738 - werkzeug - INFO -  * Debugger PIN: 107-126-000
+2025-08-14 20:39:40,919 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:39:40] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:39:54,901 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:39:54] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:39:59,591 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:39:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:40:55,889 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:40:55] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:40:59,894 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:40:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:41:56,887 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:41:56] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:41:59,592 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:41:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:42:57,890 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:42:57] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2025-08-14 20:42:59,889 - werkzeug - INFO - 127.0.0.1 - - [14/Aug/2025 20:42:59] "[36mGET /sw.js HTTP/1.1[0m" 304 -
