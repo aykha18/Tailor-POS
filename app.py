@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, send_file, session, send_from_directory, redirect, url_for
+from flask import Flask, render_template, request, jsonify, send_file, session, send_from_directory, redirect, url_for, make_response
 import sqlite3
 import os
 from datetime import datetime, date, timedelta
@@ -36,6 +36,24 @@ import logging.handlers
 import traceback
 import sys
 from pathlib import Path
+import os
+import sqlite3
+import json
+import csv
+import io
+from datetime import datetime, timedelta
+from flask import Flask, render_template, request, jsonify, send_file, redirect, url_for, session
+from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+import zipfile
+import shutil
+from plan_manager import PlanManager
+try:
+    from playwright.sync_api import sync_playwright
+    PDF_AVAILABLE = True
+except ImportError:
+    PDF_AVAILABLE = False
+    print("Warning: playwright not installed. PDF generation will be disabled.")
 
 # Configure comprehensive logging system
 def setup_logging():
@@ -881,9 +899,9 @@ def create_bill():
             for attempt in range(max_retries):
                 try:
                     # Generate a unique bill number if needed
-                    bill_number = bill_data.get('bill_number')
-                    if attempt > 0:
-                        # If retrying, generate a new bill number
+                    bill_number = bill_data.get('bill_number', '').strip()
+                    if not bill_number or attempt > 0:
+                        # If no bill number provided or retrying, generate a new bill number
                         today = datetime.now().strftime('%Y%m%d')
                         import time
                         timestamp = int(time.time() * 1000) % 10000
@@ -1044,9 +1062,9 @@ def create_bill():
             for attempt in range(max_retries):
                 try:
                     # Generate a unique bill number if needed
-                    bill_number = request.form.get('bill_number')
-                    if attempt > 0:
-                        # If retrying, generate a new bill number
+                    bill_number = request.form.get('bill_number', '').strip()
+                    if not bill_number or attempt > 0:
+                        # If no bill number provided or retrying, generate a new bill number
                         today = datetime.now().strftime('%Y%m%d')
                         import time
                         timestamp = int(time.time() * 1000) % 10000
@@ -2589,7 +2607,7 @@ def download_invoices():
             conditions.append("b.status = ?")
             params.append(status)
         if conditions:
-            base_query += " AND " + " AND ".join(conditions)
+            base_query += " WHERE " + " AND ".join(conditions)
         base_query += " GROUP BY b.bill_id ORDER BY b.bill_date DESC"
         cursor = get_db_connection().cursor()
         cursor.execute(base_query, params)
@@ -4241,6 +4259,139 @@ def test_whatsapp_config():
         
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/bills/<int:bill_id>/pdf', methods=['GET'])
+def generate_bill_pdf(bill_id):
+    """Generate PDF invoice for bill using exact HTML template"""
+    try:
+        # Check if playwright is available
+        if not PDF_AVAILABLE:
+            return jsonify({'error': 'PDF generation is not available. Please install playwright: pip install playwright && playwright install chromium'}), 500
+
+        # Get bill data using the same logic as print_bill
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Get bill details with all necessary information
+        cursor.execute("""
+            SELECT b.*, c.name as customer_name, c.phone as customer_phone, c.address as customer_address,
+                   c.city as customer_city, c.area as customer_area, c.trn as customer_trn,
+                   c.customer_type, c.business_name, c.business_address,
+                   e.name as master_name
+            FROM bills b
+            LEFT JOIN customers c ON b.customer_id = c.customer_id
+            LEFT JOIN employees e ON b.master_id = e.employee_id
+            WHERE b.bill_id = ? AND b.user_id = ?
+        """, (bill_id, get_current_user_id()))
+        
+        bill_row = cursor.fetchone()
+        if not bill_row:
+            return jsonify({'error': 'Bill not found'}), 404
+        
+        bill = dict(bill_row)
+        
+        # Get bill items with all details
+        cursor.execute("""
+            SELECT bi.*, p.product_name
+            FROM bill_items bi
+            LEFT JOIN products p ON bi.product_id = p.product_id
+            WHERE bi.bill_id = ?
+        """, (bill_id,))
+        
+        items_rows = cursor.fetchall()
+        items = [dict(item_row) for item_row in items_rows]
+        
+        # Get shop settings
+        cursor.execute("""
+            SELECT * FROM shop_settings WHERE user_id = ?
+        """, (get_current_user_id(),))
+        
+        shop_settings_row = cursor.fetchone()
+        shop_settings = dict(shop_settings_row) if shop_settings_row else {}
+        
+        conn.close()
+
+        # Generate amount in words (same logic as print_bill)
+        try:
+            from number_to_words import number_to_words, arabic_number_to_words
+            amount_in_words = number_to_words(bill['total_amount'])
+            arabic_amount_in_words = arabic_number_to_words(bill['total_amount'])
+        except ImportError:
+            amount_in_words = "Amount in words not available"
+            arabic_amount_in_words = "المبلغ بالكلمات غير متوفر"
+        
+        # Generate QR code for FTA compliance (same as print_bill)
+        qr_code_base64 = None
+        try:
+            # Generate QR code data for FTA compliance
+            qr_data = {
+                'seller_name': shop_settings.get('shop_name', ''),
+                'seller_trn': shop_settings.get('trn', ''),
+                'timestamp': bill['bill_date'],
+                'total_amount': str(bill['total_amount']),
+                'vat_amount': str(bill['vat_amount'])
+            }
+            
+            import qrcode
+            import base64
+            from io import BytesIO
+            
+            qr = qrcode.QRCode(version=1, box_size=10, border=5)
+            qr.add_data(str(qr_data))
+            qr.make(fit=True)
+            
+            img = qr.make_image(fill_color="black", back_color="white")
+            buffer = BytesIO()
+            img.save(buffer, format='PNG')
+            qr_code_base64 = base64.b64encode(buffer.getvalue()).decode()
+        except Exception as e:
+            app.logger.warning(f"QR code generation failed: {str(e)}")
+        
+        # Prepare template variables (exactly same as print_bill)
+        template_vars = {
+            'bill': bill,
+            'items': items,
+            'shop_settings': shop_settings,
+            'amount_in_words': amount_in_words,
+            'arabic_amount_in_words': arabic_amount_in_words,
+            'qr_code_base64': qr_code_base64
+        }
+        
+        # Render the HTML template (exactly same as print_bill)
+        html_content = render_template('print_bill.html', **template_vars)
+        
+        # Use Playwright to render HTML to PDF
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True)
+            page = browser.new_page()
+            
+            # Set content and wait for it to load
+            page.set_content(html_content, wait_until='networkidle')
+            
+            # Generate PDF with proper settings
+            pdf_buffer = page.pdf(
+                format='A4',
+                print_background=True,
+                margin={
+                    'top': '20px',
+                    'right': '20px',
+                    'bottom': '20px',
+                    'left': '20px'
+                }
+            )
+            
+            browser.close()
+        
+        # Return PDF as response
+        response = make_response(pdf_buffer)
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = f'attachment; filename=bill_{bill_id}.pdf'
+        
+        return response
+        
+    except Exception as e:
+        app.logger.error(f"Error generating PDF: {str(e)}")
+        return jsonify({'error': f'Error generating PDF: {str(e)}'}), 500
 
 
 

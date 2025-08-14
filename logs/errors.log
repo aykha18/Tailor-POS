@@ -14,3 +14,7 @@
 2025-08-12 17:56:21,084 - root - ERROR - log_dml_error:122 - Failed to log to database: database is locked
 2025-08-12 18:34:11,328 - root - ERROR - log_dml_error:101 - DML Error - Operation: CREATE, Table: bills, Error: UNIQUE constraint failed: bills.user_id, bills.bill_number, User: 12, Data: {'customer_name': None, 'total_amount': 94.5, 'item_count': 0}...
 2025-08-12 18:34:33,196 - root - ERROR - log_dml_error:122 - Failed to log to database: database is locked
+2025-08-14 11:20:20,433 - app - ERROR - generate_bill_pdf:4524 - Error generating PDF: 'sqlite3.Row' object has no attribute 'get'
+2025-08-14 11:24:07,476 - app - ERROR - generate_bill_pdf:4524 - Error generating PDF: 'sqlite3.Row' object has no attribute 'get'
+2025-08-14 11:52:32,787 - app - ERROR - generate_bill_pdf:4535 - Error generating PDF: name 'make_response' is not defined
+2025-08-14 12:05:13,961 - app - ERROR - generate_bill_pdf:4539 - Error generating PDF: Invalid justification 0

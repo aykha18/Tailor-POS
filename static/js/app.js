@@ -56,7 +56,12 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (btn.dataset.go === 'vatSec') {
           loadVatRates();
         } else if (btn.dataset.go === 'billingSec') {
-          initializeBillingSystem();
+          // Check if initializeBillingSystem function exists
+          if (typeof initializeBillingSystem === 'function') {
+            initializeBillingSystem();
+          } else {
+            console.error('initializeBillingSystem function not found');
+          }
         } else if (btn.dataset.go === 'dashSec') {
           // Dashboard will be loaded when accessed
           if (window.createRevenueChart) {
@@ -94,6 +99,9 @@ document.addEventListener('DOMContentLoaded', function() {
       clearCacheBtn.addEventListener('click', async () => {
         if (confirm('Are you sure you want to clear all app cache? This will remove all stored data and may require you to log in again.')) {
           try {
+            // Set flag to prevent automatic reload from PWA manager
+            window.isClearingCache = true;
+            
             await clearAllCache();
             alert('Cache cleared successfully! The app will refresh in 3 seconds.');
             setTimeout(() => {
@@ -102,6 +110,8 @@ document.addEventListener('DOMContentLoaded', function() {
           } catch (error) {
             console.error('Error clearing cache:', error);
             alert('Error clearing cache. Please try again.');
+            // Reset flag on error
+            window.isClearingCache = false;
           }
         }
       });
