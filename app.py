@@ -1,3 +1,4 @@
+# Railway Deployment - Simplified Version (2025-08-15)
 from flask import Flask, render_template, request, jsonify, send_file, session, send_from_directory, redirect, url_for, Response
 import sqlite3
 import os
