@@ -55,50 +55,22 @@ except ImportError:
     PDF_AVAILABLE = False
     print("Warning: playwright not installed. PDF generation will be disabled.")
 
-# Configure comprehensive logging system
+# Configure simple logging system for Railway
 def setup_logging():
-    """Setup comprehensive logging for production."""
-    # Create logs directory if it doesn't exist
-    log_dir = Path("logs")
-    log_dir.mkdir(exist_ok=True)
-    
-    # Configure file logging
-    file_handler = logging.handlers.RotatingFileHandler(
-        'logs/tajir_pos.log',
-        maxBytes=10*1024*1024,  # 10MB
-        backupCount=5
-    )
-    file_handler.setLevel(logging.INFO)
-    
-    # Configure error file logging
-    error_handler = logging.handlers.RotatingFileHandler(
-        'logs/errors.log',
-        maxBytes=5*1024*1024,  # 5MB
-        backupCount=3
-    )
-    error_handler.setLevel(logging.ERROR)
-    
-    # Configure console logging for development
+    """Setup simple logging for Railway deployment."""
+    # Configure console logging only (no file logging on Railway)
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.INFO)
     
-    # Create formatters
-    file_formatter = logging.Formatter(
+    # Create formatter
+    formatter = logging.Formatter(
         '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
-    error_formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s'
-    )
-    
-    file_handler.setFormatter(file_formatter)
-    error_handler.setFormatter(error_formatter)
-    console_handler.setFormatter(file_formatter)
+    console_handler.setFormatter(formatter)
     
     # Configure root logger
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.INFO)
-    root_logger.addHandler(file_handler)
-    root_logger.addHandler(error_handler)
     root_logger.addHandler(console_handler)
     
     return root_logger
@@ -220,42 +192,59 @@ def get_user_plan_info():
         }
 
 def init_db():
-    need_init = False
-    if not os.path.exists(app.config['DATABASE']):
-        need_init = True
-    else:
-        # Check if main tables are empty
-        conn = get_db_connection()
-        try:
-            cur = conn.execute("SELECT COUNT(*) FROM product_types")
-            if cur.fetchone()[0] == 0:
-                need_init = True
-        except Exception:
-            # Table doesn't exist, need to initialize
-            need_init = True
-        conn.close()
-    if need_init:
-        with open('database_schema.sql', 'r') as f:
-            schema = f.read()
-        conn = get_db_connection()
-        try:
-            conn.executescript(schema)
-            conn.commit()
-            logger.info("Database initialized successfully with logging tables")
-        except Exception as e:
-            log_dml_error("INIT", "database", e)
-            raise e
-        finally:
-            conn.close()
-        print("Database initialized successfully!")
+    """Initialize database with error handling for Railway deployment."""
+    print("Starting database initialization...")
     
-    # Always ensure admin user exists
     try:
-        from setup_production_admin import setup_production_admin
-        setup_production_admin()
-        logger.info("Admin user setup completed")
+        need_init = False
+        if not os.path.exists(app.config['DATABASE']):
+            print("Database file not found, will initialize...")
+            need_init = True
+        else:
+            # Check if main tables are empty
+            try:
+                conn = get_db_connection()
+                cur = conn.execute("SELECT COUNT(*) FROM product_types")
+                if cur.fetchone()[0] == 0:
+                    print("Product types table is empty, will initialize...")
+                    need_init = True
+                conn.close()
+            except Exception as e:
+                print(f"Database check failed, will initialize: {e}")
+                need_init = True
+        
+        if need_init:
+            print("Initializing database schema...")
+            try:
+                with open('database_schema.sql', 'r') as f:
+                    schema = f.read()
+                conn = get_db_connection()
+                conn.executescript(schema)
+                conn.commit()
+                conn.close()
+                print("Database schema initialized successfully!")
+            except Exception as e:
+                print(f"Database schema initialization failed: {e}")
+                # Don't raise, continue with admin setup
+        
+        # Always ensure admin user exists
+        print("Setting up admin user...")
+        try:
+            from setup_production_admin import setup_production_admin
+            success = setup_production_admin()
+            if success:
+                print("Admin user setup completed successfully!")
+            else:
+                print("Admin user setup failed, but continuing...")
+        except Exception as e:
+            print(f"Admin user setup failed: {e}")
+            # Don't raise, continue with app startup
+        
+        print("Database initialization completed!")
+        
     except Exception as e:
-        logger.error(f"Failed to setup admin user: {e}")
+        print(f"Database initialization error: {e}")
+        # Don't raise, let the app continue
 
 @app.route('/')
 def index():
@@ -5267,6 +5256,21 @@ def test_endpoint():
     """
 
 if __name__ == '__main__':
-    init_db()
-    port = int(os.environ.get('PORT', 5000))
-    app.run(debug=False, host='0.0.0.0', port=port) 
+    print("🚀 Starting Tajir POS Application...")
+    print(f"Database path: {app.config['DATABASE']}")
+    print(f"Secret key configured: {'Yes' if app.secret_key != 'your-secret-key-here-change-in-production' else 'No'}")
+    
+    try:
+        init_db()
+        print("✅ Database initialization completed")
+    except Exception as e:
+        print(f"⚠️ Database initialization failed: {e}")
+        print("Continuing with app startup...")
+    
+    try:
+        port = int(os.environ.get('PORT', 5000))
+        print(f"🌐 Starting server on port {port}")
+        app.run(debug=False, host='0.0.0.0', port=port)
+    except Exception as e:
+        print(f"❌ Failed to start server: {e}")
+        sys.exit(1) 
