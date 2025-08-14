@@ -4,7 +4,7 @@ import os
 from datetime import datetime, date, timedelta
 import json
 from decimal import Decimal
-import dropbox
+# import dropbox  # Removed - not being used
 import zipfile
 from io import BytesIO
 from dotenv import load_dotenv
@@ -167,7 +167,7 @@ app = Flask(__name__)
 app.config['DATABASE'] = os.getenv('DATABASE_PATH', 'pos_tailor.db')
 app.secret_key = os.getenv('SECRET_KEY', 'your-secret-key-here-change-in-production')  # Add secret key for sessions
 
-DROPBOX_ACCESS_TOKEN = os.getenv('DROPBOX_ACCESS_TOKEN')
+# DROPBOX_ACCESS_TOKEN = os.getenv('DROPBOX_ACCESS_TOKEN')  # Removed - not being used
 
 def get_db_connection():
     conn = sqlite3.connect(app.config['DATABASE'], timeout=20.0)
@@ -273,7 +273,33 @@ def index():
 @app.route('/health')
 def health_check():
     """Simple health check endpoint for Railway deployment."""
-    return jsonify({'status': 'healthy', 'timestamp': datetime.now().isoformat()})
+    try:
+        # Test database connection
+        conn = get_db_connection()
+        conn.execute('SELECT 1')
+        conn.close()
+        
+        return jsonify({
+            'status': 'healthy', 
+            'timestamp': datetime.now().isoformat(),
+            'database': 'connected',
+            'pdf_available': PDF_AVAILABLE
+        })
+    except Exception as e:
+        return jsonify({
+            'status': 'unhealthy',
+            'error': str(e),
+            'timestamp': datetime.now().isoformat()
+        }), 500
+
+@app.route('/startup-test')
+def startup_test():
+    """Test endpoint to verify the app is running."""
+    return jsonify({
+        'message': 'Tajir POS is running!',
+        'timestamp': datetime.now().isoformat(),
+        'port': os.environ.get('PORT', '5000')
+    })
 
 @app.route('/landing')
 def landing():
@@ -1734,69 +1760,7 @@ def zip_db():
     mem_zip.seek(0)
     return mem_zip
 
-# Helper: get Dropbox client
-def get_dbx():
-    return dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
-
-# Helper: prune to last 7 backups
-def prune_dropbox_backups(dbx, folder='/'):
-    files = dbx.files_list_folder(folder).entries
-    backups = sorted([f for f in files if f.name.startswith('pos_tailor_') and f.name.endswith('.db.zip')], key=lambda f: f.client_modified, reverse=True)
-    for f in backups[7:]:
-        dbx.files_delete_v2(f.path_lower)
-
-@app.route('/api/backup/upload', methods=['POST'])
-def backup_upload():
-    dbx = get_dbx()
-    today = datetime.now().strftime('%Y%m%d')
-    filename = f'/pos_tailor_{today}.db.zip'
-    mem_zip = zip_db()
-    try:
-        dbx.files_upload(mem_zip.read(), filename, mode=dropbox.files.WriteMode.overwrite)
-        prune_dropbox_backups(dbx)
-        return jsonify({'message': 'Backup uploaded to Dropbox.'})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/api/backups', methods=['GET'])
-def list_backups():
-    dbx = get_dbx()
-    try:
-        files = dbx.files_list_folder('').entries
-        backups = sorted([f for f in files if f.name.startswith('pos_tailor_') and f.name.endswith('.db.zip')], key=lambda f: f.client_modified, reverse=True)
-        result = [
-            {
-                'name': f.name,
-                'date': f.client_modified.strftime('%Y-%m-%d'),
-                'path': f.path_lower
-            } for f in backups[:7]
-        ]
-        return jsonify(result)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/api/backup/download/<filename>', methods=['GET'])
-def download_backup(filename):
-    dbx = get_dbx()
-    path = f'/{filename}'
-    try:
-        md, res = dbx.files_download(path)
-        return send_file(BytesIO(res.content), download_name=filename, as_attachment=True)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/api/backup/restore/<filename>', methods=['POST'])
-def restore_backup(filename):
-    dbx = get_dbx()
-    path = f'/{filename}'
-    try:
-        md, res = dbx.files_download(path)
-        # Unzip and replace local db
-        with zipfile.ZipFile(BytesIO(res.content)) as zf:
-            zf.extract('pos_tailor.db', path='.')
-        return jsonify({'message': f'Restored {filename} from Dropbox.'})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+# Dropbox functionality removed - not being used
 
 # Plan Management API
 @app.route('/api/plan/status', methods=['GET'])
@@ -5310,6 +5274,7 @@ if __name__ == '__main__':
         print("🚀 Starting Tajir POS application...")
         print(f"📁 Working directory: {os.getcwd()}")
         print(f"🐍 Python version: {sys.version}")
+        print(f"🔧 Environment variables: PORT={os.environ.get('PORT', '5000')}")
         
         # Initialize database
         print("🗄️ Initializing database...")
@@ -5319,9 +5284,10 @@ if __name__ == '__main__':
         # Get port from environment
         port = int(os.environ.get('PORT', 5000))
         print(f"🌐 Starting server on port {port}")
+        print(f"🔗 Health check will be available at: http://0.0.0.0:{port}/health")
         
         # Start Flask app
-        app.run(debug=False, host='0.0.0.0', port=port)
+        app.run(debug=False, host='0.0.0.0', port=port, threaded=True)
         
     except Exception as e:
         print(f"💥 Failed to start application: {e}")
