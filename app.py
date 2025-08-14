@@ -4251,10 +4251,9 @@ def generate_bill_pdf(bill_id):
 
         # Generate amount in words (same logic as print_bill)
         try:
-            from number_to_words import number_to_words, arabic_number_to_words
-            amount_in_words = number_to_words(bill['total_amount'])
-            arabic_amount_in_words = arabic_number_to_words(bill['total_amount'])
-        except ImportError:
+            amount_in_words = num2words(bill['total_amount'])
+            arabic_amount_in_words = "╪º┘ä┘à╪¿┘ä╪║ ╪¿╪º┘ä┘â┘ä┘à╪º╪¬ ╪║┘è╪▒ ┘à╪¬┘ê┘ü╪▒"
+        except Exception:
             amount_in_words = "Amount in words not available"
             arabic_amount_in_words = "╪º┘ä┘à╪¿┘ä╪║ ╪¿╪º┘ä┘â┘ä┘à╪º╪¬ ╪║┘è╪▒ ┘à╪¬┘ê┘ü╪▒"
         
