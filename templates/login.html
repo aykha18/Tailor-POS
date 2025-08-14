@@ -505,7 +505,16 @@
     const email = document.getElementById('signin-email').value.trim();
     const password = document.getElementById('signin-password').value;
 
+    // Frontend logging
+    console.log('=== FRONTEND LOGIN ATTEMPT ===');
+    console.log('Email:', email);
+    console.log('Password provided:', !!password);
+    console.log('Timestamp:', new Date().toISOString());
+    console.log('User Agent:', navigator.userAgent);
+    console.log('Current URL:', window.location.href);
+
     if (!email || !password) {
+      console.warn('Login validation failed - missing fields');
       showToast('error', 'Validation Error', 'Please fill in all fields');
       return;
     }
@@ -515,6 +524,8 @@
     const originalText = submitBtn.textContent;
     submitBtn.textContent = 'Signing In...';
     submitBtn.disabled = true;
+
+    console.log('Sending login request to server...');
 
     fetch('/api/auth/login', {
       method: 'POST',
@@ -527,19 +538,32 @@
         password: password
       })
     })
-    .then(response => response.json())
+    .then(response => {
+      console.log('Server response status:', response.status);
+      return response.json();
+    })
     .then(data => {
+      console.log('Server response data:', data);
+      
       if (data.success) {
+        console.log('=== LOGIN SUCCESS ===');
+        console.log('User data:', data.user);
+        console.log('Redirecting to /app...');
         showToast('success', 'Login Successful', 'Welcome back! Redirecting...', 2000);
         setTimeout(() => {
           window.location.href = '/app';
         }, 2000);
       } else {
+        console.warn('=== LOGIN FAILED ===');
+        console.warn('Error message:', data.message);
         showToast('error', 'Login Failed', data.message || 'Invalid email or password');
       }
     })
     .catch(error => {
-      console.error('Error:', error);
+      console.error('=== LOGIN ERROR ===');
+      console.error('Error type:', error.name);
+      console.error('Error message:', error.message);
+      console.error('Full error:', error);
       showToast('error', 'Connection Error', 'Unable to connect to server. Please try again.');
     })
     .finally(() => {

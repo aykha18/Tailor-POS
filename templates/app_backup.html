@@ -529,7 +529,7 @@
             <input id="restoreInput" type="file" accept=".zip" class="hidden">
           </label>
         </div>
-        <h4 class="text-lg font-semibold mb-2">Last 7 Backups (Dropbox)</h4>
+        <h4 class="text-lg font-semibold mb-2">Last 7 Backups</h4>
         <table class="min-w-full text-sm border border-neutral-700 rounded-lg overflow-hidden">
           <thead class="bg-neutral-800/70"><tr><th class="px-3 py-2 text-left font-medium">Date</th><th class="px-3 py-2 text-left font-medium">File</th><th class="px-3 py-2 text-left font-medium">Actions</th></tr></thead>
           <tbody id="backupTableBody" class="divide-y divide-neutral-800"></tbody>
@@ -2722,8 +2722,8 @@
       }
       if (rsBtn) {
         const confirmed = await showConfirmDialog(
-          'Restore this backup from Dropbox? This will overwrite all current data and cannot be undone.',
-          'Restore from Dropbox',
+          'Restore this backup? This will overwrite all current data and cannot be undone.',
+          'Restore Backup',
           'confirm'
         );
         if (!confirmed) return;

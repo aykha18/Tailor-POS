@@ -1938,6 +1938,12 @@ def debug_plan():
 @app.route('/login')
 def login():
     """Login page for multi-tenant system."""
+    logger.info(f"=== LOGIN PAGE ACCESSED ===")
+    logger.info(f"IP address: {request.remote_addr}")
+    logger.info(f"User agent: {request.headers.get('User-Agent', 'Unknown')}")
+    logger.info(f"Referer: {request.headers.get('Referer', 'Direct access')}")
+    logger.info(f"Timestamp: {datetime.now().isoformat()}")
+    
     return render_template('login.html',
                         get_user_language=get_user_language,
                         get_translated_text=get_translated_text)
@@ -2119,6 +2125,14 @@ def auth_login():
         data = request.get_json()
         method = data.get('method')
         
+        # Enhanced logging for login attempts
+        logger.info(f"=== LOGIN ATTEMPT STARTED ===")
+        logger.info(f"Login method: {method}")
+        logger.info(f"Request data: {data}")
+        logger.info(f"User agent: {request.headers.get('User-Agent', 'Unknown')}")
+        logger.info(f"IP address: {request.remote_addr}")
+        logger.info(f"Timestamp: {datetime.now().isoformat()}")
+        
         # Log login attempt
         log_user_action("LOGIN_ATTEMPT", None, {
             'method': method,
@@ -2131,23 +2145,35 @@ def auth_login():
             email = data.get('email')
             password = data.get('password')
             
+            logger.info(f"Email login attempt for: {email}")
+            
             if not email or not password:
+                logger.warning(f"Email login failed - missing credentials: email={bool(email)}, password={bool(password)}")
                 return jsonify({'success': False, 'message': 'Email and password required'})
             
             user = conn.execute('SELECT * FROM users WHERE email = ? AND is_active = 1', (email,)).fetchone()
             
             if not user:
+                logger.warning(f"Email login failed - user not found: {email}")
                 return jsonify({'success': False, 'message': 'Invalid email or password'})
+            
+            logger.info(f"User found for email: {email}, user_id: {user['user_id']}")
             
             import bcrypt
             if not bcrypt.checkpw(password.encode('utf-8'), user['password_hash'].encode('utf-8')):
+                logger.warning(f"Email login failed - invalid password for user: {email}")
                 return jsonify({'success': False, 'message': 'Invalid email or password'})
+            
+            logger.info(f"Password verification successful for user: {email}")
                 
         elif method == 'mobile':
             mobile = data.get('mobile')
             otp = data.get('otp')
             
+            logger.info(f"Mobile login attempt for: {mobile}")
+            
             if not mobile or not otp:
+                logger.warning(f"Mobile login failed - missing credentials: mobile={bool(mobile)}, otp={bool(otp)}")
                 return jsonify({'success': False, 'message': 'Mobile and OTP required'})
             
             # Verify OTP
@@ -2158,7 +2184,10 @@ def auth_login():
             ''', (mobile, otp)).fetchone()
             
             if not otp_record:
+                logger.warning(f"Mobile login failed - invalid/expired OTP for: {mobile}")
                 return jsonify({'success': False, 'message': 'Invalid or expired OTP'})
+            
+            logger.info(f"OTP verification successful for mobile: {mobile}")
             
             # Mark OTP as used
             conn.execute('UPDATE otp_codes SET is_used = 1 WHERE id = ?', (otp_record['id'],))
@@ -2166,23 +2195,35 @@ def auth_login():
             user = conn.execute('SELECT * FROM users WHERE mobile = ? AND is_active = 1', (mobile,)).fetchone()
             
             if not user:
+                logger.warning(f"Mobile login failed - no user found for mobile: {mobile}")
                 return jsonify({'success': False, 'message': 'No account found with this mobile number'})
+            
+            logger.info(f"User found for mobile: {mobile}, user_id: {user['user_id']}")
                 
         elif method == 'shop_code':
             shop_code = data.get('shop_code')
             password = data.get('password')
             
+            logger.info(f"Shop code login attempt for: {shop_code}")
+            
             if not shop_code or not password:
+                logger.warning(f"Shop code login failed - missing credentials: shop_code={bool(shop_code)}, password={bool(password)}")
                 return jsonify({'success': False, 'message': 'Shop code and password required'})
             
             user = conn.execute('SELECT * FROM users WHERE shop_code = ? AND is_active = 1', (shop_code,)).fetchone()
             
             if not user:
+                logger.warning(f"Shop code login failed - user not found: {shop_code}")
                 return jsonify({'success': False, 'message': 'Invalid shop code or password'})
+            
+            logger.info(f"User found for shop code: {shop_code}, user_id: {user['user_id']}")
             
             import bcrypt
             if not bcrypt.checkpw(password.encode('utf-8'), user['password_hash'].encode('utf-8')):
+                logger.warning(f"Shop code login failed - invalid password for shop: {shop_code}")
                 return jsonify({'success': False, 'message': 'Invalid shop code or password'})
+            
+            logger.info(f"Password verification successful for shop code: {shop_code}")
         else:
             return jsonify({'success': False, 'message': 'Invalid login method'})
         
@@ -2192,6 +2233,14 @@ def auth_login():
         session['user_id'] = user['user_id']
         session['shop_name'] = user['shop_name']
         session['shop_code'] = user['shop_code']
+        
+        logger.info(f"=== LOGIN SUCCESSFUL ===")
+        logger.info(f"User ID: {user['user_id']}")
+        logger.info(f"Shop Name: {user['shop_name']}")
+        logger.info(f"Shop Code: {user['shop_code']}")
+        logger.info(f"Login Method: {method}")
+        logger.info(f"Session created successfully")
+        logger.info(f"Timestamp: {datetime.now().isoformat()}")
         
         # Log successful login
         log_user_action("LOGIN_SUCCESS", user['user_id'], {
@@ -2215,6 +2264,11 @@ def auth_login():
         })
         
     except Exception as e:
+        logger.error(f"=== LOGIN ERROR ===")
+        logger.error(f"Error type: {type(e).__name__}")
+        logger.error(f"Error message: {str(e)}")
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        logger.error(f"Timestamp: {datetime.now().isoformat()}")
         print(f"Login error: {e}")
         return jsonify({'success': False, 'message': 'Login failed. Please try again.'})
 
