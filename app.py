@@ -7,7 +7,7 @@ from datetime import datetime
 print("=== RAILWAY DIAGNOSTIC START ===")
 print(f"Python version: {sys.version}")
 print(f"Current directory: {os.getcwd()}")
-print(f"Environment variables: {dict(os.environ)}")
+print(f"PORT environment variable: {os.environ.get('PORT', 'NOT SET')}")
 
 try:
     print("Step 1: Importing Flask...")
@@ -47,6 +47,7 @@ def index():
             <p><strong>Python Version:</strong> {sys.version}</p>
             <p><strong>Current Directory:</strong> {os.getcwd()}</p>
             <p><strong>Port:</strong> {os.environ.get('PORT', 'Not set')}</p>
+            <p><strong>Railway URL:</strong> {os.environ.get('RAILWAY_STATIC_URL', 'Not set')}</p>
             <hr style="margin: 20px 0;">
             <h2>Test Endpoints:</h2>
             <ul>
@@ -70,7 +71,8 @@ def health_check():
         'timestamp': datetime.now().isoformat(),
         'message': 'Railway diagnostic successful',
         'python_version': sys.version,
-        'port': os.environ.get('PORT', 'Not set')
+        'port': os.environ.get('PORT', 'Not set'),
+        'railway_url': os.environ.get('RAILWAY_STATIC_URL', 'Not set')
     })
 
 @app.route('/debug')
@@ -79,6 +81,8 @@ def debug_info():
     return jsonify({
         'python_version': sys.version,
         'current_directory': os.getcwd(),
+        'port': os.environ.get('PORT', 'Not set'),
+        'railway_url': os.environ.get('RAILWAY_STATIC_URL', 'Not set'),
         'environment_variables': dict(os.environ),
         'timestamp': datetime.now().isoformat()
     })
@@ -91,8 +95,14 @@ if __name__ == '__main__':
     
     try:
         print("Step 5: Getting port...")
-        port = int(os.environ.get('PORT', 5000))
-        print(f"✅ Port configured: {port}")
+        # Railway specific port handling
+        port = os.environ.get('PORT')
+        if port:
+            port = int(port)
+            print(f"✅ Port from environment: {port}")
+        else:
+            port = 5000
+            print(f"⚠️ No PORT environment variable, using default: {port}")
     except Exception as e:
         print(f"❌ Port configuration failed: {e}")
         port = 5000
@@ -101,7 +111,8 @@ if __name__ == '__main__':
     try:
         print("Step 6: Starting Flask server...")
         print(f"🌐 Starting server on port {port}")
-        print("🚀 Application ready!")
+        print(f"🚀 Application ready!")
+        print(f"🔗 Railway URL: {os.environ.get('RAILWAY_STATIC_URL', 'Not set')}")
         app.run(debug=False, host='0.0.0.0', port=port)
     except Exception as e:
         print(f"❌ Failed to start server: {e}")
