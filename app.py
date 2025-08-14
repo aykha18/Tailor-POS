@@ -306,7 +306,28 @@ def startup_test():
 @app.route('/test')
 def test_endpoint():
     """Simple test endpoint."""
-    return "Tajir POS is working! 🚀"
+    return f"""
+    <html>
+    <head><title>Tajir POS - Test</title></head>
+    <body style="font-family: Arial, sans-serif; padding: 20px;">
+        <h1>🚀 Tajir POS is Working!</h1>
+        <p><strong>Status:</strong> ✅ Application is running successfully</p>
+        <p><strong>Port:</strong> {os.environ.get('PORT', '5000')}</p>
+        <p><strong>Timestamp:</strong> {datetime.now().isoformat()}</p>
+        <hr>
+        <h2>Available Endpoints:</h2>
+        <ul>
+            <li><a href="/">Root (redirects to /app)</a></li>
+            <li><a href="/app">Main Application</a></li>
+            <li><a href="/health">Health Check</a></li>
+            <li><a href="/startup-test">Startup Test</a></li>
+        </ul>
+        <hr>
+        <p><strong>Login Credentials:</strong></p>
+        <p>Email: admin@tailorpos.com<br>Password: admin123</p>
+    </body>
+    </html>
+    """
 
 @app.route('/landing')
 def landing():
