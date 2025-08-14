@@ -75,7 +75,7 @@ window.addEventListener('load', function() {
 function initializeWhatsApp() {
     console.log('🔄 Initializing WhatsApp functionality...');
     
-    setTimeout(() => {
+        setTimeout(() => {
         const whatsappBtn = document.getElementById('whatsappBtn');
         console.log('🔍 WhatsApp button found:', !!whatsappBtn);
         
