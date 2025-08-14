@@ -10,7 +10,12 @@ from io import BytesIO
 from dotenv import load_dotenv
 load_dotenv()
 from num2words import num2words
-from plan_manager import plan_manager
+# from plan_manager import plan_manager  # Removed to fix Railway deployment issues
+
+def get_plan_manager():
+    """Get plan manager instance when needed to avoid import issues on Railway."""
+    from plan_manager import PlanManager
+    return PlanManager()
 import csv
 from io import StringIO
 from flask import Response
@@ -1745,17 +1750,18 @@ def get_plan_status():
         else:
             user_plan = dict(user_plan)
         
-        plan_status = plan_manager.get_user_plan_status(
+        pm = get_plan_manager()
+        plan_status = pm.get_user_plan_status(
             user_plan['plan_type'], 
             user_plan['plan_start_date']
         )
         
         # Add upgrade options
-        upgrade_options = plan_manager.get_upgrade_options(user_plan['plan_type'])
+        upgrade_options = pm.get_upgrade_options(user_plan['plan_type'])
         plan_status['upgrade_options'] = upgrade_options
         
         # Add expiry warnings
-        warnings = plan_manager.get_expiry_warnings(
+        warnings = pm.get_expiry_warnings(
             user_plan['plan_type'], 
             user_plan['plan_start_date']
         )
@@ -1815,7 +1821,8 @@ def get_enabled_features():
             return jsonify({'enabled_features': [], 'locked_features': []})
         
         user_plan = dict(user_plan)
-        plan_status = plan_manager.get_user_plan_status(
+        pm = get_plan_manager()
+        plan_status = pm.get_user_plan_status(
             user_plan['plan_type'], 
             user_plan['plan_start_date']
         )
@@ -1843,7 +1850,8 @@ def check_feature_access(feature):
             return jsonify({'enabled': False, 'reason': 'No active plan'})
         
         user_plan = dict(user_plan)
-        is_enabled = plan_manager.is_feature_enabled(
+        pm = get_plan_manager()
+        is_enabled = pm.is_feature_enabled(
             user_plan['plan_type'], 
             user_plan['plan_start_date'], 
             feature
@@ -1862,11 +1870,12 @@ def check_feature_access(feature):
 def get_plan_config():
     """Get plan configuration for frontend."""
     try:
+        pm = get_plan_manager()
         return jsonify({
-            'pricing_plans': plan_manager.config.get('pricing_plans', {}),
-            'feature_definitions': plan_manager.config.get('feature_definitions', {}),
-            'ui_settings': plan_manager.config.get('ui_settings', {}),
-            'upgrade_options': plan_manager.config.get('upgrade_options', {})
+            'pricing_plans': pm.config.get('pricing_plans', {}),
+            'feature_definitions': pm.config.get('feature_definitions', {}),
+            'ui_settings': pm.config.get('ui_settings', {}),
+            'upgrade_options': pm.config.get('upgrade_options', {})
         })
         
     except Exception as e:
@@ -3843,7 +3852,8 @@ def send_bill_email(bill_id):
             return jsonify({'success': False, 'error': 'Invalid email address format'}), 400
         
         # Check if user has email feature access
-        if not plan_manager.check_feature_access(get_current_user_id(), 'email_integration'):
+        pm = get_plan_manager()
+        if not pm.check_feature_access(get_current_user_id(), 'email_integration'):
             return jsonify({'success': False, 'error': 'Email integration not available in your plan'}), 403
         
         result = send_email_invoice(bill_id, recipient_email, language)
@@ -4063,7 +4073,8 @@ def send_bill_whatsapp(bill_id):
             user_id = get_current_user_id()
             print(f"DEBUG: User ID: {user_id}")
             
-            if not plan_manager.check_feature_access(user_id, 'whatsapp_integration'):
+            pm = get_plan_manager()
+            if not pm.check_feature_access(user_id, 'whatsapp_integration'):
                 return jsonify({'success': False, 'error': 'WhatsApp integration not available in your plan'}), 403
         except Exception as e:
             print(f"DEBUG: Plan manager error: {e}")
