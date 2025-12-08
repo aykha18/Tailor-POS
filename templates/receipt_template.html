@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt - {{ shop_settings.shop_name or 'Shop' }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #000;
+            background: white;
+            max-width: 80mm;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .company-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        
+        .address {
+            font-size: 10px;
+            margin-bottom: 3px;
+        }
+        
+        .contact {
+            font-size: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .print-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #000;
+            padding-bottom: 5px;
+        }
+        
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .tax-invoice {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        .trn {
+            font-size: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .invoice-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .separator {
+            border-bottom: 1px dashed #000;
+            margin: 10px 0;
+        }
+        
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        
+        .items-table th {
+            font-size: 9px;
+            text-align: left;
+            padding: 2px 0;
+            border-bottom: 1px solid #000;
+        }
+        
+        .items-table td {
+            font-size: 9px;
+            padding: 2px 0;
+            vertical-align: top;
+        }
+        
+        .barcode-col {
+            width: 15%;
+        }
+        
+        .description-col {
+            width: 35%;
+        }
+        
+        .qty-col {
+            width: 15%;
+            text-align: center;
+        }
+        
+        .amount-col {
+            width: 35%;
+            text-align: right;
+        }
+        
+        .payment-details {
+            margin-top: 10px;
+        }
+        
+        .payment-title {
+            font-size: 11px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        
+        .payment-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            margin-bottom: 2px;
+        }
+        
+        .payment-row.bold {
+            font-weight: bold;
+            font-size: 10px;
+            margin-top: 5px;
+            padding-top: 5px;
+            border-top: 1px solid #000;
+        }
+        
+        .payment-row.net-amount {
+            font-weight: bold;
+            font-size: 11px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 2px solid #000;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .barcode {
+            margin: 10px 0;
+        }
+        
+        .policy {
+            font-size: 8px;
+            margin-top: 10px;
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+                padding: 5px;
+            }
+            
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="company-name">{{ shop_settings.shop_name or 'REGENT TAILORS LLC' }}</div>
+        <div class="address">{{ shop_settings.address or 'Shop no 7. AL. Asfoor Building Opp Sher-e-karachi Restaurant, Bur Dubai' }}</div>
+        <div class="contact">
+            {% if shop_settings.shop_mobile %}
+            Ph: {{ shop_settings.shop_mobile }}
+            {% endif %}
+            {% if shop_settings.shop_phone %}
+            Mob: {{ shop_settings.shop_phone }}
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Print Info -->
+    <div class="print-info">
+        <div>Print Date: {{ current_date.strftime('%d-%b-%Y') }}</div>
+        <div>Print Time: {{ current_time.strftime('%I:%M:%S %p') }}</div>
+    </div>
+    
+    <!-- Customer Info -->
+    <div style="font-size: 10px; margin-bottom: 10px;">
+        <strong>Customer:</strong> {{ bill.customer_name or 'Walk-in Customer' }}
+    </div>
+    
+    <!-- Invoice Header -->
+    <div class="invoice-header">
+        <div class="tax-invoice">TAX INVOICE</div>
+        <div class="trn">TRN: {{ shop_settings.trn or '100279662900003' }}</div>
+    </div>
+    
+    <!-- Invoice Details -->
+    <div class="invoice-details">
+        <div>Invoice #: {{ bill.bill_number or '51-09069' }}</div>
+        <div>Date: {{ bill_date_display }}</div>
+    </div>
+    
+    <div class="separator"></div>
+    
+    <!-- Items Table -->
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th class="barcode-col">BarCode / الباركود</th>
+                <th class="description-col">Description / تفصيل</th>
+                <th class="qty-col">Qty / مقدار</th>
+                <th class="amount-col">Net Amnt / كمية</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td class="barcode-col">{{ item.get('product_id', item.get('barcode', '')) }}</td>
+                <td class="description-col">{{ item.get('product_name', item.get('description', '')) }}</td>
+                <td class="qty-col">{{ item.get('quantity_float', item.get('quantity', 0)) }}</td>
+                <td class="amount-col">{{ currency_symbol }} {{ "%.2f"|format(item.get('display_amount', item.get('net_amount', 0))) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="separator"></div>
+    
+    <!-- Payment Details -->
+    <div class="payment-details">
+        <div class="payment-title">Payment Details / تفاصيل الدفع</div>
+        
+        <div class="payment-row">
+            <span>Gross Amount / المبلغ الإجمالي</span>
+            <span>{{ currency_symbol }} {{ "%.2f"|format(gross_amount) }}</span>
+        </div>
+        
+        {% if discount_amount and discount_amount > 0 %}
+        <div class="payment-row">
+            <span>Discount / خصم المتعة</span>
+            <span>-{{ currency_symbol }} {{ "%.2f"|format(discount_amount) }}</span>
+        </div>
+        {% endif %}
+        
+        <div class="payment-row">
+            <span>Total Amount / المبلغ الإجمالي</span>
+            <span>{{ currency_symbol }} {{ "%.2f"|format(total_before_tax) }}</span>
+        </div>
+        
+        {% if show_vat %}
+        <div class="payment-row">
+            <span>Tax ({{ "%.0f"|format(vat_percent) }}%{% if include_vat_in_price %} included{% endif %}) / تاكس</span>
+            <span>{{ currency_symbol }} {{ "%.2f"|format(tax_amount) }}</span>
+        </div>
+        {% endif %}
+        
+        <div class="payment-row net-amount">
+            <span>NET AMOUNT / مجموعة صافي المبلغ</span>
+            <span>{{ currency_symbol }} {{ net_amount_integer }}</span>
+        </div>
+        
+        <div class="payment-row">
+            <span>Cash Received / نقد</span>
+            <span>{{ currency_symbol }} {{ "%.2f"|format(advance_paid) }}</span>
+        </div>
+        
+        <div class="payment-row">
+            <span>Card Received / بطاقة ائتمان</span>
+            <span>{{ currency_symbol }} 0.00</span>
+        </div>
+        
+        <div class="payment-row">
+            <span>Change / إعادة مات</span>
+            <span>{{ currency_symbol }} {{ "%.2f"|format(change_amount) }}</span>
+        </div>
+    </div>
+    
+    <div class="separator"></div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="barcode">
+            {% if qr_code_base64 %}
+            <img src="data:image/png;base64,{{ qr_code_base64 }}" alt="QR Code" style="height:90px; width:90px;" />
+            {% else %}
+            <div style="height: 40px; border: 1px solid #000; display: flex; align-items: center; justify-content: center; font-size: 8px;">
+                {{ bill.bill_number or '' }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="policy">
+            No Exchange or Refund on Readymade Products
+        </div>
+    </div>
+    
+    <!-- Print Button (hidden when printing) -->
+    <div class="no-print" style="text-align: center; margin-top: 20px;">
+        <button onclick="window.print()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Print Receipt
+        </button>
+    </div>
+</body>
+</html>

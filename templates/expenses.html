@@ -1,0 +1,656 @@
+{% extends "base.html" %}
+
+{% block title %}Expense Management - {{ get_translated_text("Tajir POS", get_user_language()) }}{% endblock %}
+
+{% block content %}
+<style>
+/* Target specific input fields with higher specificity */
+input#expenseSearch,
+input#expenseDateFrom,
+input#expenseDateTo,
+select#expenseCategoryFilter {
+    color: white !important;
+    -webkit-text-fill-color: white !important;
+    background-clip: unset !important;
+    -webkit-background-clip: unset !important;
+}
+
+/* Target placeholders specifically */
+input#expenseSearch::placeholder {
+    color: #94a3b8 !important;
+    -webkit-text-fill-color: #94a3b8 !important;
+}
+
+/* Hide mobile navigation on desktop screens */
+@media (min-width: 769px) {
+    .mobile-nav {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+}
+
+/* Show mobile navigation only on mobile screens */
+@media (max-width: 768px) {
+    .mobile-nav {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+}
+</style>
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <!-- Enhanced Header with Statistics -->
+    <div class="bg-gradient-to-r from-slate-800/90 to-slate-700/90 backdrop-blur-xl border-b border-slate-600/30 shadow-2xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center py-6 lg:py-8 space-y-6 lg:space-y-0">
+                <div class="flex-1">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <div class="p-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl shadow-lg">
+                            <svg data-lucide="trending-down" class="w-6 h-6 text-white"></svg>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl lg:text-3xl font-bold text-white tracking-tight">Expense Management</h1>
+                            <p class="text-slate-300 mt-1">Track, analyze, and optimize your business expenses</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 w-full lg:w-auto">
+                    <button id="addCategoryBtn" class="group relative inline-flex items-center justify-center px-6 py-3 border border-slate-600 rounded-xl shadow-lg text-sm font-semibold text-slate-200 bg-slate-700/50 hover:bg-slate-600/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 hover:shadow-xl hover:scale-105">
+                        <svg data-lucide="folder-plus" class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform"></svg>
+                        Add Category
+                    </button>
+                    <button id="addExpenseBtn" class="group relative inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-xl shadow-lg text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 hover:shadow-xl hover:scale-105">
+                        <svg data-lucide="plus" class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform"></svg>
+                        Add Expense
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+        <!-- Enhanced Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-gradient-to-br from-slate-800/80 to-slate-700/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-600/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-slate-400 text-sm font-medium">Total Expenses</p>
+                        <p id="totalExpenses" class="text-2xl font-bold text-white mt-1">AED 0.00</p>
+                    </div>
+                    <div class="p-3 bg-gradient-to-r from-red-500/20 to-pink-500/20 rounded-xl">
+                        <svg data-lucide="trending-down" class="w-6 h-6 text-red-400"></svg>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-400 text-sm font-medium">+12.5%</span>
+                    <span class="text-slate-400 text-sm ml-2">from last month</span>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-slate-800/80 to-slate-700/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-600/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-slate-400 text-sm font-medium">This Month</p>
+                        <p id="monthExpenses" class="text-2xl font-bold text-white mt-1">AED 0.00</p>
+                    </div>
+                    <div class="p-3 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 rounded-xl">
+                        <svg data-lucide="calendar" class="w-6 h-6 text-blue-400"></svg>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-400 text-sm font-medium">+8.2%</span>
+                    <span class="text-slate-400 text-sm ml-2">vs last month</span>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-slate-800/80 to-slate-700/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-600/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-slate-400 text-sm font-medium">Categories</p>
+                        <p id="totalCategories" class="text-2xl font-bold text-white mt-1">0</p>
+                    </div>
+                    <div class="p-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl">
+                        <svg data-lucide="folder" class="w-6 h-6 text-purple-400"></svg>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-slate-400 text-sm">Active categories</span>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-slate-800/80 to-slate-700/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-600/30 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-slate-400 text-sm font-medium">Avg. per Day</p>
+                        <p id="avgPerDay" class="text-2xl font-bold text-white mt-1">AED 0.00</p>
+                    </div>
+                    <div class="p-3 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl">
+                        <svg data-lucide="bar-chart" class="w-6 h-6 text-green-400"></svg>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-400 text-sm font-medium">+5.3%</span>
+                    <span class="text-slate-400 text-sm ml-2">this week</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Filters Section -->
+        <div class="bg-gradient-to-br from-slate-800/80 to-slate-700/80 backdrop-blur-xl rounded-2xl shadow-xl border border-slate-600/30 p-6 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-lg">
+                        <svg data-lucide="filter" class="w-5 h-5 text-indigo-400"></svg>
+                    </div>
+                    <h2 class="text-xl font-semibold text-white">Filters & Search</h2>
+                </div>
+                <button id="exportExpensesBtn" class="group inline-flex items-center justify-center px-4 py-2 border border-slate-600 rounded-lg shadow-sm text-sm font-medium text-slate-200 bg-slate-700/50 hover:bg-slate-600/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 hover:shadow-lg">
+                    <svg data-lucide="download" class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform"></svg>
+                    Export CSV
+                </button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="space-y-2">
+                    <label for="expenseSearch" class="block text-sm font-medium text-slate-300">Search Expenses</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg data-lucide="search" class="h-4 w-4 text-slate-400"></svg>
+                        </div>
+                                                 <input type="text" id="expenseSearch" placeholder="Search by description..." 
+                                style="width: 100%; padding: 10px 12px 10px 40px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px;">
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label for="expenseDateFrom" class="block text-sm font-medium text-slate-300">From Date</label>
+                                         <input type="date" id="expenseDateFrom" 
+                            style="width: 100%; padding: 10px 12px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px;">
+                </div>
+                <div class="space-y-2">
+                    <label for="expenseDateTo" class="block text-sm font-medium text-slate-300">To Date</label>
+                                         <input type="date" id="expenseDateTo" 
+                            style="width: 100%; padding: 8px 12px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px;">
+                </div>
+                <div class="space-y-2">
+                    <label for="expenseCategoryFilter" class="block text-sm font-medium text-slate-300">Category</label>
+                                         <select id="expenseCategoryFilter" 
+                             style="width: 100%; padding: 10px 12px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px;">
+                        <option value="">All Categories</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Tabs -->
+        <div class="bg-gradient-to-br from-slate-800/80 to-slate-700/80 backdrop-blur-xl rounded-2xl shadow-xl border border-slate-600/30 overflow-hidden">
+            <div class="border-b border-slate-600/30 bg-slate-800/50">
+                <nav class="flex space-x-8 px-6" aria-label="Tabs">
+                    <button onclick="switchTab('expenses')" id="expensesTab" class="tab-button active py-4 px-1 border-b-2 border-indigo-500 font-medium text-sm text-indigo-400 whitespace-nowrap transition-all duration-200 hover:text-indigo-300">
+                        <div class="flex items-center space-x-2">
+                            <svg data-lucide="currency" class="w-4 h-4"></svg>
+                            <span>Expenses</span>
+                        </div>
+                    </button>
+                                         <button onclick="switchTab('categories')" id="categoriesTab" class="tab-button py-4 px-1 border-b-2 border-transparent font-medium text-sm text-slate-400 hover:text-slate-300 hover:border-slate-600 whitespace-nowrap transition-all duration-200">
+                         <div class="flex items-center space-x-2">
+                             <svg data-lucide="folder" class="w-4 h-4"></svg>
+                             <span>Categories</span>
+                         </div>
+                     </button>
+                     <button onclick="switchTab('recurring')" id="recurringTab" class="tab-button py-4 px-1 border-b-2 border-transparent font-medium text-sm text-slate-400 hover:text-slate-300 hover:border-slate-600 whitespace-nowrap transition-all duration-200">
+                         <div class="flex items-center space-x-2">
+                             <svg data-lucide="repeat" class="w-4 h-4"></svg>
+                             <span>Recurring Bills</span>
+                         </div>
+                     </button>
+                 </nav>
+            </div>
+
+            <!-- Enhanced Expenses Tab -->
+            <div id="expensesTabContent" class="tab-content active p-6">
+                <div id="expensesContainer" class="space-y-4">
+                    <!-- Expenses will be loaded here -->
+                </div>
+            </div>
+
+                         <!-- Enhanced Categories Tab -->
+             <div id="categoriesTabContent" class="tab-content hidden p-6">
+                 <div id="categoriesContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                     <!-- Categories will be loaded here -->
+                 </div>
+             </div>
+
+             <!-- Enhanced Recurring Expenses Tab -->
+             <div id="recurringTabContent" class="tab-content hidden p-6">
+                 <div class="flex items-center justify-between mb-6">
+                     <div class="flex items-center space-x-3">
+                         <div class="p-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-lg">
+                             <svg data-lucide="repeat" class="w-5 h-5 text-green-400"></svg>
+                         </div>
+                         <h3 class="text-lg font-semibold text-white">Recurring Bills</h3>
+                     </div>
+                     <div class="flex space-x-3">
+                         <button id="generateRecurringBtn" class="group inline-flex items-center justify-center px-4 py-2 border border-green-600 rounded-lg shadow-sm text-sm font-medium text-green-200 bg-green-700/50 hover:bg-green-600/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 hover:shadow-lg">
+                             <svg data-lucide="play" class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform"></svg>
+                             Generate Due Bills
+                         </button>
+                         <button id="addRecurringBtn" class="group inline-flex items-center justify-center px-4 py-3 border border-transparent rounded-xl shadow-lg text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 hover:shadow-xl hover:scale-105">
+                             <svg data-lucide="plus" class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform"></svg>
+                             Add Recurring Bill
+                         </button>
+                     </div>
+                 </div>
+                 <div id="recurringContainer" class="space-y-4">
+                     <!-- Recurring expenses will be loaded here -->
+                 </div>
+             </div>
+         </div>
+     </div>
+ </div>
+
+<!-- Mobile Navigation -->
+<div class="mobile-nav">
+    <a href="/app" class="mobile-nav-item">
+        <svg data-lucide="home" class="w-5 h-5"></svg>
+        <span>Home</span>
+    </a>
+    <a href="/app" class="mobile-nav-item">
+        <svg data-lucide="home" class="w-5 h-5"></svg>
+        <span>Dashboard</span>
+    </a>
+    <button onclick="document.getElementById('addExpenseBtn').click()" class="mobile-nav-item">
+        <svg data-lucide="plus" class="w-5 h-5"></svg>
+        <span>Add</span>
+    </button>
+    <button onclick="document.getElementById('exportExpensesBtn').click()" class="mobile-nav-item">
+        <svg data-lucide="download" class="w-5 h-5"></svg>
+        <span>Export</span>
+    </button>
+</div>
+
+<!-- Enhanced Category Modal -->
+<div id="categoryModal" class="modal hidden fixed inset-0 bg-black/60 backdrop-blur-sm overflow-y-auto h-full w-full z-50">
+    <div class="relative top-4 sm:top-20 mx-auto p-4 sm:p-5 border border-slate-600/30 w-11/12 sm:w-96 shadow-2xl rounded-2xl bg-gradient-to-br from-slate-800/95 to-slate-700/95 backdrop-blur-xl">
+        <div class="mt-3">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-lg">
+                        <svg data-lucide="folder-plus" class="w-5 h-5 text-indigo-400"></svg>
+                    </div>
+                    <h3 class="modal-title text-xl font-semibold text-white">Add Category</h3>
+                </div>
+                <button class="modal-close text-slate-400 hover:text-slate-300 transition-colors duration-200">
+                    <svg data-lucide="x" class="w-6 h-6"></svg>
+                </button>
+            </div>
+            <form id="categoryForm" class="space-y-6">
+                <div>
+                    <label for="categoryName" class="block text-sm font-medium text-slate-300 mb-2">Category Name *</label>
+                                         <input type="text" id="categoryName" name="category_name" required
+                            style="width: 100%; padding: 12px 16px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px;"
+                            class="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                            placeholder="Enter category name">
+                </div>
+                <div>
+                    <label for="categoryDescription" class="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                                         <textarea id="categoryDescription" name="description" rows="3"
+                               style="width: 100%; padding: 12px 16px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px; resize: none;"
+                               class="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                               placeholder="Enter description (optional)"></textarea>
+                </div>
+                <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3">
+                    <button type="button" class="modal-close w-full sm:w-auto px-6 py-3 border border-slate-600 rounded-lg shadow-sm text-sm font-medium text-slate-300 bg-slate-700/50 hover:bg-slate-600/50 transition-all duration-200">
+                        Cancel
+                    </button>
+                    <button type="submit" class="w-full sm:w-auto px-6 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200">
+                        Save Category
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Expense Modal -->
+<div id="expenseModal" class="modal hidden fixed inset-0 bg-black/60 backdrop-blur-sm overflow-y-auto h-full w-full z-50">
+    <div class="relative top-4 sm:top-10 mx-auto p-4 sm:p-5 border border-slate-600/30 w-11/12 sm:w-full max-w-lg shadow-2xl rounded-2xl bg-gradient-to-br from-slate-800/95 to-slate-700/95 backdrop-blur-xl">
+        <div class="mt-3">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-lg">
+                        <svg data-lucide="plus" class="w-5 h-5 text-indigo-400"></svg>
+                    </div>
+                    <h3 class="modal-title text-xl font-semibold text-white">Add Expense</h3>
+                </div>
+                <button class="modal-close text-slate-400 hover:text-slate-300 transition-colors duration-200">
+                    <svg data-lucide="x" class="w-6 h-6"></svg>
+                </button>
+            </div>
+            <div id="expenseForm" class="space-y-6">
+                <!-- Category and Date Row -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div>
+                        <label for="expenseCategory" class="block text-sm font-medium text-slate-300 mb-2">Category *</label>
+                        <select id="expenseCategory" name="category_id" required class="expense-category-select"
+                                style="width: 100%; padding: 12px 16px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px;">
+                            <option value="">Select Category</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="expenseDate" class="block text-sm font-medium text-slate-300 mb-2">Date *</label>
+                        <input type="date" id="expenseDate" name="expense_date" required
+                               style="width: 100%; padding: 12px 16px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px;">
+                    </div>
+                </div>
+
+                <!-- Amount Field -->
+                <div>
+                    <label for="expenseAmount" class="block text-sm font-medium text-slate-300 mb-2">Amount (AED) *</label>
+                    <div style="position: relative;">
+                        <div style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px;">AED</div>
+                        <input type="number" id="expenseAmount" name="amount" step="0.01" min="0" required
+                               style="width: 100%; padding: 12px 16px 12px 50px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px;"
+                               placeholder="0.00"
+                               oninput="this.style.borderColor = this.validity.valid ? '#475569' : '#ef4444'">
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <label for="expenseDescription" class="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                                         <textarea id="expenseDescription" name="description" rows="3"
+                               style="width: 100%; padding: 12px 16px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px; -webkit-text-fill-color: white; resize: none;"
+                               placeholder="Enter description (optional)"></textarea>
+                </div>
+
+                <!-- Payment Method and Receipt URL Row -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div>
+                        <label for="expensePaymentMethod" class="block text-sm font-medium text-slate-300 mb-2">Payment Method</label>
+                        <select id="expensePaymentMethod" name="payment_method"
+                                style="width: 100%; padding: 12px 16px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px;">
+                            <option value="Cash">Cash</option>
+                            <option value="Card">Card</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="Cheque">Cheque</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="expenseReceiptUrl" class="block text-sm font-medium text-slate-300 mb-2">Receipt URL</label>
+                        <input type="url" id="expenseReceiptUrl" name="receipt_url"
+                               style="width: 100%; padding: 12px 16px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px;"
+                               placeholder="https://example.com/receipt">
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <button type="button" class="modal-close" 
+                            style="width: 100%; padding: 12px 24px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: #cbd5e1; font-size: 14px; font-weight: 500;">
+                        Cancel
+                    </button>
+                    <button type="button" id="saveExpenseBtn" 
+                            style="width: 100%; padding: 12px 24px; border: none; border-radius: 8px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; font-size: 14px; font-weight: 500;">
+                        Save Expense
+                    </button>
+                </div>
+            </div>
+        </div>
+         </div>
+ </div>
+ 
+ <!-- Enhanced Recurring Expense Modal -->
+ <div id="recurringExpenseModal" class="modal hidden fixed inset-0 bg-black/60 backdrop-blur-sm overflow-y-auto h-full w-full z-50">
+     <div class="relative top-4 sm:top-10 mx-auto p-4 sm:p-5 border border-slate-600/30 w-11/12 sm:w-full max-w-lg shadow-2xl rounded-2xl bg-gradient-to-br from-slate-800/95 to-slate-700/95 backdrop-blur-xl">
+         <div class="mt-3">
+             <div class="flex items-center justify-between mb-6">
+                 <div class="flex items-center space-x-3">
+                     <div class="p-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-lg">
+                         <svg data-lucide="repeat" class="w-5 h-5 text-green-400"></svg>
+                     </div>
+                     <h3 class="modal-title text-xl font-semibold text-white">Add Recurring Bill</h3>
+                 </div>
+                 <button class="modal-close text-slate-400 hover:text-slate-300 transition-colors duration-200">
+                     <svg data-lucide="x" class="w-6 h-6"></svg>
+                 </button>
+             </div>
+                           <!-- OLD FORM - COMMENTED OUT
+              <form id="recurringExpenseForm" class="space-y-6">
+                  <div>
+                      <label for="recurringTitle" class="block text-sm font-medium text-slate-300 mb-2">Bill Title *</label>
+                      <input type="text" id="recurringTitle" name="title" required
+                             class="w-full px-4 py-3 border border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-slate-700/50 text-white placeholder-slate-400 backdrop-blur-sm transition-all duration-200"
+                             placeholder="e.g., Shop Rent, Electricity Bill">
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                          <label for="recurringCategory" class="block text-sm font-medium text-slate-300 mb-2">Category *</label>
+                          <select id="recurringCategory" name="category_id" required
+                                  class="w-full px-4 py-3 border border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-slate-700/50 text-white expense-category-select backdrop-blur-sm transition-all duration-200">
+                              <option value="">Select Category</option>
+                          </select>
+                      </div>
+                      <div>
+                          <label for="recurringFrequency" class="block text-sm font-medium text-slate-300 mb-2">Frequency *</label>
+                          <select id="recurringFrequency" name="frequency" required
+                                  class="w-full px-4 py-3 border border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-slate-700/50 text-white backdrop-blur-sm transition-all duration-200">
+                              <option value="">Select Frequency</option>
+                              <option value="daily">Daily</option>
+                              <option value="weekly">Weekly</option>
+                              <option value="monthly">Monthly</option>
+                              <option value="yearly">Yearly</option>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                          <label for="recurringAmount" class="block text-sm font-medium text-slate-300 mb-2">Amount (AED) *</label>
+                          <div class="relative">
+                              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                  <span class="text-slate-400 text-sm">AED</span>
+                              </div>
+                              <input type="number" id="recurringAmount" name="amount" step="0.01" min="0" required
+                                     class="w-full pl-12 pr-4 py-3 border border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-slate-700/50 text-white placeholder-slate-400 transition-all duration-200"
+                                     placeholder="0.00">
+                          </div>
+                      </div>
+                      <div>
+                          <label for="recurringStartDate" class="block text-sm font-medium text-slate-300 mb-2">Start Date *</label>
+                          <input type="date" id="recurringStartDate" name="start_date" required
+                                 class="w-full px-4 py-3 border border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-slate-700/50 text-white backdrop-blur-sm transition-all duration-200">
+                      </div>
+                  </div>
+                  <div>
+                      <label for="recurringDescription" class="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                      <textarea id="recurringDescription" name="description" rows="3"
+                                class="w-full px-4 py-3 border border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-slate-700/50 text-white placeholder-slate-400 backdrop-blur-sm transition-all duration-200 resize-none"
+                                placeholder="Enter description (optional)"></textarea>
+                  </div>
+                  <div>
+                      <label for="recurringPaymentMethod" class="block text-sm font-medium text-slate-300 mb-2">Payment Method</label>
+                      <select id="recurringPaymentMethod" name="payment_method"
+                              class="w-full px-4 py-3 border border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-slate-700/50 text-white backdrop-blur-sm transition-all duration-200">
+                          <option value="Cash">Cash</option>
+                          <option value="Card">Card</option>
+                          <option value="Bank Transfer">Bank Transfer</option>
+                          <option value="Cheque">Cheque</option>
+                          <option value="Other">Other</option>
+                      </select>
+                  </div>
+                  <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3">
+                      <button type="button" class="modal-close w-full sm:w-auto px-6 py-3 border border-slate-600 rounded-lg shadow-sm text-sm font-medium text-slate-300 bg-slate-700/50 hover:bg-slate-600/50 transition-all duration-200">
+                          Cancel
+                      </button>
+                      <button type="submit" class="w-full sm:w-auto px-6 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200">
+                          Save Recurring Bill
+                      </button>
+                  </div>
+              </form>
+              -->
+
+              <!-- COMPLETELY NEW FORM - DIFFERENT APPROACH -->
+              <div id="recurringExpenseForm" class="space-y-6">
+                  <!-- Bill Title -->
+                  <div>
+                      <label for="recurringTitle" class="block text-sm font-medium text-slate-300 mb-2">Bill Title *</label>
+                                             <input type="text" id="recurringTitle" name="title" required
+                              style="width: 100%; padding: 12px 16px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px; -webkit-text-fill-color: white; -webkit-text-stroke: 0px;"
+                              placeholder="e.g., Shop Rent, Electricity Bill">
+                  </div>
+
+                  <!-- Category and Frequency Row -->
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                      <div>
+                          <label for="recurringCategory" class="block text-sm font-medium text-slate-300 mb-2">Category *</label>
+                          <select id="recurringCategory" name="category_id" required
+                                  style="width: 100%; padding: 12px 16px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px;">
+                              <option value="">Select Category</option>
+                          </select>
+                      </div>
+                      <div>
+                          <label for="recurringFrequency" class="block text-sm font-medium text-slate-300 mb-2">Frequency *</label>
+                          <select id="recurringFrequency" name="frequency" required
+                                  style="width: 100%; padding: 12px 16px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px;">
+                              <option value="">Select Frequency</option>
+                              <option value="daily">Daily</option>
+                              <option value="weekly">Weekly</option>
+                              <option value="monthly">Monthly</option>
+                              <option value="yearly">Yearly</option>
+                          </select>
+                      </div>
+                  </div>
+
+                  <!-- Amount and Start Date Row -->
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                      <div>
+                          <label for="recurringAmount" class="block text-sm font-medium text-slate-300 mb-2">Amount (AED) *</label>
+                          <div style="position: relative;">
+                              <div style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px;">AED</div>
+                              <input type="number" id="recurringAmount" name="amount" step="0.01" min="0" required
+                                     style="width: 100%; padding: 12px 16px 12px 50px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px;"
+                                     placeholder="0.00"
+                                     oninput="this.style.borderColor = this.validity.valid ? '#475569' : '#ef4444'">
+                          </div>
+                      </div>
+                      <div>
+                          <label for="recurringStartDate" class="block text-sm font-medium text-slate-300 mb-2">Start Date *</label>
+                          <input type="date" id="recurringStartDate" name="start_date" required
+                                 style="width: 100%; padding: 12px 16px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px;">
+                      </div>
+                  </div>
+
+                  <!-- Description -->
+                  <div>
+                      <label for="recurringDescription" class="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                      <textarea id="recurringDescription" name="description" rows="3"
+                                style="width: 100%; padding: 12px 16px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px; resize: none;"
+                                placeholder="Enter description (optional)"></textarea>
+                  </div>
+
+                  <!-- Payment Method -->
+                  <div>
+                      <label for="recurringPaymentMethod" class="block text-sm font-medium text-slate-300 mb-2">Payment Method</label>
+                      <select id="recurringPaymentMethod" name="payment_method"
+                              style="width: 100%; padding: 12px 16px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: white; font-size: 16px;">
+                          <option value="Cash">Cash</option>
+                          <option value="Card">Card</option>
+                          <option value="Bank Transfer">Bank Transfer</option>
+                          <option value="Cheque">Cheque</option>
+                          <option value="Other">Other</option>
+                      </select>
+                  </div>
+
+                  <!-- Buttons -->
+                  <div style="display: flex; flex-direction: column; gap: 12px;">
+                      <button type="button" class="modal-close" 
+                              style="width: 100%; padding: 12px 24px; border: 1px solid #475569; border-radius: 8px; background-color: #475569; color: #cbd5e1; font-size: 14px; font-weight: 500;">
+                          Cancel
+                      </button>
+                      <button type="submit" id="saveRecurringBtn"
+                              style="width: 100%; padding: 12px 24px; border: none; border-radius: 8px; background-color: #10b981; color: white; font-size: 14px; font-weight: 500;">
+                          Save Recurring Bill
+                      </button>
+                  </div>
+              </div>
+         </div>
+     </div>
+ </div>
+ 
+ 
+
+<script>
+function switchTab(tabName) {
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.add('hidden');
+        content.classList.remove('active');
+    });
+    
+    // Remove active class from all tab buttons
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('active', 'border-indigo-500', 'text-indigo-400');
+        button.classList.add('border-transparent', 'text-slate-400');
+    });
+    
+    // Show selected tab content
+    document.getElementById(tabName + 'TabContent').classList.remove('hidden');
+    document.getElementById(tabName + 'TabContent').classList.add('active');
+    
+    // Add active class to selected tab button
+    document.getElementById(tabName + 'Tab').classList.add('active', 'border-indigo-500', 'text-indigo-400');
+    document.getElementById(tabName + 'Tab').classList.remove('border-transparent', 'text-slate-400');
+}
+</script>
+
+<!-- Load expense management module -->
+
+<script>
+// Lucide icons fallback
+if (typeof lucide === 'undefined') {
+    console.warn('Lucide icons not loaded, using fallback');
+    window.lucide = {
+        createIcons: function() {
+            console.log('Lucide fallback: createIcons called');
+            // Replace lucide icons with simple text or emoji
+            document.querySelectorAll('[data-lucide]').forEach(el => {
+                const iconName = el.getAttribute('data-lucide');
+                el.innerHTML = getIconFallback(iconName);
+            });
+        }
+    };
+    
+    function getIconFallback(iconName) {
+        const fallbacks = {
+            'plus': '➕',
+            'folder-plus': '📁➕',
+            'download': '⬇️',
+            'currency': '💰',
+            'folder': '📁',
+            'edit': '✏️',
+            'trash': '🗑️',
+            'eye': '👁️',
+            'calendar': '📅',
+            'search': '🔍',
+            'filter': '🔧',
+            'home': '🏠',
+            'users': '👥',
+            'package': '📦',
+            'bar-chart': '📊',
+            'settings': '⚙️',
+            'more-horizontal': '⋯',
+            'trending-down': '📉',
+            'x': '❌',
+            'credit-card': '💳',
+            'file-text': '📄',
+            'trash-2': '🗑️'
+        };
+        return fallbacks[iconName] || '📄';
+    }
+}
+</script>
+
+<script src="{{ url_for('static', filename='js/modules/expenses.js') }}"></script>
+{% endblock %}

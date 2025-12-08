@@ -1,0 +1,1740 @@
+/* Mobile Billing V3 - Fresh 4-Step Process */
+
+/* CRITICAL: Customer Color Overrides - Must be at the top for highest priority */
+/* These styles override ANY conflicting styles from mobile-enhancements.css AND billing-ui-enhanced.css */
+.mobile-billing-v3-overlay .customer-name,
+.mobile-billing-v3-modal .customer-name,
+.mobile-billing-v3-overlay .customer-item .customer-name,
+.mobile-billing-v3-modal .customer-item .customer-name,
+.mobile-billing-v3-overlay .customers-list .customer-name,
+.mobile-billing-v3-modal .customers-list .customer-name,
+.mobile-billing-v3-overlay .customer-info .customer-name,
+.mobile-billing-v3-modal .customer-info .customer-name,
+.mobile-billing-v3-overlay .customer-card .customer-name,
+.mobile-billing-v3-modal .customer-card .customer-name,
+.mobile-billing-v3-overlay .selected-customer-display .customer-name,
+.mobile-billing-v3-modal .selected-customer-display .customer-name {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  font-weight: 600 !important;
+  font-size: 18px !important;
+  margin-bottom: 6px !important;
+  line-height: 1.3 !important;
+}
+
+.mobile-billing-v3-overlay .customer-phone,
+.mobile-billing-v3-modal .customer-phone,
+.mobile-billing-v3-overlay .customer-item .customer-phone,
+.mobile-billing-v3-modal .customer-item .customer-phone,
+.mobile-billing-v3-overlay .customers-list .customer-phone,
+.mobile-billing-v3-modal .customers-list .customer-phone,
+.mobile-billing-v3-overlay .customer-info .customer-phone,
+.mobile-billing-v3-modal .customer-info .customer-phone,
+.mobile-billing-v3-overlay .customer-card .customer-phone,
+.mobile-billing-v3-modal .customer-card .customer-phone,
+.mobile-billing-v3-overlay .selected-customer-display .customer-phone,
+.mobile-billing-v3-modal .selected-customer-display .customer-phone {
+  color: #3b82f6 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  font-weight: 500 !important;
+  font-size: 15px !important;
+  margin-bottom: 4px !important;
+}
+
+/* STEP 2 CUSTOMER SEARCH AND ADD BUTTON RESIZING */
+/* Resize customer search input in Step 2 */
+.mobile-billing-v3-overlay #step-2 #customer-search,
+.mobile-billing-v3-modal #step-2 #customer-search {
+  height: 45px !important;
+  padding: 10px 16px !important;
+  font-size: 14px !important;
+  border-radius: 8px !important;
+}
+
+/* Resize Add New Customer button in Step 2 */
+.mobile-billing-v3-overlay #step-2 #add-customer-btn,
+.mobile-billing-v3-modal #step-2 #add-customer-btn {
+  height: 45px !important;
+  padding: 10px 16px !important;
+  font-size: 14px !important;
+  border-radius: 8px !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 10003 !important;
+  pointer-events: auto !important;
+}
+
+.mobile-billing-v3-overlay #step-2 #add-customer-btn .flex,
+.mobile-billing-v3-modal #step-2 #add-customer-btn .flex {
+  gap: 6px !important;
+}
+
+.mobile-billing-v3-overlay #step-2 #add-customer-btn svg,
+.mobile-billing-v3-modal #step-2 #add-customer-btn svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+
+
+/* ENSURE ADD NEW BUTTON IS VISIBLE AND STYLED CORRECTLY */
+.mobile-billing-v3-overlay #step-2 #add-customer-btn,
+.mobile-billing-v3-modal #step-2 #add-customer-btn {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: white !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+/* ENSURE CUSTOMER MODAL IS VISIBLE */
+#add-customer-modal {
+  z-index: 99999 !important;
+}
+
+#add-customer-modal:not(.hidden) {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* CUSTOMER DETAILS SECTION POSITIONING */
+#customer-details-section {
+  margin-top: -8px !important;
+  padding-top: 12px !important;
+}
+
+.mobile-billing-v3-overlay #step-2 #add-customer-btn:hover,
+.mobile-billing-v3-modal #step-2 #add-customer-btn:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  transform: scale(1.02) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* SIMPLE NAVIGATION BUTTON FIX */
+/* Force the navigation buttons to be visible with proper colors */
+#prev-step-btn,
+#next-step-btn {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  min-width: 120px !important;
+  margin: 0 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  border: none !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Force Previous button to be gray with white text */
+#prev-step-btn {
+  background-color: #6b7280 !important;
+  background: #6b7280 !important;
+  color: #ffffff !important;
+  border: 1px solid #9ca3af !important;
+}
+
+#prev-step-btn:hover {
+  background-color: #9ca3af !important;
+  background: #9ca3af !important;
+  color: #ffffff !important;
+}
+
+/* Force Next button to be blue with white text */
+#next-step-btn {
+  background-color: #3b82f6 !important;
+  background: #3b82f6 !important;
+  color: #ffffff !important;
+  border: 1px solid #2563eb !important;
+}
+
+#next-step-btn:hover {
+  background-color: #2563eb !important;
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+/* Override disabled state */
+#prev-step-btn:disabled,
+#next-step-btn:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* Main Container */
+.mobile-billing-v3-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+  display: none;
+}
+
+.mobile-billing-v3-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #111827;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 10001;
+}
+
+/* Hide the bottom mobile navigation when mobile billing V3 is active */
+.mobile-billing-v3-overlay.active ~ .mobile-nav,
+.mobile-billing-v3-overlay.active + .mobile-nav,
+body.mobile-billing-active .mobile-nav,
+body.mobile-billing-active .bottom-nav,
+body.mobile-billing-active .mobile-navigation,
+body.mobile-billing-active nav.mobile-nav,
+.mobile-billing-v3-overlay.active ~ nav.mobile-nav,
+.mobile-billing-v3-overlay.active + nav.mobile-nav,
+body.mobile-billing-active [class*="mobile-nav"],
+body.mobile-billing-active [class*="bottom-nav"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+}
+
+/* Ensure mobile navigation is visible when mobile billing is NOT active */
+.mobile-nav:not(.mobile-billing-v3-overlay.active ~ .mobile-nav),
+#mobile-navigation-bar:not(.mobile-billing-v3-overlay.active ~ #mobile-navigation-bar),
+nav.mobile-nav:not(.mobile-billing-v3-overlay.active ~ nav.mobile-nav) {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 1000 !important;
+  pointer-events: auto !important;
+}
+
+/* ENSURE MOBILE BILLING NAVIGATION IS ALWAYS VISIBLE */
+.mobile-billing-v3-modal .p-4.border-t.border-neutral-700.bg-neutral-800,
+#mobile-billing-v3-overlay .p-4.border-t.border-neutral-700.bg-neutral-800 {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 10002 !important;
+  pointer-events: auto !important;
+}
+
+.mobile-billing-v3-modal .navigation-container,
+#mobile-billing-v3-overlay .navigation-container {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  width: 100% !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.mobile-billing-v3-modal #prev-step-btn,
+.mobile-billing-v3-modal #next-step-btn,
+#mobile-billing-v3-overlay #prev-step-btn,
+#mobile-billing-v3-overlay #next-step-btn {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  min-width: 120px !important;
+  margin: 0 !important;
+  pointer-events: auto !important;
+}
+
+/* ULTIMATE OVERRIDE - Force mobile billing navigation to be visible */
+body .mobile-billing-v3-modal .p-4.border-t.border-neutral-700.bg-neutral-800,
+body #mobile-billing-v3-overlay .p-4.border-t.border-neutral-700.bg-neutral-800,
+body .mobile-billing-v3-modal #prev-step-btn,
+body .mobile-billing-v3-modal #next-step-btn,
+body #mobile-billing-v3-overlay #prev-step-btn,
+body #mobile-billing-v3-overlay #next-step-btn {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 10002 !important;
+  pointer-events: auto !important;
+  position: relative !important;
+}
+
+/* FORCE BUTTON DISPLAY AND ENABLEMENT */
+#mobile-billing-v3-overlay #prev-step-btn,
+#mobile-billing-v3-overlay #next-step-btn,
+.mobile-billing-v3-modal #prev-step-btn,
+.mobile-billing-v3-modal #next-step-btn {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  min-width: 120px !important;
+  margin: 0 !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 10002 !important;
+  /* Force enable buttons */
+  cursor: pointer !important;
+  opacity: 1 !important;
+}
+
+/* Override disabled state for navigation buttons */
+#mobile-billing-v3-overlay #prev-step-btn:not([disabled]),
+#mobile-billing-v3-overlay #next-step-btn:not([disabled]),
+.mobile-billing-v3-modal #prev-step-btn:not([disabled]),
+.mobile-billing-v3-modal #next-step-btn:not([disabled]) {
+  opacity: 1 !important;
+  cursor: pointer !important;
+}
+
+/* Force navigation container to be visible and properly laid out */
+#mobile-billing-v3-overlay .p-4.border-t.border-neutral-700.bg-neutral-800,
+.mobile-billing-v3-modal .p-4.border-t.border-neutral-700.bg-neutral-800 {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 10002 !important;
+  pointer-events: auto !important;
+  padding: 1rem !important;
+  border-top: 1px solid #374151 !important;
+  background-color: #1f2937 !important;
+}
+
+/* Force navigation container inner div to be horizontal */
+#mobile-billing-v3-overlay .p-4.border-t.border-neutral-700.bg-neutral-800 > div,
+.mobile-billing-v3-modal .p-4.border-t.border-neutral-700.bg-neutral-800 > div {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  width: 100% !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 10002 !important;
+}
+
+/* Header */
+.mobile-billing-v3-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #1f2937;
+  border-bottom: 1px solid #374151;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.app-info h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+.app-info p {
+  margin: 0;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: #374151;
+  color: #f9fafb;
+}
+
+/* Step Progress */
+.step-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #1f2937;
+  border-bottom: 1px solid #374151;
+}
+
+.step-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #374151;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.step-indicator.active .step-number {
+  background: #3b82f6;
+  color: white;
+}
+
+.step-label {
+  font-size: 12px;
+  color: #9ca3af;
+  font-weight: 500;
+  text-align: center;
+}
+
+.step-indicator.active .step-label {
+  color: #3b82f6;
+}
+
+.step-line {
+  width: 40px;
+  height: 2px;
+  background: #374151;
+  margin: 0 8px;
+}
+
+/* Step Content */
+.step-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  background: #111827;
+}
+
+.step-panel {
+  display: none !important;
+  flex-direction: column;
+  height: 100%;
+}
+
+.step-panel.active {
+  display: flex !important;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.step-header {
+  margin-bottom: 32px;
+  text-align: center;
+  padding: 0 16px;
+}
+
+.step-header h2 {
+  margin: 0 0 12px 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #f9fafb;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.step-header p {
+  margin: 0;
+  font-size: 16px;
+  color: #9ca3af;
+  line-height: 1.5;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Search Section */
+.search-section,
+.customer-search-section {
+  margin-bottom: 24px;
+}
+
+.search-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-input svg {
+  position: absolute;
+  left: 16px;
+  color: #9ca3af;
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+}
+
+.search-input input {
+  width: 100%;
+  padding: 18px 18px 18px 52px;
+  background: #374151;
+  border: 2px solid #4b5563;
+  border-radius: 16px;
+  color: #f9fafb;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-input input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
+  transform: translateY(-1px);
+}
+
+.search-input input::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.customer-search-section {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.add-customer-btn {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  padding: 18px 32px;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  width: 100%;
+  justify-content: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.add-customer-btn:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.add-customer-btn:active {
+  transform: translateY(0);
+}
+
+/* Products Grid */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.product-card {
+  background: #374151;
+  border: 1px solid #4b5563;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+}
+
+.product-card:hover {
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+}
+
+.product-info {
+  flex: 1;
+}
+
+.product-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.product-type {
+  font-size: 12px;
+  color: #d1d5db;
+  margin-bottom: 8px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.product-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.add-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  width: 40px;
+  height: 60px; /* Increased from 40px to 60px (50% increase) */
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.add-btn:hover {
+  background: #2563eb;
+}
+
+/* Customers List */
+.customers-list {
+  margin-bottom: 24px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.customer-item {
+  background: #374151;
+  border: 1px solid #4b5563;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.customer-item:hover {
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
+}
+
+.customer-info {
+  flex: 1;
+  margin-right: 16px;
+}
+
+/* Override mobile-enhancements.css with more specific selectors */
+.mobile-billing-v3-overlay .customer-name,
+.mobile-billing-v3-modal .customer-name,
+.mobile-billing-v3-overlay .customer-item .customer-name,
+.mobile-billing-v3-modal .customer-item .customer-name,
+.mobile-billing-v3-overlay .customers-list .customer-name,
+.mobile-billing-v3-modal .customers-list .customer-name {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  margin-bottom: 6px !important;
+  line-height: 1.3 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.mobile-billing-v3-overlay .customer-phone,
+.mobile-billing-v3-modal .customer-phone,
+.mobile-billing-v3-overlay .customer-item .customer-phone,
+.mobile-billing-v3-modal .customer-item .customer-phone,
+.mobile-billing-v3-overlay .customers-list .customer-phone,
+.mobile-billing-v3-modal .customers-list .customer-phone {
+  font-size: 15px !important;
+  color: #3b82f6 !important;
+  margin-bottom: 4px !important;
+  font-weight: 500 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.customer-location {
+  font-size: 13px;
+  color: #9ca3af;
+  font-style: italic;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* NUCLEAR OPTION - Override ALL possible conflicting styles */
+#mobile-billing-v3-overlay .customer-name,
+#mobile-billing-v3-modal .customer-name,
+#mobile-billing-v3-overlay .customer-item .customer-name,
+#mobile-billing-v3-modal .customer-item .customer-name,
+#mobile-billing-v3-overlay .customers-list .customer-name,
+#mobile-billing-v3-modal .customers-list .customer-name,
+#mobile-billing-v3-overlay .customer-info .customer-name,
+#mobile-billing-v3-modal .customer-info .customer-name {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+#mobile-billing-v3-overlay .customer-phone,
+#mobile-billing-v3-modal .customer-phone,
+#mobile-billing-v3-overlay .customer-item .customer-phone,
+#mobile-billing-v3-modal .customer-item .customer-phone,
+#mobile-billing-v3-overlay .customers-list .customer-phone,
+#mobile-billing-v3-modal .customers-list .customer-phone,
+#mobile-billing-v3-overlay .customer-info .customer-phone,
+#mobile-billing-v3-modal .customer-info .customer-phone {
+  color: #3b82f6 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.select-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  min-width: 100px;
+  text-align: center;
+}
+
+.select-btn:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.select-btn:active {
+  transform: translateY(0);
+}
+
+/* Selected Items Summary */
+.selected-items-summary {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 24px;
+}
+
+.selected-items-summary h3 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.selected-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #374151;
+}
+
+.selected-item:last-child {
+  border-bottom: none;
+}
+
+.item-info {
+  flex: 1;
+}
+
+.item-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.item-details {
+  font-size: 12px;
+  color: #d1d5db;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.item-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qty-btn {
+  background: #374151;
+  color: #f9fafb;
+  border: 1px solid #4b5563;
+  width: 42px; /* Increased from 28px to 42px (50% increase) */
+  height: 42px; /* Increased from 28px to 42px (50% increase) */
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.qty-btn:hover {
+  background: #4b5563;
+}
+
+.qty {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f9fafb;
+  min-width: 20px;
+  text-align: center;
+}
+
+.remove-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  width: 42px; /* Increased from 28px to 42px (50% increase) */
+  height: 42px; /* Increased from 28px to 42px (50% increase) */
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.remove-btn:hover {
+  background: #dc2626;
+}
+
+/* Selected Customer Display */
+.selected-customer-display {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 24px;
+}
+
+.selected-customer-display h3 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.customer-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Override mobile-enhancements.css for selected customer display */
+.mobile-billing-v3-overlay .selected-customer-display .customer-name,
+.mobile-billing-v3-modal .selected-customer-display .customer-name {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  margin-bottom: 4px !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.mobile-billing-v3-overlay .selected-customer-display .customer-phone,
+.mobile-billing-v3-modal .selected-customer-display .customer-phone {
+  font-size: 14px !important;
+  color: #3b82f6 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.change-customer-btn {
+  background: #f59e0b;
+  color: white;
+  border: none;
+  padding: 12px 24px; /* Increased from 8px 16px to 12px 24px (50% increase) */
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.change-customer-btn:hover {
+  background: #d97706;
+}
+
+/* Bill Summary */
+.bill-summary {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.bill-items {
+  margin-bottom: 20px;
+}
+
+.bill-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #374151;
+}
+
+.bill-item:last-child {
+  border-bottom: none;
+}
+
+.item-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.item-type {
+  font-size: 12px;
+  color: #d1d5db;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.item-qty {
+  font-size: 12px;
+  color: #d1d5db;
+  margin-bottom: 4px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.item-total {
+  font-size: 14px;
+  font-weight: 600;
+  color: #10b981;
+}
+
+.bill-totals {
+  border-top: 1px solid #374151;
+  padding-top: 20px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.total-row.total {
+  font-size: 18px;
+  font-weight: 700;
+  color: #10b981;
+  border-top: 1px solid #374151;
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+.total-row.balance {
+  font-size: 16px;
+  font-weight: 600;
+  color: #f59e0b;
+}
+
+.discount-row,
+.advance-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.discount-input,
+.advance-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.discount-input input,
+.advance-input input {
+  width: 80px;
+  padding: 8px 12px;
+  background: #374151;
+  border: 1px solid #4b5563;
+  border-radius: 6px;
+  color: #f9fafb;
+  font-size: 14px;
+  text-align: center;
+}
+
+.discount-input input:focus,
+.advance-input input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+/* Final Bill Summary */
+.final-bill-summary {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.bill-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bill-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #f9fafb;
+}
+
+.bill-row:first-child {
+  font-size: 16px;
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px 36px; /* Increased from 16px 24px to 24px 36px (50% increase) */
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn.primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.action-btn.primary:hover {
+  background: #2563eb;
+}
+
+.action-btn.secondary {
+  background: #374151;
+  color: #f9fafb;
+  border: 1px solid #4b5563;
+}
+
+.action-btn.secondary:hover {
+  background: #4b5563;
+}
+
+/* Navigation */
+.step-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #1f2937;
+  border-top: 1px solid #374151;
+  gap: 16px;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 36px; /* Increased from 12px 24px to 18px 36px (50% increase) */
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.prev-btn {
+  background: #374151;
+  color: #9ca3af;
+}
+
+.prev-btn:hover:not(:disabled) {
+  background: #4b5563;
+  color: #f9fafb;
+}
+
+.prev-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.next-btn {
+  background: #3b82f6;
+  color: white;
+}
+
+.next-btn:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.next-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-content {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.modal-content h3 {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #f9fafb;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #f9fafb;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  background: #374151;
+  border: 1px solid #4b5563;
+  border-radius: 8px;
+  color: #f9fafb;
+  font-size: 14px;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn-primary,
+.btn-secondary {
+  flex: 1;
+  padding: 18px 24px; /* Increased from 12px 16px to 18px 24px (50% increase) */
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #2563eb;
+}
+
+.btn-secondary {
+  background: #374151;
+  color: #f9fafb;
+  border: 1px solid #4b5563;
+}
+
+.btn-secondary:hover {
+  background: #4b5563;
+}
+
+/* Success Modal */
+.success-icon {
+  text-align: center;
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.bill-details p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #f9fafb;
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* Loading and Empty States */
+.loading,
+.no-products,
+.no-customers,
+.no-items {
+  text-align: center;
+  padding: 40px 20px;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+/* Custom Scrollbar */
+.customers-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.customers-list::-webkit-scrollbar-track {
+  background: #1f2937;
+  border-radius: 3px;
+}
+
+.customers-list::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 3px;
+  transition: background 0.3s ease;
+}
+
+.customers-list::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .step-progress {
+    padding: 16px;
+  }
+  
+  .step-line {
+    width: 20px;
+  }
+  
+  .step-content {
+    padding: 16px;
+  }
+  
+  .customer-search-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .add-customer-btn {
+    justify-content: center;
+  }
+  
+  .customer-item {
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  
+  .customer-name {
+    font-size: 16px !important;
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  .customer-phone {
+    font-size: 14px !important;
+    color: #3b82f6 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  }
+  
+  .select-btn {
+    padding: 12px 20px;
+    font-size: 14px;
+    min-width: 80px;
+  }
+}
+
+/* Notification System */
+.mobile-billing-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10001;
+  max-width: 400px;
+  min-width: 300px;
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.notification-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-billing-notification-success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+.mobile-billing-notification-error {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+.mobile-billing-notification-info {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+}
+
+.notification-icon {
+  font-size: 20px;
+  font-weight: bold;
+  min-width: 24px;
+  text-align: center;
+}
+
+.notification-message {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.notification-close {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+  opacity: 0.8;
+}
+
+.notification-close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  opacity: 1;
+}
+
+/* Mobile responsive adjustments for notifications */
+@media (max-width: 640px) {
+  .mobile-billing-notification {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+    min-width: auto;
+  }
+  
+  .notification-content {
+    padding: 14px 16px;
+  }
+  
+  .notification-message {
+    font-size: 13px;
+  }
+}
+
+/* Navigation buttons - FORCE horizontal alignment */
+#mobile-billing-v3-overlay .p-4.border-t.border-neutral-700.bg-neutral-800 {
+  display: block !important;
+}
+
+#mobile-billing-v3-overlay .p-4.border-t.border-neutral-700.bg-neutral-800 > div {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  width: 100% !important;
+}
+
+#mobile-billing-v3-overlay #prev-step-btn,
+#mobile-billing-v3-overlay #next-step-btn {
+  display: inline-block !important;
+  margin: 0 !important;
+  float: none !important;
+  width: auto !important;
+  height: auto !important;
+  flex: 0 0 auto !important;
+  min-width: 120px !important;
+}
+
+/* Override any Tailwind classes that might be causing issues */
+.flex.flex-row {
+  flex-direction: row !important;
+}
+
+.flex.flex-col {
+  flex-direction: column !important;
+}
+
+/* Navigation - Simplified and Clean */
+.navigation-container {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  width: 100% !important;
+}
+
+/* Ensure navigation buttons are visible */
+#prev-step-btn,
+#next-step-btn {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  min-width: 120px !important;
+  margin: 0 !important;
+}
+
+/* Force the container to be horizontal */
+#mobile-billing-v3-overlay .p-4.border-t.border-neutral-700.bg-neutral-800 > div {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  width: 100% !important;
+  flex-wrap: nowrap !important;
+  /* Ensure navigation section is visible */
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 10001 !important;
+}
+
+/* Only target navigation buttons, not the Add New button */
+#mobile-billing-v3-overlay .p-4.border-t.border-neutral-700.bg-neutral-800 > div > button:not(#add-customer-btn) {
+  flex: 0 0 auto !important;
+  display: inline-block !important;
+  float: none !important;
+  clear: none !important;
+  width: auto !important;
+  min-width: 120px !important;
+  margin: 0 !important;
+}
+
+
+
+/* ULTIMATE CUSTOMER COLOR OVERRIDE - MAXIMUM SPECIFICITY */
+/* This will override ANY conflicting styles from ANY CSS file */
+#mobile-billing-v3-overlay .customer-name,
+#mobile-billing-v3-modal .customer-name,
+#mobile-billing-v3-overlay .customer-item .customer-name,
+#mobile-billing-v3-modal .customer-item .customer-name,
+#mobile-billing-v3-overlay .customers-list .customer-name,
+#mobile-billing-v3-modal .customers-list .customer-name,
+#mobile-billing-v3-overlay .customer-info .customer-name,
+#mobile-billing-v3-modal .customer-info .customer-name,
+#mobile-billing-v3-overlay .customer-card .customer-name,
+#mobile-billing-v3-modal .customer-card .customer-name,
+#mobile-billing-v3-overlay .selected-customer-display .customer-name,
+#mobile-billing-v3-modal .selected-customer-display .customer-name,
+/* Target any element with customer-name class inside mobile billing */
+#mobile-billing-v3-overlay [class*="customer-name"],
+#mobile-billing-v3-modal [class*="customer-name"],
+/* Target by attribute selector as well */
+#mobile-billing-v3-overlay .customer-name,
+#mobile-billing-v3-modal .customer-name {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  font-weight: 600 !important;
+}
+
+#mobile-billing-v3-overlay .customer-phone,
+#mobile-billing-v3-modal .customer-phone,
+#mobile-billing-v3-overlay .customer-item .customer-phone,
+#mobile-billing-v3-modal .customer-item .customer-phone,
+#mobile-billing-v3-overlay .customers-list .customer-phone,
+#mobile-billing-v3-modal .customers-list .customer-phone,
+#mobile-billing-v3-overlay .customer-info .customer-phone,
+#mobile-billing-v3-modal .customer-info .customer-phone,
+#mobile-billing-v3-overlay .customer-card .customer-phone,
+#mobile-billing-v3-modal .customer-card .customer-phone,
+#mobile-billing-v3-overlay .selected-customer-display .customer-phone,
+#mobile-billing-v3-modal .selected-customer-display .customer-phone,
+/* Target any element with customer-phone class inside mobile billing */
+#mobile-billing-v3-overlay [class*="customer-phone"],
+#mobile-billing-v3-modal [class*="customer-phone"],
+/* Target by attribute selector as well */
+#mobile-billing-v3-overlay .customer-phone,
+#mobile-billing-v3-modal .customer-phone {
+  color: #3b82f6 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  font-weight: 500 !important;
+}
+
+/* Force override for mobile-enhancements.css specifically */
+.mobile-billing-v3-overlay .customer-name,
+.mobile-billing-v3-modal .customer-name {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.mobile-billing-v3-overlay .customer-phone,
+.mobile-billing-v3-modal .customer-phone {
+  color: #3b82f6 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* CRITICAL: Override billing-ui-enhanced.css customer info styles */
+.mobile-billing-v3-overlay .customer-info .customer-name,
+.mobile-billing-v3-modal .customer-info .customer-name {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  font-weight: 600 !important;
+  font-size: 18px !important;
+  margin-bottom: 6px !important;
+  line-height: 1.3 !important;
+}
+
+.mobile-billing-v3-overlay .customer-info .customer-phone,
+.mobile-billing-v3-modal .customer-info .customer-phone {
+  color: #3b82f6 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  font-weight: 500 !important;
+  font-size: 15px !important;
+  margin-bottom: 4px !important;
+}
+
+/* Override any billing-ui-enhanced.css h5 and p styles within customer-info */
+.mobile-billing-v3-overlay .customer-info h5,
+.mobile-billing-v3-modal .customer-info h5,
+.mobile-billing-v3-overlay .customer-info p,
+.mobile-billing-v3-modal .customer-info p {
+  color: inherit !important;
+  font-weight: inherit !important;
+  font-size: inherit !important;
+  margin: inherit !important;
+  line-height: inherit !important;
+}
+
+/* FINAL NUCLEAR OVERRIDE - This will override ANY conflicting styles from ANY CSS file */
+/* Force customer name to be white and phone to be blue regardless of any other rules */
+.mobile-billing-v3-overlay .customer-name,
+.mobile-billing-v3-modal .customer-name,
+.mobile-billing-v3-overlay .customer-item .customer-name,
+.mobile-billing-v3-modal .customer-item .customer-name,
+.mobile-billing-v3-overlay .customers-list .customer-name,
+.mobile-billing-v3-modal .customers-list .customer-name,
+.mobile-billing-v3-overlay .customer-info .customer-name,
+.mobile-billing-v3-modal .customer-info .customer-name,
+.mobile-billing-v3-overlay .customer-card .customer-name,
+.mobile-billing-v3-modal .customer-card .customer-name,
+.mobile-billing-v3-overlay .selected-customer-display .customer-name,
+.mobile-billing-v3-modal .selected-customer-display .customer-name,
+/* Target any element with customer-name class inside mobile billing */
+.mobile-billing-v3-overlay [class*="customer-name"],
+.mobile-billing-v3-modal [class*="customer-name"],
+/* Target by attribute selector as well */
+.mobile-billing-v3-overlay .customer-name,
+.mobile-billing-v3-modal .customer-name,
+/* Target any element that contains customer-name in its class */
+.mobile-billing-v3-overlay div[class*="customer-name"],
+.mobile-billing-v3-modal div[class*="customer-name"],
+/* Target any element that contains customer-name in its class */
+.mobile-billing-v3-overlay span[class*="customer-name"],
+.mobile-billing-v3-modal span[class*="customer-name"],
+/* Target any element that contains customer-name in its class */
+.mobile-billing-v3-overlay p[class*="customer-name"],
+.mobile-billing-v3-modal p[class*="customer-name"],
+/* Target any element that contains customer-name in its class */
+.mobile-billing-v3-overlay h5[class*="customer-name"],
+.mobile-billing-v3-modal h5[class*="customer-name"],
+/* Target any element that contains customer-name in its class */
+.mobile-billing-v3-overlay h6[class*="customer-name"],
+.mobile-billing-v3-modal h6[class*="customer-name"] {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  font-weight: 600 !important;
+  font-size: 18px !important;
+  margin-bottom: 6px !important;
+  line-height: 1.3 !important;
+}
+
+.mobile-billing-v3-overlay .customer-phone,
+.mobile-billing-v3-modal .customer-phone,
+.mobile-billing-v3-overlay .customer-item .customer-phone,
+.mobile-billing-v3-modal .customer-item .customer-phone,
+.mobile-billing-v3-overlay .customers-list .customer-phone,
+.mobile-billing-v3-modal .customers-list .customer-phone,
+.mobile-billing-v3-overlay .customer-info .customer-phone,
+.mobile-billing-v3-modal .customer-info .customer-phone,
+.mobile-billing-v3-overlay .customer-card .customer-phone,
+.mobile-billing-v3-modal .customer-card .customer-phone,
+.mobile-billing-v3-overlay .selected-customer-display .customer-phone,
+.mobile-billing-v3-modal .selected-customer-display .customer-phone,
+/* Target any element with customer-phone class inside mobile billing */
+.mobile-billing-v3-overlay [class*="customer-phone"],
+.mobile-billing-v3-modal [class*="customer-phone"],
+/* Target by attribute selector as well */
+.mobile-billing-v3-overlay .customer-phone,
+.mobile-billing-v3-modal .customer-phone,
+/* Target any element that contains customer-phone in its class */
+.mobile-billing-v3-overlay div[class*="customer-phone"],
+.mobile-billing-v3-modal div[class*="customer-phone"],
+/* Target any element that contains customer-phone in its class */
+.mobile-billing-v3-overlay span[class*="customer-phone"],
+.mobile-billing-v3-modal span[class*="customer-phone"],
+/* Target any element that contains customer-phone in its class */
+.mobile-billing-v3-overlay p[class*="customer-phone"],
+.mobile-billing-v3-modal p[class*="customer-phone"],
+/* Target any element that contains customer-phone in its class */
+.mobile-billing-v3-overlay h5[class*="customer-phone"],
+.mobile-billing-v3-modal h5[class*="customer-phone"],
+/* Target any element that contains customer-phone in its class */
+.mobile-billing-v3-overlay h6[class*="customer-phone"],
+.mobile-billing-v3-modal h6[class*="customer-phone"] {
+  color: #3b82f6 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  font-weight: 500 !important;
+  font-size: 15px !important;
+  margin-bottom: 4px !important;
+}
+
+/* Customer Table - align like product table */
+#customerTable {
+  width: 100% !important;
+  border-collapse: collapse !important;
+}
+
+#customerTable th {
+  background: rgba(55, 65, 81, 0.8) !important;
+  padding: 12px 8px !important;
+  text-align: left !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #f9fafb !important;
+  border-bottom: 2px solid #374151 !important;
+}
+
+#customerTable td {
+  padding: 12px 8px !important;
+  text-align: left !important;
+  font-size: 14px !important;
+  border-bottom: 1px solid #374151 !important;
+  color: #d1d5db !important;
+}

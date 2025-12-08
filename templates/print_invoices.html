@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Print Invoices</title>
+  <style>
+    body { font-family: sans-serif; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #888; padding: 6px; }
+    th { background: #eee; }
+  </style>
+</head>
+<body>
+  <h2>Invoices Report</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="white-space: nowrap; min-width: 140px;">Bill#</th>
+        <th style="white-space: nowrap; min-width: 110px;">Bill Date</th>
+        <th>Customer Name</th>
+        <th style="white-space: nowrap; min-width: 110px;">Delivery Date</th>
+        <th>Total Before VAT</th>
+        <th>VAT</th>
+        <th>Total After VAT</th>
+        <th>Status</th>
+        <th>Products</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for inv in invoices %}
+      <tr>
+        <td style="white-space: nowrap; min-width: 140px;">{{ inv.bill_id }}</td>
+        <td style="white-space: nowrap; min-width: 110px;">{{ inv.bill_date }}</td>
+        <td>{{ inv.customer_name }}</td>
+        <td style="white-space: nowrap; min-width: 110px;">{{ inv.delivery_date }}</td>
+        <td>{{ inv.total_before_vat }}</td>
+        <td>{{ inv.vat }}</td>
+        <td>{{ inv.total_after_vat }}</td>
+        <td>{{ inv.status }}</td>
+        <td>{{ inv.products|join(', ') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <script>
+    window.onload = function() { window.print(); }
+  </script>
+</body>
+</html> 

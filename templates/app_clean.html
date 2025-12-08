@@ -1,0 +1,1480 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Tajir - Application{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@4.1.0/dist/chartjs-chart-matrix.umd.min.js"></script>
+<style>
+  label{font-size:.7rem;color:#9ca3af}
+  
+  /* Custom animations for Product Type screen */
+  @keyframes slideInFromBottom {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeInScale {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes pulseGlow {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(99, 102, 241, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+    }
+  }
+  
+  .product-type-item {
+    animation: slideInFromBottom 0.3s ease-out;
+  }
+  
+  .product-type-item:nth-child(1) { animation-delay: 0.1s; }
+  .product-type-item:nth-child(2) { animation-delay: 0.2s; }
+  .product-type-item:nth-child(3) { animation-delay: 0.3s; }
+  .product-type-item:nth-child(4) { animation-delay: 0.4s; }
+  .product-type-item:nth-child(5) { animation-delay: 0.5s; }
+  
+  /* Product animations */
+  .product-item {
+    animation: slideInFromBottom 0.3s ease-out;
+  }
+  
+  .product-item:nth-child(1) { animation-delay: 0.1s; }
+  .product-item:nth-child(2) { animation-delay: 0.2s; }
+  .product-item:nth-child(3) { animation-delay: 0.3s; }
+  .product-item:nth-child(4) { animation-delay: 0.4s; }
+  .product-item:nth-child(5) { animation-delay: 0.5s; }
+  .product-item:nth-child(6) { animation-delay: 0.6s; }
+  .product-item:nth-child(7) { animation-delay: 0.7s; }
+  .product-item:nth-child(8) { animation-delay: 0.8s; }
+  .product-item:nth-child(9) { animation-delay: 0.9s; }
+  .product-item:nth-child(10) { animation-delay: 1.0s; }
+  
+  /* Employee animations */
+  .employee-item {
+    animation: slideInFromBottom 0.3s ease-out;
+  }
+  
+  .employee-item:nth-child(1) { animation-delay: 0.1s; }
+  .employee-item:nth-child(2) { animation-delay: 0.2s; }
+  .employee-item:nth-child(3) { animation-delay: 0.3s; }
+  .employee-item:nth-child(4) { animation-delay: 0.4s; }
+  .employee-item:nth-child(5) { animation-delay: 0.5s; }
+  .employee-item:nth-child(6) { animation-delay: 0.6s; }
+  .employee-item:nth-child(7) { animation-delay: 0.7s; }
+  .employee-item:nth-child(8) { animation-delay: 0.8s; }
+  .employee-item:nth-child(9) { animation-delay: 0.9s; }
+  .employee-item:nth-child(10) { animation-delay: 1.0s; }
+  
+  /* Customer animations */
+  .customer-item {
+    animation: slideInFromBottom 0.3s ease-out;
+  }
+  
+  .customer-item:nth-child(1) { animation-delay: 0.1s; }
+  .customer-item:nth-child(2) { animation-delay: 0.2s; }
+  .customer-item:nth-child(3) { animation-delay: 0.3s; }
+  .customer-item:nth-child(4) { animation-delay: 0.4s; }
+  .customer-item:nth-child(5) { animation-delay: 0.5s; }
+  .customer-item:nth-child(6) { animation-delay: 0.6s; }
+  .customer-item:nth-child(7) { animation-delay: 0.7s; }
+  .customer-item:nth-child(8) { animation-delay: 0.8s; }
+  .customer-item:nth-child(9) { animation-delay: 0.9s; }
+  .customer-item:nth-child(10) { animation-delay: 1.0s; }
+  
+  .hover-glow:hover {
+    animation: pulseGlow 2s infinite;
+  }
+  
+  .form-fade-in {
+    animation: fadeInScale 0.5s ease-out;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="flex min-h-screen">
+  <!-- SIDEBAR -->
+  <aside class="w-64 shrink-0 bg-neutral-800/60 backdrop-blur border-r border-neutral-700 flex flex-col rounded-tr-2xl rounded-br-2xl fade-in" style="animation-delay:.05s">
+    <div class="flex flex-col items-center pt-6 pb-2">
+      <div class="w-20 h-20 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center mb-2 border-2 border-neutral-700">
+        <span class="text-white font-bold text-3xl">Øª</span>
+      </div>
+      <h1 class="text-xl font-semibold tracking-tight flex items-center gap-2">
+        {{ user_plan_info.plan_display_name if user_plan_info else 'Tajir' }}
+    </h1>
+    </div>
+
+    <p class="px-6 pt-2 pb-1 text-xs uppercase tracking-wide text-neutral-400">Masters</p>
+    <nav class="flex flex-col gap-1 px-4" aria-label="Masters">
+      <button data-go="productTypeSec" class="nav-btn flex items-center gap-3 px-3 py-2 rounded-lg focus-visible:ring-2 focus-visible:ring-indigo-400/60 hover:bg-neutral-700 transition">
+        <svg data-lucide="layers" class="w-4 h-4"></svg> Product&nbsp;Types
+      </button>
+      <button data-go="productSec" class="nav-btn flex items-center gap-3 px-3 py-2 rounded-lg focus-visible:ring-2 focus-visible:ring-indigo-400/60 hover:bg-neutral-700 transition">
+        <svg data-lucide="box" class="w-4 h-4"></svg> Products
+      </button>
+      <button data-go="customerSec" class="nav-btn flex items-center gap-3 px-3 py-2 rounded-lg focus-visible:ring-2 focus-visible:ring-indigo-400/60 hover:bg-neutral-700 transition">
+        <svg data-lucide="users" class="w-4 h-4"></svg> Customers
+      </button>
+      <button data-go="vatSec" class="nav-btn flex items-center gap-3 px-3 py-2 rounded-lg focus-visible:ring-2 focus-visible:ring-indigo-400/60 hover:bg-neutral-700 transition">
+        <svg data-lucide="percent" class="w-4 h-4"></svg> VAT&nbsp;%
+      </button>
+      <button data-go="employeeSec" class="nav-btn flex items-center gap-3 px-3 py-2 rounded-lg focus-visible:ring-2 focus-visible:ring-indigo-400/60 hover:bg-neutral-700 transition">
+        <svg data-lucide="user-cog" class="w-4 h-4"></svg> Employees
+      </button>
+      <button data-go="settingsSec" class="nav-btn flex items-center gap-3 px-3 py-2 rounded-lg focus-visible:ring-2 focus-visible:ring-indigo-400/60 hover:bg-neutral-700 transition">
+        <svg data-lucide="settings" class="w-4 h-4"></svg> Settings
+      </button>
+      <button data-go="shopSettingsSec" class="nav-btn flex items-center gap-3 px-3 py-2 rounded-lg focus-visible:ring-2 focus-visible:ring-indigo-400/60 hover:bg-neutral-700 transition">
+        <svg data-lucide="store" class="w-4 h-4"></svg> Shop Settings
+      </button>
+    </nav>
+
+    <div class="border-t border-neutral-700 my-4"></div>
+
+    <p class="px-6 pt-2 pb-1 text-xs uppercase tracking-wide text-neutral-400">Operations</p>
+    <nav class="flex flex-col gap-1 px-4 mb-auto" aria-label="Operations">
+      <button data-go="billingSec" class="nav-btn flex items-center gap-3 px-3 py-2 rounded-lg focus-visible:ring-2 focus-visible:ring-indigo-400/60 hover:bg-neutral-700 transition">
+        <svg data-lucide="file-text" class="w-4 h-4"></svg> Billing
+      </button>
+      <button data-go="dashSec" class="nav-btn flex items-center gap-3 px-3 py-2 rounded-lg focus-visible:ring-2 focus-visible:ring-indigo-400/60 hover:bg-neutral-700 transition">
+        <svg data-lucide="bar-chart-3" class="w-4 h-4"></svg> Dashboard
+      </button>
+      <button data-go="advancedReportsSec" class="nav-btn flex items-center gap-3 px-3 py-2 rounded-lg focus-visible:ring-2 focus-visible:ring-indigo-400/60 hover:bg-neutral-700 transition">
+        <svg data-lucide="pie-chart" class="w-4 h-4"></svg> Advanced Reports
+      </button>
+    </nav>
+
+    <p class="px-6 py-4 border-t border-neutral-700 text-xs text-neutral-400">Â© 2024</p>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="flex-1 overflow-y-auto fade-in" style="animation-delay:.12s">
+    <header class="sticky top-0 z-10 bg-neutral-900/80 backdrop-blur border-b border-neutral-800 rounded-bl-2xl">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <h2 id="pageTitle" class="text-lg font-semibold tracking-tight">Billing</h2>
+        <div class="flex items-center gap-4">
+          <button id="darkToggle" class="p-2 rounded-lg border border-neutral-700 hover:bg-neutral-800 focus-visible:ring-2 focus-visible:ring-indigo-400/60">
+            <svg data-lucide="moon" class="w-4 h-4"></svg>
+          </button>
+          <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=64&q=80" alt="avatar" class="w-8 h-8 rounded-full object-cover border border-neutral-700">
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="max-w-6xl mx-auto py-10 px-6 space-y-20">
+      <!-- PRODUCT TYPES -->
+      <section id="productTypeSec" class="page hidden space-y-6">
+        <h3 class="text-2xl font-semibold tracking-tight">Create Product Type</h3>
+        
+        <!-- Loading Overlay -->
+        <div id="productTypeLoadingOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 flex items-center justify-center hidden">
+          <div class="bg-neutral-900/95 border border-neutral-700 rounded-xl p-8 flex flex-col items-center">
+            <div class="relative mb-4">
+              <div class="w-12 h-12 border-4 border-neutral-700 border-t-indigo-500 rounded-full animate-spin"></div>
+              <div class="absolute inset-0 w-12 h-12 border-4 border-transparent border-t-indigo-400 rounded-full animate-ping opacity-20"></div>
+            </div>
+            <p class="text-white font-medium">Loading Product Types...</p>
+          </div>
+        </div>
+
+        <form id="productTypeForm" class="grid grid-cols-12 gap-4 transform transition-all duration-300 opacity-0 translate-y-4" id="productTypeForm">
+          <div class="col-span-9 flex flex-col">
+            <label for="productTypeName" class="text-sm font-medium text-neutral-300 mb-1">Type Name</label>
+            <input id="productTypeName" placeholder="e.g. Shirt" required class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+          </div>
+          <button class="col-span-3 bg-indigo-600 hover:bg-indigo-500 active:scale-95 transition-all duration-200 rounded-lg text-sm font-medium py-2 self-end transform hover:scale-105 hover:shadow-lg hover:shadow-indigo-500/25 flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Add/Update
+          </button>
+        </form>
+
+        <!-- Skeleton Loading -->
+        <div id="productTypeSkeleton" class="border border-neutral-700 rounded-lg overflow-hidden hidden">
+          <div class="animate-pulse">
+            <div class="bg-neutral-800/50 h-12 flex items-center px-3">
+              <div class="h-4 bg-neutral-700 rounded w-1/3"></div>
+            </div>
+            <div class="bg-neutral-800/30 h-12 flex items-center px-3">
+              <div class="h-4 bg-neutral-700 rounded w-1/4"></div>
+            </div>
+            <div class="bg-neutral-800/50 h-12 flex items-center px-3">
+              <div class="h-4 bg-neutral-700 rounded w-1/2"></div>
+            </div>
+            <div class="bg-neutral-800/30 h-12 flex items-center px-3">
+              <div class="h-4 bg-neutral-700 rounded w-2/5"></div>
+            </div>
+          </div>
+        </div>
+
+        <ul id="productTypeList" class="text-sm divide-y divide-neutral-800 border border-neutral-700 rounded-lg overflow-hidden transform transition-all duration-300 opacity-0 translate-y-4" aria-live="polite"></ul>
+      </section>
+
+     <!-- PRODUCTS -->
+     <section id="productSec" class="page hidden space-y-6">
+        <h3 class="text-2xl font-semibold tracking-tight">Create / Modify Product</h3>
+        
+        <!-- Loading Overlay -->
+        <div id="productLoadingOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 flex items-center justify-center hidden">
+          <div class="bg-neutral-900/95 border border-neutral-700 rounded-xl p-8 flex flex-col items-center">
+            <div class="relative mb-4">
+              <div class="w-12 h-12 border-4 border-neutral-700 border-t-indigo-500 rounded-full animate-spin"></div>
+              <div class="absolute inset-0 w-12 h-12 border-4 border-transparent border-t-indigo-400 rounded-full animate-ping opacity-20"></div>
+            </div>
+            <p class="text-white font-medium">Loading Products...</p>
+          </div>
+        </div>
+
+        <input type="text" id="productSearch" placeholder="Search products by name or type..." class="bg-neutral-900/70 border border-neutral-700 text-white rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 mb-2 w-full max-w-md transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+        <div id="productResults"></div>
+        
+        <form id="productForm" class="grid grid-cols-12 gap-4 transform transition-all duration-300 opacity-0 translate-y-4">
+          <div class="col-span-3 flex flex-col">
+            <label for="productTypeSelect" class="text-sm font-medium text-neutral-300 mb-1">Product Type</label>
+            <select id="productTypeSelect" required class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-2 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+              <option hidden selected>Select type</option>
+            </select>
+          </div>
+          <div class="col-span-5 flex flex-col">
+            <label for="productName" class="text-sm font-medium text-neutral-300 mb-1">Product Name</label>
+            <input id="productName" placeholder="e.g. Linen Shirt" required class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+          </div>
+          <div class="col-span-2 flex flex-col">
+            <label for="productPrice" class="text-sm font-medium text-neutral-300 mb-1">Price (AED)</label>
+            <input id="productPrice" type="number" min="0" step=".01" placeholder="0.00" required class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+          </div>
+          <button type="submit" class="col-span-2 bg-indigo-600 hover:bg-indigo-500 active:scale-95 transition-all duration-200 rounded-lg text-sm font-medium py-2 self-end transform hover:scale-105 hover:shadow-lg hover:shadow-indigo-500/25 flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Add/Update
+          </button>
+        </form>
+
+        <!-- Skeleton Loading -->
+        <div id="productSkeleton" class="border border-neutral-700 rounded-lg overflow-hidden hidden">
+          <div class="animate-pulse">
+            <div class="bg-neutral-800/50 h-12 flex items-center px-3">
+              <div class="h-4 bg-neutral-700 rounded w-1/4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/3 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/6 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/5 ml-auto"></div>
+            </div>
+            <div class="bg-neutral-800/30 h-12 flex items-center px-3">
+              <div class="h-4 bg-neutral-700 rounded w-1/5"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/4 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/8 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/6 ml-auto"></div>
+            </div>
+            <div class="bg-neutral-800/50 h-12 flex items-center px-3">
+              <div class="h-4 bg-neutral-700 rounded w-1/3"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/2 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/5 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/4 ml-auto"></div>
+            </div>
+            <div class="bg-neutral-800/30 h-12 flex items-center px-3">
+              <div class="h-4 bg-neutral-700 rounded w-1/4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-2/5 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/6 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/5 ml-auto"></div>
+            </div>
+          </div>
+        </div>
+
+        <table id="productTable" class="min-w-full text-sm border border-neutral-700 rounded-lg overflow-hidden transform transition-all duration-300 opacity-0 translate-y-4" dir="{{ 'rtl' if get_user_language() == 'ar' else 'ltr' }}">
+          <thead class="bg-neutral-800/70"><tr><th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Type</th><th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Name</th><th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Price</th><th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Actions</th></tr></thead>
+          <tbody class="divide-y divide-neutral-800"></tbody>
+        </table>
+      </section>
+
+      <!-- CUSTOMERS -->
+      <section id="customerSec" class="page hidden space-y-6">
+        <h3 class="text-2xl font-semibold tracking-tight">Customer Master</h3>
+        
+        <!-- Loading Overlay -->
+        <div id="customerLoadingOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 flex items-center justify-center hidden">
+          <div class="bg-neutral-900/95 border border-neutral-700 rounded-xl p-8 flex flex-col items-center">
+            <div class="relative mb-4">
+              <div class="w-12 h-12 border-4 border-neutral-700 border-t-indigo-500 rounded-full animate-spin"></div>
+              <div class="absolute inset-0 w-12 h-12 border-4 border-transparent border-t-indigo-400 rounded-full animate-ping opacity-20"></div>
+            </div>
+            <p class="text-white font-medium">Loading Customers...</p>
+          </div>
+        </div>
+
+        <input type="text" id="customerSearch" placeholder="Search customers by name or phone..." class="bg-neutral-900/70 border border-neutral-700 text-white rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 mb-2 w-full max-w-md transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+        <div id="customerResults"></div>
+        
+        <form id="customerForm" class="grid grid-cols-12 gap-4 transform transition-all duration-300 opacity-0 translate-y-4">
+          <div class="col-span-2 flex flex-col">
+            <label for="customerType" class="text-sm font-medium text-neutral-300 mb-1" title="Individual B2C (Business-to-Consumer): The customer is an individual (e.g., a person getting a haircut, laundry service, or tailoring for personal use).&#10;B2B (Business-to-Business): The customer is a registered business (e.g., a hotel outsourcing laundry services, a company ordering uniforms for employees).">Customer Type</label>
+            <select id="customerType" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500" title="Individual B2C (Business-to-Consumer): The customer is an individual (e.g., a person getting a haircut, laundry service, or tailoring for personal use).&#10;B2B (Business-to-Business): The customer is a registered business (e.g., a hotel outsourcing laundry services, a company ordering uniforms for employees).">
+              <option value="Individual">Individual (B2C)</option>
+              <option value="Business">Business (B2B)</option>
+            </select>
+          </div>
+          <div class="col-span-3 flex flex-col">
+            <label for="customerName" class="text-sm font-medium text-neutral-300 mb-1">Name</label>
+            <input id="customerName" placeholder="Customer name" required class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+          </div>
+          <div class="col-span-3 flex flex-col business-field" style="display: none;">
+            <label for="customerBusinessName" class="text-sm font-medium text-neutral-300 mb-1">Business Name *</label>
+            <input id="customerBusinessName" placeholder="Legal business name" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+          </div>
+          <div class="col-span-2 flex flex-col">
+            <label for="customerPhone" class="text-sm font-medium text-neutral-300 mb-1">Phone</label>
+            <input id="customerPhone" placeholder="e.g. 9876543210" required class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+          </div>
+          <div class="col-span-2 flex flex-col trn-field" style="display: none;">
+            <label for="customerTRN" class="text-sm font-medium text-neutral-300 mb-1">TRN</label>
+            <input id="customerTRN" placeholder="Tax Registration Number" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+          </div>
+          <div class="col-span-2 flex flex-col">
+            <label for="customerCity" class="text-sm font-medium text-neutral-300 mb-1">City</label>
+            <input id="customerCity" placeholder="City" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+          </div>
+          <div class="col-span-2 flex flex-col relative">
+            <label for="customerArea" class="text-sm font-medium text-neutral-300 mb-1">Area</label>
+            <input id="customerArea" placeholder="Area" autocomplete="off" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+            <div id="customerAreaDropdown" class="absolute top-full left-0 right-0 bg-neutral-800 border border-neutral-700 rounded-lg mt-1 max-h-48 overflow-y-auto z-50 hidden shadow-lg">
+              <!-- Autocomplete suggestions will be populated here -->
+            </div>
+          </div>
+          <div class="col-span-4 flex flex-col business-field" style="display: none;">
+            <label for="customerBusinessAddress" class="text-sm font-medium text-neutral-300 mb-1">Business Address</label>
+            <input id="customerBusinessAddress" placeholder="Complete business address" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+          </div>
+          <div class="col-span-4 flex flex-col">
+            <label for="customerAddress" class="text-sm font-medium text-neutral-300 mb-1">Address</label>
+            <input id="customerAddress" placeholder="Customer address" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+          </div>
+          <div class="col-span-2 flex flex-col">
+            <label for="customerEmail" class="text-sm font-medium text-neutral-300 mb-1">Email</label>
+            <input id="customerEmail" type="email" placeholder="email@example.com" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+          </div>
+          <button class="col-span-2 bg-indigo-600 hover:bg-indigo-500 active:scale-95 transition-all duration-200 rounded-lg text-sm font-medium py-2 self-end transform hover:scale-105 hover:shadow-lg hover:shadow-indigo-500/25 flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Add/Update
+          </button>
+        </form>
+
+        <!-- Skeleton Loading -->
+        <div id="customerSkeleton" class="border border-neutral-700 rounded-lg overflow-hidden hidden">
+          <div class="animate-pulse">
+            <div class="bg-neutral-800/50 h-12 flex items-center px-3">
+              <div class="h-4 bg-neutral-700 rounded w-1/4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/3 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/3 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/5 ml-auto"></div>
+            </div>
+            <div class="bg-neutral-800/30 h-12 flex items-center px-3">
+              <div class="h-4 bg-neutral-700 rounded w-1/5"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/4 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/3 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/6 ml-auto"></div>
+            </div>
+            <div class="bg-neutral-800/50 h-12 flex items-center px-3">
+              <div class="h-4 bg-neutral-700 rounded w-1/3"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/4 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/3 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/5 ml-auto"></div>
+            </div>
+            <div class="bg-neutral-800/30 h-12 flex items-center px-3">
+              <div class="h-4 bg-neutral-700 rounded w-1/4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/3 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/3 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/6 ml-auto"></div>
+            </div>
+          </div>
+        </div>
+
+        <table id="customerTable" class="min-w-full text-sm border border-neutral-700 rounded-lg overflow-hidden transform transition-all duration-300 opacity-0 translate-y-4" dir="{{ 'rtl' if get_user_language() == 'ar' else 'ltr' }}">
+          <thead class="bg-neutral-800/70">
+            <tr>
+              <th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Type</th>
+              <th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Name</th>
+              <th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Business Name</th>
+              <th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Phone</th>
+              <th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">TRN</th>
+              <th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">City</th>
+              <th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Area</th>
+              <th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-neutral-800" id="customerTableBody"></tbody>
+        </table>
+      </section>
+
+      <!-- VAT MASTER -->
+      <section id="vatSec" class="page hidden space-y-6">
+        <h3 class="text-2xl font-semibold tracking-tight">VAT % Master</h3>
+        <form id="vatForm" class="grid grid-cols-12 gap-4">
+          <div class="col-span-3 flex flex-col"><label for="vatRate">Rate&nbsp;(AED)</label><input id="vatRate" type="number" min="0" step=".01" placeholder="0.00" required class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+          <div class="col-span-3 flex flex-col"><label for="vatEffDate">Effective From</label><input id="vatEffDate" type="date" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+          <button class="col-span-3 bg-indigo-600 hover:bg-indigo-500 active:scale-95 transition rounded-lg text-sm font-medium py-2 self-end">Add VAT Rate</button>
+        </form>
+        <table id="vatTable" class="min-w-full text-sm border border-neutral-700 rounded-lg overflow-hidden" dir="{{ 'rtl' if get_user_language() == 'ar' else 'ltr' }}">
+                      <thead class="bg-neutral-800/70"><tr><th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Rate</th><th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Effective From</th><th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Effective To</th><th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Actions</th></tr></thead>
+          <tbody class="divide-y divide-neutral-800"></tbody>
+        </table>
+      </section>
+
+      <!-- EMPLOYEES -->
+      <section id="employeeSec" class="page hidden space-y-6">
+        <h3 class="text-2xl font-semibold tracking-tight">Employees</h3>
+        
+        <!-- Loading Overlay -->
+        <div id="employeeLoadingOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 flex items-center justify-center hidden">
+          <div class="bg-neutral-900/95 border border-neutral-700 rounded-xl p-8 flex flex-col items-center">
+            <div class="relative mb-4">
+              <div class="w-12 h-12 border-4 border-neutral-700 border-t-indigo-500 rounded-full animate-spin"></div>
+              <div class="absolute inset-0 w-12 h-12 border-4 border-transparent border-t-indigo-400 rounded-full animate-ping opacity-20"></div>
+            </div>
+            <p class="text-white font-medium">Loading Employees...</p>
+          </div>
+        </div>
+
+        <form id="employeeForm" class="grid grid-cols-12 gap-4 transform transition-all duration-300 opacity-0 translate-y-4">
+          <div class="col-span-4 flex flex-col">
+            <label for="employeeName" class="text-sm font-medium text-neutral-300 mb-1">Name</label>
+            <input id="employeeName" placeholder="Employee name" required class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+          </div>
+          <div class="col-span-3 flex flex-col">
+            <label for="employeeMobile" class="text-sm font-medium text-neutral-300 mb-1">Mobile</label>
+            <input id="employeeMobile" placeholder="e.g. 9876543210" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+          </div>
+          <div class="col-span-3 flex flex-col">
+            <label for="employeeAddress" class="text-sm font-medium text-neutral-300 mb-1">Address</label>
+            <input id="employeeAddress" placeholder="Address" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+          </div>
+          <button class="col-span-2 bg-indigo-600 hover:bg-indigo-500 active:scale-95 transition-all duration-200 rounded-lg text-sm font-medium py-2 self-end transform hover:scale-105 hover:shadow-lg hover:shadow-indigo-500/25 flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Add/Update
+          </button>
+        </form>
+
+        <!-- Skeleton Loading -->
+        <div id="employeeSkeleton" class="border border-neutral-700 rounded-lg overflow-hidden hidden">
+          <div class="animate-pulse">
+            <div class="bg-neutral-800/50 h-12 flex items-center px-3">
+              <div class="h-4 bg-neutral-700 rounded w-1/4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/3 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/3 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/5 ml-auto"></div>
+            </div>
+            <div class="bg-neutral-800/30 h-12 flex items-center px-3">
+              <div class="h-4 bg-neutral-700 rounded w-1/5"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/4 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/3 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/6 ml-auto"></div>
+            </div>
+            <div class="bg-neutral-800/50 h-12 flex items-center px-3">
+              <div class="h-4 bg-neutral-700 rounded w-1/3"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/2 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/4 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/5 ml-auto"></div>
+            </div>
+            <div class="bg-neutral-800/30 h-12 flex items-center px-3">
+              <div class="h-4 bg-neutral-700 rounded w-1/4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-2/5 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/6 ml-4"></div>
+              <div class="h-4 bg-neutral-700 rounded w-1/5 ml-auto"></div>
+            </div>
+          </div>
+        </div>
+
+        <table id="employeeTable" class="min-w-full text-sm border border-neutral-700 rounded-lg overflow-hidden transform transition-all duration-300 opacity-0 translate-y-4" dir="{{ 'rtl' if get_user_language() == 'ar' else 'ltr' }}">
+          <thead class="bg-neutral-800/70">
+            <tr>
+              <th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Name</th>
+              <th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Mobile</th>
+              <th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Address</th>
+              <th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-neutral-800" id="employeeTableBody"></tbody>
+        </table>
+      </section>
+
+      <!-- SETTINGS -->
+      <section id="settingsSec" class="page hidden space-y-6">
+        <h3 class="text-2xl font-semibold tracking-tight">Backup & Restore</h3>
+        <div class="flex gap-4 mb-4">
+          <button id="backupBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg px-4 py-2 font-medium">Backup Now</button>
+          <label class="bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg px-4 py-2 font-medium cursor-pointer">
+            Restore...
+            <input id="restoreInput" type="file" accept=".zip" class="hidden">
+          </label>
+        </div>
+                        <h4 class="text-lg font-semibold mb-2">Backup History</h4>
+        <table class="min-w-full text-sm border border-neutral-700 rounded-lg overflow-hidden">
+          <thead class="bg-neutral-800/70"><tr><th class="px-3 py-2 text-left font-medium">Date</th><th class="px-3 py-2 text-left font-medium">File</th><th class="px-3 py-2 text-left font-medium">Actions</th></tr></thead>
+          <tbody id="backupTableBody" class="divide-y divide-neutral-800"></tbody>
+        </table>
+      </section>
+
+      <!-- SHOP SETTINGS -->
+      <section id="shopSettingsSec" class="page hidden space-y-6">
+        <h3 class="text-2xl font-semibold tracking-tight">Shop Settings</h3>
+        
+        <!-- Loading Overlay -->
+        <div id="shopSettingsLoadingOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 flex items-center justify-center hidden">
+          <div class="bg-neutral-900/95 border border-neutral-700 rounded-xl p-8 flex flex-col items-center">
+            <div class="relative mb-4">
+              <div class="w-12 h-12 border-4 border-neutral-700 border-t-indigo-500 rounded-full animate-spin"></div>
+              <div class="absolute inset-0 w-12 h-12 border-4 border-transparent border-t-indigo-400 rounded-full animate-ping opacity-20"></div>
+            </div>
+            <p class="text-white font-medium">Loading Shop Settings...</p>
+          </div>
+        </div>
+
+        <form id="shopSettingsForm" class="space-y-6 transform transition-all duration-300 opacity-0 translate-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex flex-col">
+              <label for="shopName" class="text-sm font-medium text-neutral-300 mb-1">Shop Name</label>
+              <input id="shopName" type="text" placeholder="Enter shop name" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+            </div>
+            
+            <div class="flex flex-col">
+              <label for="shopTRN" class="text-sm font-medium text-neutral-300 mb-1">TRN (Tax Registration Number)</label>
+              <input id="shopTRN" type="text" placeholder="Enter TRN" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+            </div>
+          </div>
+          
+          <div class="flex flex-col">
+            <label for="shopAddress" class="text-sm font-medium text-neutral-300 mb-1">Address</label>
+            <textarea id="shopAddress" rows="3" placeholder="Enter complete shop address" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500"></textarea>
+          </div>
+          
+          <div class="flex flex-col">
+            <label for="shopLogoUrl" class="text-sm font-medium text-neutral-300 mb-1">Logo URL</label>
+            <input id="shopLogoUrl" type="url" placeholder="https://example.com/logo.png" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+            <p class="text-xs text-neutral-500 mt-1">Enter a direct link to your logo image</p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex flex-col">
+              <label for="shopMobile" class="text-sm font-medium text-neutral-300 mb-1">Shop Mobile Number(s)</label>
+              <input id="shopMobile" type="text" placeholder="+971 50 123 4567, +971 55 987 6543" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+              <p class="text-xs text-neutral-500 mt-1">Multiple numbers separated by commas</p>
+            </div>
+            
+            <div class="flex flex-col">
+              <label for="workingHours" class="text-sm font-medium text-neutral-300 mb-1">Working Hours</label>
+              <input id="workingHours" type="text" placeholder="9:00 AM - 6:00 PM (Mon-Sat)" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500">
+              <p class="text-xs text-neutral-500 mt-1">e.g., 9:00 AM - 6:00 PM (Mon-Sat)</p>
+            </div>
+          </div>
+          
+          <div class="flex flex-col">
+            <label for="invoiceStaticInfo" class="text-sm font-medium text-neutral-300 mb-1">Invoice Static Information</label>
+            <textarea id="invoiceStaticInfo" rows="3" placeholder="Enter any additional information to display on invoices (e.g., terms, policies, contact info)" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60 transition-all duration-200 hover:border-neutral-600 focus:border-indigo-500"></textarea>
+            <p class="text-xs text-neutral-500 mt-1">This text will appear at the bottom of printed invoices</p>
+          </div>
+          
+          <div class="border-t border-neutral-700 pt-6">
+            <h4 class="text-lg font-semibold mb-4">Invoice Template Settings</h4>
+            <div class="space-y-4">
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input id="useDynamicInvoiceTemplate" type="checkbox" class="w-4 h-4 text-indigo-600 bg-neutral-900 border-neutral-700 rounded focus:ring-indigo-400/60">
+                <span class="text-sm text-neutral-300">Use dynamic invoice template (pull shop details automatically)</span>
+              </label>
+              <p class="text-xs text-neutral-500">When enabled, invoice templates will automatically include shop name, address, TRN, and logo from these settings.</p>
+            </div>
+          </div>
+          
+          <div class="flex gap-4 pt-4">
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 active:scale-95 transition-all duration-200 rounded-lg text-sm font-medium py-2 px-6 transform hover:scale-105 hover:shadow-lg hover:shadow-indigo-500/25 flex items-center justify-center gap-2">
+              <svg data-lucide="save" class="w-4 h-4"></svg>
+              Save Settings
+            </button>
+            <button type="button" id="resetShopSettingsBtn" class="bg-neutral-700 hover:bg-neutral-600 active:scale-95 transition-all duration-200 rounded-lg text-sm font-medium py-2 px-6">
+              Reset to Default
+            </button>
+          </div>
+        </form>
+        
+        <!-- Success Message -->
+        <div id="shopSettingsSuccess" class="hidden bg-green-900/20 border border-green-700 text-green-400 px-4 py-3 rounded-lg">
+          <div class="flex items-center gap-2">
+            <svg data-lucide="check-circle" class="w-5 h-5"></svg>
+            <span>Shop settings saved successfully!</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- BILLING -->
+      <section id="billingSec" class="page space-y-6">
+        <h3 class="text-2xl font-semibold tracking-tight">Billing</h3>
+        <button id="searchInvoiceBtn" class="bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg px-4 py-2 mb-4">Search & Reprint Invoice</button>
+        <div id="searchInvoiceModal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 hidden">
+          <div class="bg-neutral-900 p-6 rounded-lg w-full max-w-2xl">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-lg font-semibold">Search Invoice</h3>
+              <button id="closeSearchInvoice" class="text-neutral-400 hover:text-white text-xl">&times;</button>
+            </div>
+            <input id="searchInvoiceInput" type="text" placeholder="Invoice #, Customer Name, or Phone" class="w-full mb-4 px-3 py-2 rounded bg-neutral-800 border border-neutral-700 text-white">
+            <div id="searchInvoiceResults" class="max-h-64 overflow-y-auto"></div>
+          </div>
+        </div>
+
+        <!-- META -->
+        <form id="billingForm" class="space-y-6">
+          <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-3 flex flex-col"><label for="billNumber">Bill&nbsp;#</label><input id="billNumber" placeholder="Auto / Manual" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+            <div class="col-span-3 flex flex-col"><label for="billMobile">Mobile</label><input id="billMobile" placeholder="Mobile no." maxlength="10" inputmode="numeric" pattern="\\d{9,10}" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+            <div class="col-span-2 flex flex-col">
+              <label for="billCustomerType" title="Individual B2C (Business-to-Consumer): The customer is an individual (e.g., a person getting a haircut, laundry service, or tailoring for personal use).&#10;B2B (Business-to-Business): The customer is a registered business (e.g., a hotel outsourcing laundry services, a company ordering uniforms for employees).">Customer Type</label>
+              <select id="billCustomerType" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-2 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60" title="Individual B2C (Business-to-Consumer): The customer is an individual (e.g., a person getting a haircut, laundry service, or tailoring for personal use).&#10;B2B (Business-to-Business): The customer is a registered business (e.g., a hotel outsourcing laundry services, a company ordering uniforms for employees).">
+                <option value="Individual">Individual (B2C)</option>
+                <option value="Business">Business (B2B)</option>
+              </select>
+            </div>
+            <div class="col-span-3 flex flex-col"><label for="billCustomer">Customer</label><input id="billCustomer" placeholder="Customer name" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+            <div class="col-span-3 flex flex-col business-billing-field" style="display: none;"><label for="billBusinessName">Business Name *</label><input id="billBusinessName" placeholder="Legal business name" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+            <div class="col-span-3 flex flex-col trn-billing-field" style="display: none;"><label for="billTRN">TRN</label><input id="billTRN" placeholder="Tax Registration Number" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+            <div class="col-span-3 flex flex-col"><label for="paymentMethod">Payment Method</label><select id="paymentMethod" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-2 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"><option>Cash</option><option>Card</option></select></div>
+            <div class="col-span-3 flex flex-col"><label for="masterName">Master</label><input id="masterName" placeholder="Master name" autocomplete="off" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+            <div class="col-span-3 flex flex-col"><label for="trialDate">Trial Date</label><input id="trialDate" type="date" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+            <div class="col-span-3 flex flex-col"><label for="billDate">Bill Date</label><input id="billDate" type="date" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+            <div class="col-span-3 flex flex-col"><label for="deliveryDate">Delivery Date</label><input id="deliveryDate" type="date" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+            <div class="col-span-3 flex flex-col"><label for="billCity">City</label><input id="billCity" placeholder="City" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+            <div class="col-span-3 flex flex-col"><label for="billArea">Area</label><input id="billArea" placeholder="Area" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+            <div class="col-span-6 flex flex-col business-billing-field" style="display: none;"><label for="billBusinessAddress">Business Address *</label><input id="billBusinessAddress" placeholder="Complete business address" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+            <div class="col-span-3 flex flex-col"><label for="billNotes">Notes</label><textarea id="billNotes" placeholder="Notes" rows="2" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></textarea></div>
+          </div>
+
+          <!-- ITEM ENTRY -->
+          <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-3 flex flex-col"><label for="billProduct">Product</label><select id="billProduct" required class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-2 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"><option hidden selected>Select product</option></select></div>
+            <div class="col-span-2 flex flex-col"><label for="billRate">Rate&nbsp;(AED)</label><input id="billRate" type="number" min="0" step=".01" placeholder="0.00" required class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+            <div class="col-span-1 flex flex-col"><label for="billQty">Qty</label><input id="billQty" type="number" min="1" value="1" required class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+            <div class="col-span-2 flex flex-col"><label for="billDiscount">Discount&nbsp;(AED)</label><input id="billDiscount" type="number" min="0" step=".01" value="0" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+            <div class="col-span-2 flex flex-col"><label for="billAdvPaid">Advance&nbsp;(AED)</label><input id="billAdvPaid" type="number" min="0" value="0" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+            <div class="col-span-1 flex flex-col"><label for="vatPercent">VAT&nbsp;%</label><input id="vatPercent" type="number" min="0" step=".01" value="5" class="bg-neutral-900/70 border border-neutral-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400/60"></div>
+            <button id="addItemBtn" class="col-span-1 bg-indigo-600 hover:bg-indigo-500 active:scale-95 transition rounded-lg text-sm font-medium py-2 self-end">Add</button>
+          </div>
+        </form>
+
+        <table id="billTable" class="min-w-full text-sm border border-neutral-700 rounded-lg overflow-hidden" dir="{{ 'rtl' if get_user_language() == 'ar' else 'ltr' }}">
+          <thead class="bg-neutral-800/70"><tr><th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Product</th><th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Qty</th><th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Rate</th><th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Discount</th><th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Advance</th><th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Total</th><th class="px-3 py-2 font-medium {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Actions</th></tr></thead>
+          <tbody class="divide-y divide-neutral-800"></tbody>
+        </table>
+
+        <div class="flex flex-wrap items-center justify-between gap-6 text-sm">
+          <div class="flex gap-12">
+            <div class="flex gap-4"><span class="text-neutral-400">Subtotal:</span><span id="subTotal" class="font-semibold tracking-tight">AED&nbsp;0</span></div>
+            <div class="flex gap-4"><span class="text-neutral-400">VAT:</span><span id="vatAmount" class="font-semibold tracking-tight">AED&nbsp;0</span></div>
+            <div class="flex gap-4"><span class="text-neutral-400">Amount Due:</span><span id="amountDue" class="font-semibold tracking-tight">AED&nbsp;0</span></div>
+          </div>
+          <div class="flex gap-2">
+            <button id="whatsappBtn" disabled class="flex items-center gap-2 bg-green-600/40 text-white/60 px-4 py-2 rounded-lg font-medium opacity-50 pointer-events-none focus-visible:ring-2 focus-visible:ring-green-400/60 transition">
+              <svg data-lucide="message-circle" class="w-4 h-4"></svg> WhatsApp
+            </button>
+            <button id="emailBtn" disabled class="flex items-center gap-2 bg-blue-600/40 text-white/60 px-4 py-2 rounded-lg font-medium opacity-50 pointer-events-none focus-visible:ring-2 focus-visible:ring-blue-400/60 transition">
+              <svg data-lucide="mail" class="w-4 h-4"></svg> Email
+            </button>
+            <button id="printBtn" disabled class="flex items-center gap-2 bg-indigo-600/40 text-white/60 px-4 py-2 rounded-lg font-medium opacity-50 pointer-events-none focus-visible:ring-2 focus-visible:ring-indigo-400/60 transition">
+              <svg data-lucide="printer" class="w-4 h-4"></svg> Print Receipt
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- DASHBOARD -->
+      <section id="dashSec" class="page hidden space-y-6">
+        <div class="flex justify-between items-center">
+          <h3 class="text-2xl font-semibold tracking-tight">Analytics Dashboard</h3>
+          <button id="refreshDashboardBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg px-4 py-2 text-sm font-medium">
+            <svg data-lucide="refresh-cw" class="w-4 h-4 inline mr-2"></svg> Refresh
+          </button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div class="bg-neutral-800/60 p-6 rounded-lg border border-neutral-700">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-neutral-400">Today's Revenue</p>
+                <p id="todayRevenue" class="text-2xl font-bold text-indigo-400">AED 0</p>
+              </div>
+              <svg class="w-8 h-8 text-indigo-500" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10 6v20" />
+                  <path d="M10 6c10 0 10 20 0 20" />
+                  <path d="M6 12h16" />
+                  <path d="M6 20h16" />
+                </g>
+              </svg>
+            </div>
+          </div>
+          <div class="bg-neutral-800/60 p-6 rounded-lg border border-neutral-700">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-neutral-400">Today's Bills</p>
+                <p id="todayBills" class="text-2xl font-bold text-green-400">0</p>
+              </div>
+              <svg data-lucide="file-text" class="w-8 h-8 text-green-500"></svg>
+            </div>
+          </div>
+          <div class="bg-neutral-800/60 p-6 rounded-lg border border-neutral-700">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-neutral-400">Pending Bills</p>
+                <p id="pendingBills" class="text-2xl font-bold text-yellow-400">0</p>
+              </div>
+              <svg data-lucide="clock" class="w-8 h-8 text-yellow-500"></svg>
+            </div>
+          </div>
+          <div class="bg-neutral-800/60 p-6 rounded-lg border border-neutral-700">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-neutral-400">Total Customers</p>
+                <p id="totalCustomers" class="text-2xl font-bold text-blue-400">0</p>
+              </div>
+              <svg data-lucide="users" class="w-8 h-8 text-blue-500"></svg>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-neutral-800/60 p-6 rounded-lg border border-neutral-700" style="min-height:340px;">
+            <h4 class="text-lg font-semibold mb-4">Monthly Revenue</h4>
+            <div style="height:260px;"><canvas id="revenueChart"></canvas></div>
+          </div>
+          <div class="bg-neutral-800/60 p-6 rounded-lg border border-neutral-700" style="min-height:340px;">
+            <h4 class="text-lg font-semibold mb-4">Top Regions by Sales</h4>
+            <div style="height:260px;"><canvas id="regionsChart"></canvas></div>
+          </div>
+          <div class="bg-neutral-800/60 p-6 rounded-lg border border-neutral-700" style="min-height:340px;">
+            <h4 class="text-lg font-semibold mb-4">Trending Products</h4>
+            <div style="height:260px;"><canvas id="trendingProductsChart"></canvas></div>
+          </div>
+          <div class="bg-neutral-800/60 p-6 rounded-lg border border-neutral-700" style="min-height:340px;">
+            <h4 class="text-lg font-semibold mb-4">Most Repeated Customers</h4>
+            <div style="height:260px;"><canvas id="repeatedCustomersChart"></canvas></div>
+          </div>
+          <div class="bg-neutral-800/60 p-6 rounded-lg border border-neutral-700" style="min-height:340px;">
+            <h4 class="text-lg font-semibold mb-4">Top 5 Employees by Revenue</h4>
+            <div style="height:260px;"><canvas id="employeeBarChart"></canvas></div>
+          </div>
+          <div class="bg-neutral-800/60 p-6 rounded-lg border border-neutral-700" style="min-height:340px;">
+            <h4 class="text-lg font-semibold mb-4">Revenue Share by Employee</h4>
+            <div style="height:260px;"><canvas id="employeePieChart"></canvas></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="advancedReportsSec" class="page hidden space-y-6">
+        <h3 class="text-2xl font-semibold tracking-tight mb-4">Advanced Reports</h3>
+        <!-- Tabs -->
+        <div class="flex border-b border-neutral-700 mb-6">
+          <button class="report-tab-btn px-6 py-2 -mb-px text-sm font-medium text-neutral-300 border-b-2 border-transparent focus:outline-none transition-colors" data-tab="invoicesTab">Invoices</button>
+          <button class="report-tab-btn px-6 py-2 -mb-px text-sm font-medium text-neutral-300 border-b-2 border-transparent focus:outline-none transition-colors" data-tab="employeesTab">Employees</button>
+          <button class="report-tab-btn px-6 py-2 -mb-px text-sm font-medium text-neutral-300 border-b-2 border-transparent focus:outline-none transition-colors" data-tab="productsTab">Products</button>
+        </div>
+        <!-- Tab Contents -->
+        <div id="invoicesTab" class="report-tab-content">
+          <!-- Filter Bar -->
+          <form class="flex flex-wrap gap-4 items-end mb-6 bg-neutral-800/60 p-4 rounded-xl border border-neutral-700 shadow">
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="invFromDate">From Date</label>
+              <input type="date" id="invFromDate" class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-indigo-400/60" />
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="invToDate">To Date</label>
+              <input type="date" id="invToDate" class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-indigo-400/60" />
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="invProducts">Products</label>
+              <select id="invProducts" multiple class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white min-w-[120px] focus:ring-2 focus:ring-indigo-400/60">
+                <!-- <option>All</option> -->
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="invEmployees">Employees</label>
+              <select id="invEmployees" multiple class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white min-w-[120px] focus:ring-2 focus:ring-indigo-400/60">
+                <!-- <option>All</option> -->
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="invCity">City</label>
+              <select id="invCity" class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white min-w-[100px] focus:ring-2 focus:ring-indigo-400/60">
+                <!-- <option>All</option> -->
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="invArea">Area</label>
+              <select id="invArea" class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white min-w-[100px] focus:ring-2 focus:ring-indigo-400/60">
+                <!-- <option>All</option> -->
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="invStatus">Status</label>
+              <select id="invStatus" class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white min-w-[100px] focus:ring-2 focus:ring-indigo-400/60">
+                <option>All</option>
+                <option>Paid</option>
+                <option>Pending</option>
+              </select>
+            </div>
+            <div class="flex gap-2 ml-auto">
+              <button type="button" class="bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg px-4 py-2 font-medium flex items-center gap-2">
+                <svg data-lucide="download" class="w-4 h-4"></svg> Download
+              </button>
+              <button id="invoicePrintBtn" type="button" class="bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg px-4 py-2 font-medium flex items-center gap-2">
+                  <svg data-lucide="printer" class="w-4 h-4"></svg> Print
+              </button>
+            </div>
++           <div id="download-spinner" class="hidden flex items-center gap-2 text-emerald-400 text-sm mt-2">
++             <svg class="animate-spin h-5 w-5 text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
++               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
++               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
++             </svg>
++             Preparing download...
++           </div>
+          </form>
+          <!-- Data Table -->
+          <div class="overflow-x-auto rounded-lg border border-neutral-700 bg-neutral-900/80">
+            <table class="min-w-full text-sm" dir="{{ 'rtl' if get_user_language() == 'ar' else 'ltr' }}">
+              <thead class="bg-neutral-800/80">
+                <tr>
+                  <th class="px-3 py-2 font-semibold whitespace-nowrap min-w-[120px] {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Bill#</th>
+                  <th class="px-3 py-2 font-semibold {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Bill Date</th>
+                  <th class="px-3 py-2 font-semibold {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Customer Name</th>
+                  <th class="px-3 py-2 font-semibold {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Delivery Date</th>
+                  <th class="px-3 py-2 font-semibold {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Total Amt</th>
+                  <th class="px-3 py-2 font-semibold {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">VAT</th>
+                  <th class="px-3 py-2 font-semibold {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Total Billed</th>
+                  <th class="px-3 py-2 font-semibold {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Status</th>
+                  <th class="px-3 py-2 font-semibold {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Products</th>
+                </tr>
+              </thead>
+              <tbody id="invoices-table-body">
+                <tr>
+                  <td colspan="10" class="text-center text-neutral-500 py-8">No data to display. Use filters and click Preview.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="text-xs text-neutral-400 mt-2">
+            Results are limited to 50 records. Use <b>Download</b> to get all the records.<br>
+            <b>Print</b> will print all records, not just the limited view.
+          </div>
+        </div>
+        <div id="employeesTab" class="report-tab-content hidden">
+          <!-- Filter Bar -->
+          <form class="flex flex-wrap gap-4 items-end mb-6 bg-neutral-800/60 p-4 rounded-xl border border-neutral-700 shadow">
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="empFromDate">From Date</label>
+              <input type="date" id="empFromDate" class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-indigo-400/60" />
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="empToDate">To Date</label>
+              <input type="date" id="empToDate" class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-indigo-400/60" />
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="empProducts">Products</label>
+              <select id="empProducts" multiple class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white min-w-[120px] focus:ring-2 focus:ring-indigo-400/60"></select>
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="empCity">City</label>
+              <select id="empCity" class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white min-w-[100px] focus:ring-2 focus:ring-indigo-400/60"></select>
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="empArea">Area</label>
+              <select id="empArea" class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white min-w-[100px] focus:ring-2 focus:ring-indigo-400/60"></select>
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="empStatus">Status</label>
+              <select id="empStatus" class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white min-w-[100px] focus:ring-2 focus:ring-indigo-400/60">
+                <option>All</option>
+                <option>Paid</option>
+                <option>Pending</option>
+              </select>
+            </div>
+          </form>
+          <!-- Data Table -->
+          <div class="overflow-x-auto rounded-lg border border-neutral-700 bg-neutral-900/80">
+            <table class="min-w-full text-sm" dir="{{ 'rtl' if get_user_language() == 'ar' else 'ltr' }}">
+              <thead class="bg-neutral-800/80">
+                <tr>
+                  <th class="px-3 py-2 font-semibold {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Employee Name</th>
+                  <th class="px-3 py-2 font-semibold {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Bills Handled</th>
+                  <th class="px-3 py-2 font-semibold {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Total Billed</th>
+                  <th class="px-3 py-2 font-semibold {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Products</th>
+                </tr>
+              </thead>
+              <tbody id="employees-table-body">
+                <tr>
+                  <td colspan="4" class="text-center text-neutral-500 py-8">No data to display. Use filters.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div id="productsTab" class="report-tab-content hidden">
+          <!-- Filter Bar -->
+          <form class="flex flex-wrap gap-4 items-end mb-6 bg-neutral-800/60 p-4 rounded-xl border border-neutral-700 shadow">
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="prodFromDate">From Date</label>
+              <input type="date" id="prodFromDate" class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-indigo-400/60" />
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="prodToDate">To Date</label>
+              <input type="date" id="prodToDate" class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-indigo-400/60" />
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="prodType">Product Type</label>
+              <select id="prodType" class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white min-w-[120px] focus:ring-2 focus:ring-indigo-400/60"></select>
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="prodCity">City</label>
+              <select id="prodCity" class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white min-w-[100px] focus:ring-2 focus:ring-indigo-400/60"></select>
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="prodArea">Area</label>
+              <select id="prodArea" class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white min-w-[100px] focus:ring-2 focus:ring-indigo-400/60"></select>
+            </div>
+            <div>
+              <label class="block text-xs text-neutral-400 mb-1" for="prodStatus">Status</label>
+              <select id="prodStatus" class="bg-neutral-900 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white min-w-[100px] focus:ring-2 focus:ring-indigo-400/60">
+                <option>All</option>
+                <option>Paid</option>
+                <option>Pending</option>
+              </select>
+            </div>
+          </form>
+          <!-- Data Table -->
+          <div class="overflow-x-auto rounded-lg border border-neutral-700 bg-neutral-900/80">
+            <table class="min-w-full text-sm" dir="{{ 'rtl' if get_user_language() == 'ar' else 'ltr' }}">
+              <thead class="bg-neutral-800/80">
+                <tr>
+                  <th class="px-3 py-2 font-semibold {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Product Name</th>
+                  <th class="px-3 py-2 font-semibold {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Product Type</th>
+                  <th class="px-3 py-2 font-semibold {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Total Quantity</th>
+                  <th class="px-3 py-2 font-semibold {{ 'text-right' if get_user_language() == 'ar' else 'text-left' }}">Total Revenue</th>
+                </tr>
+              </thead>
+              <tbody id="products-table-body">
+                <tr>
+                  <td colspan="4" class="text-center text-neutral-500 py-8">No data to display. Use filters.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- Modern Confirmation Modal -->
+<div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 hidden backdrop-blur-sm p-4">
+  <div class="bg-neutral-900/95 backdrop-blur border border-neutral-700 rounded-xl shadow-2xl p-8 w-full max-w-md transform transition-all duration-300 scale-95 opacity-0 max-h-[90vh] overflow-y-auto" id="confirmModalContent">
+    <!-- Icon -->
+    <div class="flex justify-center mb-6">
+      <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center">
+        <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+        </svg>
+      </div>
+    </div>
+    
+    <!-- Title -->
+    <h3 class="text-xl font-semibold text-white text-center mb-3" id="confirmModalTitle">Confirm Action</h3>
+    
+    <!-- Message -->
+    <div id="confirmModalMsg" class="mb-8 text-neutral-300 text-center leading-relaxed"></div>
+    
+    <!-- Buttons -->
+    <div class="flex gap-3">
+      <button id="confirmModalCancel" class="flex-1 bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg px-6 py-3 font-medium transition-colors duration-200 border border-neutral-600 hover:border-neutral-500">
+        Cancel
+      </button>
+      <button id="confirmModalOk" class="flex-1 bg-red-600 hover:bg-red-500 text-white rounded-lg px-6 py-3 font-medium transition-colors duration-200 border border-red-600 hover:border-red-500">
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Payment Progress Modal -->
+<div id="paymentProgressModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 hidden">
+  <div class="bg-neutral-900 rounded-lg shadow-lg p-8 w-full max-w-xs flex flex-col items-center">
+    <div class="relative mb-4">
+      <svg id="progressCircle" width="80" height="80" viewBox="0 0 80 80">
+        <circle cx="40" cy="40" r="36" stroke="#444" stroke-width="6" fill="none" />
+        <circle id="progressArc" cx="40" cy="40" r="36" stroke="#22d3ee" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="226.194" stroke-dashoffset="226.194"/>
+        <g id="progressCheck" style="opacity:0">
+          <circle cx="40" cy="40" r="36" stroke="#22d3ee" stroke-width="6" fill="#22d3ee"/>
+          <polyline points="28,42 38,52 54,32" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </svg>
+    </div>
+    <div id="progressStepMsg" class="text-white text-base font-semibold mb-2">Processing...</div>
+    <button id="progressOkBtn" class="mt-4 px-4 py-2 rounded bg-cyan-500 text-white font-semibold hidden">OK</button>
+  </div>
+</div>
+
+<!-- Payment Modal -->
+<div id="paymentModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 hidden">
+  <div class="bg-neutral-900 rounded-lg shadow-lg p-6 w-full max-w-xs text-center">
+    <div class="mb-4">
+      <div>Invoice #: <span id="payBillNum"></span></div>
+      <div>Customer: <span id="payCustomer"></span></div>
+      <div>Paid: <span id="payPaid"></span></div>
+      <div>Due: <span id="payDue"></span></div>
+      <div>Total: <span id="payTotal"></span></div>
+      <div>Delivery: <span id="payDelivery"></span></div>
+      <div>Status: <span id="payStatus"></span></div>
+    </div>
+    <input id="payAmountInput" type="number" min="0" step="0.01" class="bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-sm w-full mb-4" />
+    <div class="flex justify-center gap-4">
+      <button id="payModalOk" class="bg-green-600 hover:bg-green-500 text-white rounded-lg px-6 py-2 font-semibold">OK</button>
+      <button id="payModalCancel" class="bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg px-6 py-2 font-semibold">Cancel</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{{ super() }}
+<script>
+  // Plan management variables
+  let userPlan = null;
+  let enabledFeatures = [];
+  let lockedFeatures = [];
+  let planConfig = null;
+  let isPlanLoaded = false;
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize bill array and UI elements
+    let bill = [];
+    const whatsappBtn = document.getElementById('whatsappBtn');
+    const emailBtn = document.getElementById('emailBtn');
+    const printBtn = document.getElementById('printBtn');
+
+    // Update button states based on bill content
+    function updateButtonStates(hasItems) {
+        if (whatsappBtn) whatsappBtn.disabled = !hasItems;
+        if (emailBtn) emailBtn.disabled = !hasItems;
+        if (printBtn) printBtn.disabled = !hasItems;
+    }
+
+    // Initialize button states
+    updateButtonStates(false);
+
+    // Billing functionality
+    const addItemBtn = document.getElementById('addItem');
+    const billTable = document.getElementById('billTable');
+    const billTableBody = document.getElementById('billTableBody');
+
+    if (addItemBtn) {
+        addItemBtn.addEventListener('click', function() {
+            const productName = document.getElementById('productName')?.value?.trim();
+            const quantity = parseFloat(document.getElementById('quantity')?.value || '1');
+            const price = parseFloat(document.getElementById('price')?.value || '0');
+            const description = document.getElementById('description')?.value?.trim() || '';
+
+            if (!productName) {
+                showToast('Please enter a product name', 'error');
+                return;
+            }
+
+            if (quantity <= 0 || price <= 0) {
+                showToast('Please enter valid quantity and price', 'error');
+                return;
+            }
+
+            const item = {
+                product_name: productName,
+                quantity: quantity,
+                price: price,
+                description: description,
+                total: quantity * price
+            };
+
+            bill.push(item);
+            renderBillTable();
+            updateTotals();
+            clearForm();
+            showToast('Item added to bill', 'success');
+        });
+    }
+
+    function renderBillTable() {
+        if (!billTableBody) return;
+        
+        billTableBody.innerHTML = '';
+        bill.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="px-4 py-2 text-sm">${item.product_name}</td>
+                <td class="px-4 py-2 text-sm">${item.quantity}</td>
+                <td class="px-4 py-2 text-sm">AED ${item.price.toFixed(2)}</td>
+                <td class="px-4 py-2 text-sm">AED ${item.total.toFixed(2)}</td>
+                <td class="px-4 py-2 text-sm">${item.description || '-'}</td>
+                <td class="px-4 py-2">
+                    <button onclick="removeItem(${index})" class="text-red-600 hover:text-red-800">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                    </button>
+                </td>
+            `;
+            billTableBody.appendChild(row);
+        });
+        
+        updateButtonStates(bill.length > 0);
+    }
+
+    function updateTotals() {
+        const subtotal = bill.reduce((sum, item) => sum + item.total, 0);
+        const vatRate = 0.05; // 5% VAT
+        const vatAmount = subtotal * vatRate;
+        const total = subtotal + vatAmount;
+
+        const subTotalElement = document.getElementById('subTotal');
+        const vatAmountElement = document.getElementById('vatAmount');
+        const amountDueElement = document.getElementById('amountDue');
+
+        if (subTotalElement) subTotalElement.textContent = `AED ${subtotal.toFixed(2)}`;
+        if (vatAmountElement) vatAmountElement.textContent = `AED ${vatAmount.toFixed(2)}`;
+        if (amountDueElement) amountDueElement.textContent = `AED ${total.toFixed(2)}`;
+        
+        updateButtonStates(bill.length > 0);
+    }
+
+    function clearForm() {
+        const productNameInput = document.getElementById('productName');
+        const quantityInput = document.getElementById('quantity');
+        const priceInput = document.getElementById('price');
+        const descriptionInput = document.getElementById('description');
+
+        if (productNameInput) productNameInput.value = '';
+        if (quantityInput) quantityInput.value = '1';
+        if (priceInput) priceInput.value = '';
+        if (descriptionInput) descriptionInput.value = '';
+    }
+
+    // Make removeItem function global
+    window.removeItem = function(index) {
+        bill.splice(index, 1);
+        renderBillTable();
+        updateTotals();
+        showToast('Item removed from bill', 'info');
+    };
+
+    // WhatsApp integration
+    if (whatsappBtn) {
+        whatsappBtn.addEventListener('click', async function() {
+            if (bill.length === 0) {
+                showToast('Please add items to the bill first', 'error');
+                return;
+            }
+
+            const originalText = whatsappBtn.innerHTML;
+            whatsappBtn.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Sending...';
+            whatsappBtn.disabled = true;
+
+            try {
+                const billData = {
+                    bill_number: document.getElementById('billNumber')?.value?.trim() || '',
+                    customer_name: document.getElementById('billCustomer')?.value?.trim() || '',
+                    mobile: document.getElementById('billMobile')?.value?.trim() || '',
+                    items: bill,
+                    total_amount: parseFloat(document.getElementById('amountDue')?.textContent?.replace('AED ', '') || '0'),
+                    vat_amount: parseFloat(document.getElementById('vatAmount')?.textContent?.replace('AED ', '') || '0'),
+                    subtotal: parseFloat(document.getElementById('subTotal')?.textContent?.replace('AED ', '') || '0')
+                };
+
+                // Save the bill first
+                const saveResponse = await fetch('/api/bills', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(billData)
+                });
+
+                if (!saveResponse.ok) {
+                    throw new Error('Failed to save bill');
+                }
+
+                const saveResult = await saveResponse.json();
+                const billId = saveResult.bill_id;
+
+                // Now send WhatsApp
+                const whatsappResponse = await fetch(`/api/bills/${billId}/send-whatsapp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mobile: billData.mobile })
+                });
+
+                if (!whatsappResponse.ok) {
+                    const errorData = await whatsappResponse.json();
+                    throw new Error(errorData.error || 'Failed to send WhatsApp');
+                }
+
+                const whatsappResult = await whatsappResponse.json();
+
+                // Show success message
+                showToast('WhatsApp sent successfully!', 'success');
+
+            } catch (error) {
+                console.error('WhatsApp error:', error);
+                showToast(error.message || 'Failed to send WhatsApp. Please try again.', 'error');
+            } finally {
+                // Reset button state
+                whatsappBtn.innerHTML = originalText;
+                whatsappBtn.disabled = false;
+            }
+        });
+    }
+
+    // Email integration
+    if (emailBtn) {
+        emailBtn.addEventListener('click', async function() {
+            if (bill.length === 0) {
+                showToast('Please add items to the bill first', 'error');
+                return;
+            }
+
+            const customerEmail = prompt('Please enter customer email address:');
+            if (!customerEmail) {
+                showToast('Email address is required', 'error');
+                return;
+            }
+
+            const originalText = emailBtn.innerHTML;
+            emailBtn.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Sending...';
+            emailBtn.disabled = true;
+
+            try {
+                const billData = {
+                    bill_number: document.getElementById('billNumber')?.value?.trim() || '',
+                    customer_name: document.getElementById('billCustomer')?.value?.trim() || '',
+                    mobile: document.getElementById('billMobile')?.value?.trim() || '',
+                    items: bill,
+                    total_amount: parseFloat(document.getElementById('amountDue')?.textContent?.replace('AED ', '') || '0'),
+                    vat_amount: parseFloat(document.getElementById('vatAmount')?.textContent?.replace('AED ', '') || '0'),
+                    subtotal: parseFloat(document.getElementById('subTotal')?.textContent?.replace('AED ', '') || '0')
+                };
+
+                // Save the bill first
+                const saveResponse = await fetch('/api/bills', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(billData)
+                });
+
+                if (!saveResponse.ok) {
+                    throw new Error('Failed to save bill');
+                }
+
+                const saveResult = await saveResponse.json();
+                const billId = saveResult.bill_id;
+
+                // Now send email
+                const emailResponse = await fetch(`/api/bills/${billId}/send-email`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: customerEmail })
+                });
+
+                if (!emailResponse.ok) {
+                    const errorData = await emailResponse.json();
+                    throw new Error(errorData.error || 'Failed to send email');
+                }
+
+                const emailResult = await emailResponse.json();
+
+                // Show success message
+                showToast('Email sent successfully!', 'success');
+
+            } catch (error) {
+                console.error('Email error:', error);
+                showToast(error.message || 'Failed to send email. Please try again.', 'error');
+            } finally {
+                // Reset button state
+                emailBtn.innerHTML = originalText;
+                emailBtn.disabled = false;
+            }
+        });
+    }
+
+    // Print functionality
+    if (printBtn) {
+        printBtn.addEventListener('click', function() {
+            if (bill.length === 0) {
+                showToast('Please add items to the bill first', 'error');
+                return;
+            }
+
+            // Generate bill number if not exists
+            const billNumberInput = document.getElementById('billNumber');
+            if (billNumberInput && !billNumberInput.value.trim()) {
+                const timestamp = Date.now();
+                billNumberInput.value = `BILL-${timestamp}`;
+            }
+
+            // Open print window
+            const printWindow = window.open('/print-bill', '_blank');
+            if (printWindow) {
+                printWindow.onload = function() {
+                    printWindow.print();
+                };
+            }
+        });
+    }
+
+    // Toast notification function
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
+        
+        const colors = {
+            success: 'bg-green-600 text-white',
+            error: 'bg-red-600 text-white',
+            warning: 'bg-yellow-600 text-white',
+            info: 'bg-blue-600 text-white'
+        };
+        
+        toast.setAttribute('class', `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full ${colors[type] || colors.info}`);
+        
+        const icons = {
+            success: '<svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>',
+            error: '<svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>',
+            warning: '<svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path></svg>',
+            info: '<svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+        };
+        
+        toast.innerHTML = `${icons[type] || icons.info}${message}`;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.classList.remove('translate-x-full');
+        }, 100);
+        
+        setTimeout(() => {
+            toast.classList.add('translate-x-full');
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 300);
+        }, 5000);
+    }
+
+    // Initialize other functionality
+    initializeAreaAutocompleteWithData();
+    
+    // Set default dates for Employees filter
+    const empFromDateInput = document.getElementById('empFromDate');
+    const empToDateInput = document.getElementById('empToDate');
+    if (empFromDateInput && empToDateInput) {
+        const today = new Date();
+        const toDateStr = today.toISOString().slice(0, 10);
+        const sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 6, today.getDate());
+        const fromDateStr = sixMonthsAgo.toISOString().slice(0, 10);
+        empFromDateInput.value = fromDateStr;
+        empToDateInput.value = toDateStr;
+    }
+
+    // Generalized function to populate products
+    function populateProducts(selectId) {
+        fetch('/api/products')
+            .then(res => res.json())
+            .then(data => {
+                const select = document.getElementById(selectId);
+                if (select && Array.isArray(data)) {
+                    select.innerHTML = '<option value="All">All</option>';
+                    data.forEach(prod => {
+                        if (typeof prod === 'string') {
+                            select.innerHTML += `<option value="${prod}">${prod}</option>`;
+                        } else if (prod.product_name) {
+                            select.innerHTML += `<option value="${prod.product_name}">${prod.product_name}</option>`;
+                        }
+                    });
+                }
+            });
+    }
+
+    // Generalized function to populate cities
+    function populateCities(selectId) {
+        fetch('/api/cities')
+            .then(res => res.json())
+            .then(data => {
+                const select = document.getElementById(selectId);
+                if (select && Array.isArray(data)) {
+                    select.innerHTML = '<option value="All">All</option>';
+                    data.forEach(city => {
+                        if (typeof city === 'string') {
+                            select.innerHTML += `<option value="${city}">${city}</option>`;
+                        } else if (city.city_name) {
+                            select.innerHTML += `<option value="${city.city_name}">${city.city_name}</option>`;
+                        }
+                    });
+                }
+            });
+    }
+
+    // Generalized function to populate areas
+    function populateAreas(selectId, city) {
+        let url = '/api/areas';
+        if (city && city !== 'All') {
+            url += '?city=' + encodeURIComponent(city);
+        }
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                const select = document.getElementById(selectId);
+                if (select && Array.isArray(data)) {
+                    select.innerHTML = '<option value="All">All</option>';
+                    data.forEach(area => {
+                        if (typeof area === 'string') {
+                            select.innerHTML += `<option value="${area}">${area}</option>`;
+                        } else if (area.area_name) {
+                            select.innerHTML += `<option value="${area.area_name}">${area.area_name}</option>`;
+                        }
+                    });
+                }
+            });
+    }
+
+    // Populate dropdowns for Invoices tab
+    populateProducts('invProducts');
+    populateCities('invCity');
+    populateAreas('invArea');
+    document.getElementById('invCity')?.addEventListener('change', function() {
+        populateAreas('invArea', this.value);
+    });
+
+    // Populate dropdowns for Employees tab
+    populateProducts('empProducts');
+    populateCities('empCity');
+    populateAreas('empArea');
+    document.getElementById('empCity')?.addEventListener('change', function() {
+        populateAreas('empArea', this.value);
+    });
+  });
+</script>
+{% endblock %}

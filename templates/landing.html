@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Tajir - Professional Business Management{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+  <!-- Hero Section -->
+  <div class="text-center mb-16">
+    <div class="text-center mb-8">
+      <div class="w-32 h-32 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-neutral-700">
+        <span class="text-white font-bold text-6xl">ت</span>
+      </div>
+    <h1 class="text-5xl font-bold text-white mb-6">Tajir</h1>
+    <p class="text-xl text-neutral-400 mb-8 max-w-3xl mx-auto">
+      Professional Point of Sale system designed for UAE businesses. 
+      Streamline your operations with our modern, multi-tenant solution.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="{{ url_for('login') }}" class="bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg px-8 py-4 font-semibold text-lg transition-colors">
+        <svg data-lucide="log-in" class="w-5 h-5 inline mr-2"></svg>
+        Sign In
+      </a>
+      <a href="/setup-wizard" class="bg-green-600 hover:bg-green-500 text-white rounded-lg px-8 py-4 font-semibold text-lg transition-colors">
+        <svg data-lucide="settings" class="w-5 h-5 inline mr-2"></svg>
+        Setup Your Shop
+      </a>
+      <a href="{{ url_for('pricing') }}" class="bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg px-8 py-4 font-semibold text-lg transition-colors">
+        <svg data-lucide="credit-card" class="w-5 h-5 inline mr-2"></svg>
+        View Pricing
+      </a>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+    <div class="text-center p-6 bg-neutral-800/60 rounded-lg border border-neutral-700">
+      <div class="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg data-lucide="users" class="w-8 h-8 text-white"></svg>
+      </div>
+      <h3 class="text-xl font-semibold text-white mb-2">Customer Management</h3>
+      <p class="text-neutral-400">Efficiently manage customer information, track orders, and maintain customer history.</p>
+    </div>
+    
+    <div class="text-center p-6 bg-neutral-800/60 rounded-lg border border-neutral-700">
+      <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg data-lucide="file-text" class="w-8 h-8 text-white"></svg>
+      </div>
+      <h3 class="text-xl font-semibold text-white mb-2">Smart Billing</h3>
+      <p class="text-neutral-400">Create professional invoices, track payments, and manage multiple payment methods.</p>
+    </div>
+    
+    <div class="text-center p-6 bg-neutral-800/60 rounded-lg border border-neutral-700">
+      <div class="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg data-lucide="bar-chart-3" class="w-8 h-8 text-white"></svg>
+      </div>
+      <h3 class="text-xl font-semibold text-white mb-2">Analytics Dashboard</h3>
+      <p class="text-neutral-400">Get insights into your business performance with detailed analytics and reports.</p>
+    </div>
+  </div>
+
+  <!-- CTA Section -->
+  <div class="text-center bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg p-8">
+    <h2 class="text-3xl font-bold text-white mb-4">Ready to Transform Your Tailoring Business?</h2>
+    <p class="text-indigo-100 mb-6">Join thousands of tailors who trust our system to manage their business efficiently.</p>
+    <a href="{{ url_for('app_page') }}" class="bg-white text-indigo-600 hover:bg-gray-100 rounded-lg px-8 py-3 font-semibold text-lg transition-colors">
+      Get Started Now
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    lucide.createIcons();
+  });
+</script>
+{% endblock %} 

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill #{{ bill.bill_number }}</title>
+    <style>
+        @media print {
+            body { margin: 0; }
+            .no-print { display: none; }
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            margin: 20px;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .bill-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            align-items: start;
+            margin-bottom: 20px;
+        }
+        
+        .customer-info, .bill-details { }
+        
+        .customer-info h3, .bill-details h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            border-bottom: 1px solid #000;
+            padding-bottom: 5px;
+        }
+        
+        .info-row {
+            margin-bottom: 5px;
+        }
+        
+        .label {
+            font-weight: bold;
+            color: #000;
+            font-size: 13px;
+            display: inline-block;
+            /* Keep labels on one line and allow a wider column */
+            white-space: nowrap;
+            min-width: 170px;
+            font-family: Calibri, Arial, sans-serif;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        
+        .totals {
+            margin-left: auto;
+            width: 480px; /* increased width to accommodate longer text */
+            max-width: 100%;
+            font-size: 13px;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 5px;
+            white-space: nowrap; /* keep row contents on a single line */
+        }
+        .total-row span { 
+            white-space: nowrap; 
+            flex-shrink: 0; /* prevent text from shrinking */
+        }
+        
+        .total-row.final {
+            font-weight: bold;
+            font-size: 14px;
+            border-top: 2px solid #000;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 10px;
+        }
+        
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .print-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn no-print" onclick="window.print()">Print Bill</button>
+    
+    {% set show_vat = should_show_vat if should_show_vat is not none else (bill.vat_percent|float > 0) %}
+    <div class="header">
+        {% if shop_settings.use_dynamic_invoice_template %}
+            {% if shop_settings.shop_name %}
+            <div class="title">{{ shop_settings.shop_name }}</div>
+            {% endif %}
+            {% if shop_settings.address %}
+            <div class="subtitle">{{ shop_settings.address }}</div>
+            {% endif %}
+            {% if shop_settings.shop_mobile %}
+            <div class="subtitle">{{ shop_settings.shop_mobile }}</div>
+            {% endif %}
+            {% if shop_settings.working_hours %}
+            <div class="subtitle">{{ shop_settings.working_hours }}</div>
+            {% endif %}
+            <div style="margin-top: 10px;">&nbsp;</div>
+        {% else %}
+            <!-- <div class="title">&nbsp</div> -->
+            <div>&nbsp</div>
+            <div>&nbsp</div>
+            <div>&nbsp</div>
+            <div>&nbsp</div>
+            <div>&nbsp</div>
+        {% endif %}
+        <div class="title">الفاتورة الضريبية / TAX INVOICE</div>
+    </div>
+    
+    <div class="bill-info">
+        <div class="customer-info">
+            <h3>BUYER / المشتري</h3>
+                         <div class="info-row">
+                 <span class="label">Name / الاسم:</span>
+                 <span style="font-size: 14px;">{{ bill.customer_name or 'N/A' }}</span>
+             </div>
+                           {% if bill.customer_type == 'Business' and bill.business_name %}
+              <div class="info-row">
+                  <span class="label">Business / الشركة:</span>
+                  <span style="font-size: 14px;">{{ bill.business_name }}</span>
+              </div>
+              {% endif %}
+              {% if bill.customer_type == 'Business' and bill.business_address %}
+              <div class="info-row">
+                  <span class="label">Business Address / عنوان الشركة:</span>
+                  <span style="font-size: 14px;">{{ bill.business_address }}</span>
+              </div>
+              {% endif %}
+            <div class="info-row">
+                <span class="label">Phone / الهاتف:</span>
+                <span style="font-size: 14px;">{{ bill.customer_phone or 'N/A' }}</span>
+            </div>
+            {% if bill.customer_trn %}
+            <div class="info-row">
+                <span class="label">TRN:</span>
+                <span style="font-size: 14px;">{{ bill.customer_trn }}</span>
+            </div>
+            {% endif %}
+            <div class="info-row">
+                <span class="label">City / المدينة:</span>
+                <span style="font-size: 14px;">{{ bill.customer_city or 'N/A' }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Area / المنطقة:</span>
+                <span style="font-size: 14px;">{{ bill.customer_area or 'N/A' }}</span>
+            </div>
+            {% if shop_settings.enable_trial_date %}
+            <div class="info-row">
+                <span class="label">Trial Date / تاريخ التجربة:</span>
+                <span style="font-size: 14px;">{{ bill.trial_date or 'N/A' }}</span>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="bill-details">
+            <h3 style="display: flex; justify-content: space-between; align-items: flex-end;">
+                SELLER / البائع
+                <span style="font-size: 13px; font-weight: bold; text-align: left;">TRN: {{ shop_settings.trn or 'N/A' }}</span>
+            </h3>
+                         <div class="info-row">
+                 <span class="label">Bill # / رقم الفاتورة:</span>
+                 <span style="font-size: 14px;">{{ bill.bill_number }}</span>
+             </div>
+             <div class="info-row">
+                 <span class="label">UUID:</span>
+                 <span style="font-size: 14px;">{{ bill.uuid }}</span>
+             </div>
+            <div class="info-row">
+                <span class="label">Date / التاريخ:</span>
+                <span style="font-size: 14px;">{{ bill.bill_date }}</span>
+            </div>
+            {% if shop_settings.enable_delivery_date %}
+            <div class="info-row">
+                <span class="label">Delivery / التسليم:</span>
+                <span style="font-size: 14px; white-space: nowrap;">{{ bill.delivery_date or 'N/A' }}</span>
+            </div>
+            {% endif %}
+            <div class="info-row">
+                <span class="label">Payment / الدفع:</span>
+                <span style="font-size: 14px;">{{ bill.payment_method }}</span>
+            </div>
+            {% if shop_settings.enable_employee_assignment %}
+            <div class="info-row">
+                <span class="label">Master / المعلم:</span>
+                <span style="font-size: 14px;">{{ bill.master_name or 'N/A' }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Sr. / م</th>
+                <th>Product / المنتج</th>
+                <th>Qty / الكمية</th>
+                <th>Rate ({{ currency_code }}) / السعر</th>
+                {% if bill.discount and bill.discount > 0 %}
+                <th>Discount (%) / الخصم</th>
+                <th>Discount ({{ currency_code }}) / الخصم</th>
+                {% endif %}
+                {% if show_vat and not include_vat_in_price %}
+                {% set calculated_vat_percent = (bill.vat_amount / bill.subtotal * 100) if bill.subtotal > 0 else 0 %}
+                <th>VAT ({{ "%.1f"|format(calculated_vat_percent) }}%) / الضريبة</th>
+                {% endif %}
+                {% if shop_settings.enable_advance_payment and bill.advance_paid and bill.advance_paid > 0 %}
+                <th>Advance ({{ currency_code }}) / الدفعة المقدمة</th>
+                {% endif %}
+                <th>Net Amount ({{ currency_code }}) / المجموع</th>
+            </tr>
+        </thead>
+        <tbody>
+                         {% for item in items %}
+             <tr>
+                 <td>{{ loop.index }}</td>
+                 <td>{{ item.product_name }}{% if item.notes %} ({{ item.notes }}){% endif %}</td>
+                 <td>{{ item.quantity }}</td>
+                 <td>{{ currency_symbol }} {{ "%.2f"|format(item.rate) }}</td>
+                                 {% if bill.discount and bill.discount > 0 %}
+                <td>{{ "%.1f"|format(item.discount) }}%</td>
+                <td>{{ currency_symbol }} {{ "%.2f"|format(item.discount_amount) }}</td>
+                {% endif %}
+                 {% if show_vat and not include_vat_in_price %}
+                 <td>{{ currency_symbol }} {{ "%.2f"|format(item.vat_amount) }}</td>
+                 {% endif %}
+                 {% if shop_settings.enable_advance_payment and bill.advance_paid and bill.advance_paid > 0 %}
+                 <td>{{ currency_symbol }} {{ "%.2f"|format(item.advance_paid) }}</td>
+                 {% endif %}
+                 <td>{{ currency_symbol }} {{ "%.2f"|format(item.total_amount) }}</td>
+             </tr>
+             {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="totals">
+        <div class="total-row">
+            <span>Subtotal / المجموع الفرعي:</span>
+            <span>{{ currency_symbol }} {{ "%.2f"|format(bill.subtotal) }}</span>
+        </div>
+        {% if show_vat %}
+        {% set calculated_vat_percent = (bill.vat_amount / bill.subtotal * 100) if bill.subtotal > 0 else 0 %}
+        <div class="total-row">
+            <span>VAT ({{ "%.1f"|format(calculated_vat_percent) }}%{% if include_vat_in_price %} included{% endif %}) / الضريبة:</span>
+            <span>{{ currency_symbol }} {{ "%.2f"|format(bill.vat_amount) }}</span>
+        </div>
+        {% endif %}
+        {% if shop_settings.enable_advance_payment and bill.advance_paid and bill.advance_paid > 0 %}
+        <div class="total-row">
+            <span>Advance Paid / الدفعة المقدمة:</span>
+            <span>{{ currency_symbol }} {{ "%.2f"|format(bill.advance_paid) }}</span>
+        </div>
+        {% endif %}
+        <hr style="border: 1px solid #000; margin: 8px 0;">
+        <div class="total-row" style="font-weight: bold; font-size: 1.2em; min-width: 0;">
+            <span style="flex: 1; min-width: 0;">{% if shop_settings.payment_mode == 'full' %}Total Amount Paid / المبلغ المدفوع الكلي:{% else %}Amount Due / المبلغ المستحق:{% endif %}</span>
+            <span style="flex-shrink: 0; margin-left: 10px;">{{ currency_symbol }} {{ "%.2f"|format(bill.balance_amount) }}</span>
+        </div>
+        
+        <div class="amount-in-words" style="font-weight: bold; margin-top: 12px;">
+            {{ amount_in_words }}
+        </div>
+        <div class="arabic-amount-in-words" style="font-weight: bold; margin-top: 8px; text-align: right; direction: rtl;">
+            {{ arabic_amount_in_words }}
+        </div>
+    </div>
+    
+    {% if bill.notes %}
+    <div class="notes-section" style="margin-top: 18px; font-size: 1em;">
+      <strong>Notes:</strong>
+      <div>{{ bill.notes }}</div>
+    </div>
+    {% endif %}
+    
+    <div class="footer">
+        {% if shop_settings.shop_mobile or shop_settings.working_hours %}
+        <div style="margin-top: 20px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 12px; color: #666;">
+            {% if shop_settings.shop_mobile %}
+            <div style="margin-bottom: 5px;">
+                <strong>Contact:</strong> {{ shop_settings.shop_mobile }}
+            </div>
+            {% endif %}
+            {% if shop_settings.working_hours %}
+            <div style="margin-bottom: 5px;">
+                <strong>Working Hours:</strong> {{ shop_settings.working_hours }}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        {% if shop_settings.invoice_static_info %}
+        <div style="margin-top: 15px; padding: 10px; background-color: #f9f9f9; border-radius: 5px; font-size: 11px; color: #555; line-height: 1.4;">
+            {{ shop_settings.invoice_static_info }}
+        </div>
+        {% endif %}
+    </div>
+    
+         <!-- QR Code for FTA Compliance -->
+     {% if qr_code_base64 %}
+     <div style="position: fixed; bottom: 20px; left: 20px; text-align: center;">
+         <img src="data:image/png;base64,{{ qr_code_base64 }}" 
+              alt="FTA QR Code" 
+              style="width: 120px; height: 120px; border: 1px solid #ccc;">
+         <div style="font-size: 10px; margin-top: 5px; color: #666;">
+             FTA QR Code
+         </div>
+     </div>
+     {% endif %}
+</body>
+</html> 

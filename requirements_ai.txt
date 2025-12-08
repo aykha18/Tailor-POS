@@ -1,0 +1,35 @@
+# AI Features Dependencies for Tajir POS
+# Install with: pip install -r requirements_ai.txt
+
+# Core ML Libraries
+scikit-learn>=1.3.0
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Data Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.15.0
+
+# Optional: Advanced ML (for future features)
+# prophet>=1.1.0  # For time series forecasting
+# tensorflow>=2.13.0  # For deep learning features
+# torch>=2.0.0  # Alternative to TensorFlow
+
+# Data Processing
+scipy>=1.10.0
+joblib>=1.3.0
+
+# Jupyter (for development and testing)
+jupyter>=1.0.0
+ipykernel>=6.25.0
+
+# Model Persistence
+pickle-mixin>=1.0.2
+
+# Performance Monitoring
+psutil>=5.9.0
+
+# Note: These are the minimum versions that work well together
+# For production, consider using exact versions for stability
+

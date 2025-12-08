@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Insights - Tajir POS</title>
+    <script src="{{ url_for('static', filename='css/libs/tailwindcss.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/libs/lucide.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='fonts/google-fonts.css') }}" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <div class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <i data-lucide="bar-chart-3" class="w-8 h-8"></i>
+                    <h1 class="text-2xl font-bold">Financial Insights</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="window.location.href='/app'" class="flex items-center space-x-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors">
+                        <i data-lucide="home" class="w-4 h-4"></i>
+                        <span>Dashboard</span>
+                    </button>
+                    <button onclick="window.history.back()" class="flex items-center space-x-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                        <span>Back</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Date Range Selector -->
+    <div class="bg-white shadow-sm border-b">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center space-x-4">
+                    <label class="text-sm font-medium text-gray-700">Date Range:</label>
+                    <select id="dateRange" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="7">Last 7 Days</option>
+                        <option value="30" selected>Last 30 Days</option>
+                        <option value="90">Last 3 Months</option>
+                        <option value="180">Last 6 Months</option>
+                        <option value="365">Last Year</option>
+                        <option value="custom">Custom Range</option>
+                    </select>
+                    <div id="customDateRange" class="hidden flex items-center space-x-2">
+                        <input type="date" id="fromDate" class="border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                        <span class="text-gray-500">to</span>
+                        <input type="date" id="toDate" class="border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                    </div>
+                </div>
+                <button onclick="loadInsights()" class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    <span>Refresh</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-6 py-8">
+            <!-- Key Metrics Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl p-6 shadow-sm border card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Total Revenue</p>
+                            <p id="totalRevenue" class="text-2xl font-bold text-green-600">AED 0.00</p>
+                            <p id="revenueChange" class="text-sm text-gray-500">+0% vs last period</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i data-lucide="trending-up" class="w-6 h-6 text-green-600"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-sm border card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Net Profit</p>
+                            <p id="netProfit" class="text-2xl font-bold text-blue-600">AED 0.00</p>
+                            <p id="profitChange" class="text-sm text-gray-500">+0% vs last period</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i data-lucide="dollar-sign" class="w-6 h-6 text-blue-600"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-sm border card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Total Expenses</p>
+                            <p id="totalExpenses" class="text-2xl font-bold text-red-600">AED 0.00</p>
+                            <p id="expensesChange" class="text-sm text-gray-500">+0% vs last period</p>
+                        </div>
+                        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                            <i data-lucide="trending-down" class="w-6 h-6 text-red-600"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-sm border card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Profit Margin</p>
+                            <p class="text-2xl font-bold text-purple-600" id="profitMargin">0%</p>
+                            <p class="text-sm text-gray-500" id="marginChange">+0% vs last period</p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i data-lucide="percent" class="w-6 h-6 text-purple-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                                      <!-- Business Metrics Section (Moved after KPIs) -->
+             <div class="mb-8">
+                 <div class="bg-white rounded-xl shadow-sm border p-6">
+                     <div class="mb-6">
+                         <h2 class="text-xl font-semibold text-gray-900">Business Metrics</h2>
+                     </div>
+                     
+                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                         <!-- Total Customers -->
+                         <div class="metric-card bg-blue-50 rounded-xl shadow-sm border p-6">
+                             <div class="flex items-center justify-between">
+                                 <div>
+                                     <p class="text-2xl font-bold text-blue-600" id="totalCustomers">0</p>
+                                     <p class="text-sm font-medium text-gray-600">Total Customers</p>
+                                 </div>
+                                 <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                     <i data-lucide="users" class="w-6 h-6 text-blue-600"></i>
+                                 </div>
+                             </div>
+                         </div>
+
+                         <!-- New Customers (30d) -->
+                         <div class="metric-card bg-green-50 rounded-xl shadow-sm border p-6">
+                             <div class="flex items-center justify-between">
+                                 <div>
+                                     <p class="text-2xl font-bold text-green-600" id="newCustomers30d">0</p>
+                                     <p class="text-sm font-medium text-gray-600">New (30d)</p>
+                                 </div>
+                                 <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                     <i data-lucide="user-plus" class="w-6 h-6 text-green-600"></i>
+                                 </div>
+                             </div>
+                         </div>
+
+                         <!-- Average Order Value -->
+                         <div class="metric-card bg-purple-50 rounded-xl shadow-sm border p-6">
+                             <div class="flex items-center justify-between">
+                                 <div>
+                                     <p class="text-2xl font-bold text-purple-600" id="avgOrderValue">AED 0.00</p>
+                                     <p class="text-sm font-medium text-gray-600">Avg Order Value</p>
+                                 </div>
+                                 <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                     <i data-lucide="shopping-cart" class="w-6 h-6 text-purple-600"></i>
+                                 </div>
+                             </div>
+                         </div>
+
+                         <!-- Revenue per Customer -->
+                         <div class="metric-card bg-orange-50 rounded-xl shadow-sm border p-6">
+                             <div class="flex items-center justify-between">
+                                 <div>
+                                     <p class="text-2xl font-bold text-orange-600" id="revenuePerCustomer">AED 0.00</p>
+                                     <p class="text-sm font-medium text-gray-600">Revenue/Customer</p>
+                                 </div>
+                                 <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                                     <i data-lucide="dollar-sign" class="w-6 h-6 text-orange-600"></i>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+
+             <!-- Revenue vs Expenses and Cash Flow Section -->
+             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                 <!-- Revenue vs Expenses Section -->
+                 <div class="bg-white rounded-xl shadow-sm border p-6">
+                     <div class="flex items-center justify-between mb-6">
+                         <h2 class="text-xl font-semibold text-gray-900">Revenue vs Expenses</h2>
+                         <button onclick="downloadRevenueExpenses()" class="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700">
+                             <i data-lucide="download" class="w-4 h-4"></i>
+                             <span>Download</span>
+                         </button>
+                     </div>
+                     
+                     <div>
+                         <h3 class="text-lg font-medium text-gray-900 mb-4">Revenue vs Expenses Summary</h3>
+                         <div class="overflow-x-auto">
+                             <table class="min-w-full divide-y divide-gray-200">
+                                 <thead class="bg-gray-50">
+                                     <tr>
+                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Period</th>
+                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
+                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expenses</th>
+                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Profit</th>
+                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Margin</th>
+                                     </tr>
+                                 </thead>
+                                 <tbody class="bg-white divide-y divide-gray-200" id="revenueExpensesTable">
+                                     <tr>
+                                         <td colspan="5" class="px-6 py-4 text-center text-gray-500">Loading revenue vs expenses data...</td>
+                                     </tr>
+                                 </tbody>
+                             </table>
+                         </div>
+                     </div>
+                 </div>
+
+                 <!-- Cash Flow Section -->
+                 <div class="bg-white rounded-xl shadow-sm border p-6">
+                     <div class="flex items-center justify-between mb-6">
+                         <h2 class="text-xl font-semibold text-gray-900">Cash Flow</h2>
+                         <button onclick="downloadCashFlow()" class="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700">
+                             <i data-lucide="download" class="w-4 h-4"></i>
+                             <span>Download</span>
+                         </button>
+                     </div>
+                     
+                     <div>
+                         <h3 class="text-lg font-medium text-gray-900 mb-4">Cash Flow Summary</h3>
+                         <div class="overflow-x-auto">
+                             <table class="min-w-full divide-y divide-gray-200">
+                                 <thead class="bg-gray-50">
+                                     <tr>
+                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Percentage</th>
+                                     </tr>
+                                 </thead>
+                                 <tbody class="bg-white divide-y divide-gray-200" id="cashFlowTable">
+                                     <tr>
+                                         <td colspan="3" class="px-6 py-4 text-center text-gray-500">Loading cash flow data...</td>
+                                     </tr>
+                                 </tbody>
+                             </table>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+
+             <!-- Expense Breakdown Section (Now standalone) -->
+             <div class="mb-8">
+                 <!-- Expense Breakdown Section -->
+                 <div class="bg-white rounded-xl shadow-sm border p-6">
+                     <div class="flex items-center justify-between mb-6">
+                         <h2 class="text-xl font-semibold text-gray-900">Expense Breakdown</h2>
+                         <div class="flex items-center space-x-4">
+                             <div class="flex items-center space-x-2">
+                                 <span class="text-sm text-gray-500">Total:</span>
+                                 <span class="text-lg font-semibold text-gray-900" id="expenseBreakdownTotal">AED 0.00</span>
+                             </div>
+                             <button onclick="downloadExpenseBreakdown()" class="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700">
+                                 <i data-lucide="download" class="w-4 h-4"></i>
+                                 <span>Download</span>
+                             </button>
+                         </div>
+                     </div>
+                     
+                     <div class="overflow-x-auto">
+                         <table class="min-w-full divide-y divide-gray-200">
+                             <thead class="bg-gray-50">
+                                 <tr>
+                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Percentage</th>
+                                 </tr>
+                             </thead>
+                             <tbody class="bg-white divide-y divide-gray-200" id="expenseBreakdownTable">
+                                 <tr>
+                                     <td colspan="3" class="px-6 py-4 text-center text-gray-500">Loading expense breakdown...</td>
+                                 </tr>
+                             </tbody>
+                         </table>
+                     </div>
+                     
+                     <!-- Navigation for more expenses -->
+                     <div class="mt-4 flex justify-end">
+                         <button onclick="showAllExpenses()" class="flex items-center space-x-2 text-blue-600 hover:text-blue-800 text-sm font-medium">
+                             <span>View All Expenses</span>
+                             <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                         </button>
+                     </div>
+                 </div>
+             </div>
+         </div>
+
+         <!-- Top Products and Top Expenses Section -->
+         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+             <!-- Top Products Section -->
+             <div class="bg-white rounded-xl shadow-sm border p-6">
+                 <div class="flex items-center justify-between mb-6">
+                     <h2 class="text-xl font-semibold text-gray-900">Top Products</h2>
+                     <button onclick="downloadTopProducts()" class="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700">
+                         <i data-lucide="download" class="w-4 h-4"></i>
+                         <span>Download</span>
+                     </button>
+                 </div>
+                 
+                 <div class="overflow-x-auto">
+                     <table class="min-w-full divide-y divide-gray-200">
+                         <thead class="bg-gray-50">
+                             <tr>
+                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
+                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Units Sold</th>
+                             </tr>
+                         </thead>
+                         <tbody class="bg-white divide-y divide-gray-200" id="topProductsTable">
+                             <tr>
+                                 <td colspan="3" class="px-6 py-4 text-center text-gray-500">Loading top products...</td>
+                             </tr>
+                         </tbody>
+                     </table>
+                 </div>
+             </div>
+
+             <!-- Top Expenses Section -->
+             <div class="bg-white rounded-xl shadow-sm border p-6">
+                 <div class="flex items-center justify-between mb-6">
+                     <h2 class="text-xl font-semibold text-gray-900">Top Expenses</h2>
+                     <button onclick="downloadTopExpenses()" class="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700">
+                         <i data-lucide="download" class="w-4 h-4"></i>
+                         <span>Download</span>
+                     </button>
+                 </div>
+                 
+                 <div class="overflow-x-auto">
+                     <table class="min-w-full divide-y divide-gray-200">
+                         <thead class="bg-gray-50">
+                             <tr>
+                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Percentage</th>
+                             </tr>
+                         </thead>
+                         <tbody class="bg-white divide-y divide-gray-200" id="topExpensesTable">
+                             <tr>
+                                 <td colspan="3" class="px-6 py-4 text-center text-gray-500">Loading top expenses...</td>
+                             </tr>
+                         </tbody>
+                     </table>
+                 </div>
+             </div>
+         </div>
+     </div>
+</div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Set default date range (last 30 days)
+        function setDefaultDateRange() {
+            const today = new Date();
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+            
+            document.getElementById('fromDate').value = thirtyDaysAgo.toISOString().split('T')[0];
+            document.getElementById('toDate').value = today.toISOString().split('T')[0];
+        }
+
+        // Load financial insights data
+        async function loadInsights() {
+            const fromDate = document.getElementById('fromDate').value;
+            const toDate = document.getElementById('toDate').value;
+            
+            if (!fromDate || !toDate) {
+                alert('Please select both start and end dates');
+                return;
+            }
+
+            // Show loading state
+            document.body.classList.add('loading');
+
+            try {
+                // Load financial overview
+                const overviewResponse = await fetch(`/api/analytics/financial-overview?from_date=${fromDate}&to_date=${toDate}`, {
+                    credentials: 'include'
+                });
+                
+                if (!overviewResponse.ok) {
+                    throw new Error('Failed to load financial overview');
+                }
+                
+                const overviewData = await overviewResponse.json();
+                
+                // Extract values with proper error handling and defaults
+                const totalRevenue = overviewData?.revenue?.total_revenue || 0;
+                const netProfit = overviewData?.profitability?.net_profit || 0;
+                const totalExpenses = overviewData?.expenses?.total_expenses || 0;
+                const profitMargin = overviewData?.profitability?.net_margin || 0;
+                
+                // Calculate last period dates and fetch comparison data
+                const lastPeriodData = await calculateLastPeriodComparison(fromDate, toDate);
+                
+                // Update metrics with comparison
+                updateMetricWithComparison('totalRevenue', totalRevenue, lastPeriodData.revenue, 'AED');
+                updateMetricWithComparison('netProfit', netProfit, lastPeriodData.profit, 'AED');
+                updateMetricWithComparison('totalExpenses', totalExpenses, lastPeriodData.expenses, 'AED');
+                updateMetricWithComparison('profitMargin', profitMargin, lastPeriodData.margin, '%');
+                
+                // Load expense breakdown
+                const breakdownResponse = await fetch(`/api/analytics/expense-breakdown?from_date=${fromDate}&to_date=${toDate}`, {
+                    credentials: 'include'
+                });
+                
+                if (!breakdownResponse.ok) {
+                    throw new Error('Failed to load expense breakdown');
+                }
+                
+                                 const breakdownData = await breakdownResponse.json();
+                 displayExpenseBreakdown(breakdownData.category_breakdown || [], totalExpenses);
+                 
+                 // Load business metrics
+                 const businessMetricsResponse = await fetch(`/api/analytics/business-metrics?from_date=${fromDate}&to_date=${toDate}`, {
+                     credentials: 'include'
+                 });
+                 
+                 if (!businessMetricsResponse.ok) {
+                     throw new Error('Failed to load business metrics');
+                 }
+                 
+                 const businessMetricsData = await businessMetricsResponse.json();
+                 displayBusinessMetrics(businessMetricsData);
+                 
+                 // Load revenue vs expenses data
+                 const revenueExpensesResponse = await fetch(`/api/analytics/revenue-trends?period=30&from_date=${fromDate}&to_date=${toDate}`, {
+                     credentials: 'include'
+                 });
+                 
+                 if (!revenueExpensesResponse.ok) {
+                     throw new Error('Failed to load revenue vs expenses data');
+                 }
+                 
+                 const revenueExpensesData = await revenueExpensesResponse.json();
+                 displayRevenueExpenses(revenueExpensesData, totalRevenue, totalExpenses);
+                 
+                 // Load cash flow data
+                 const cashFlowResponse = await fetch(`/api/analytics/cash-flow?from_date=${fromDate}&to_date=${toDate}`, {
+                     credentials: 'include'
+                 });
+                 
+                 if (!cashFlowResponse.ok) {
+                     throw new Error('Failed to load cash flow data');
+                 }
+                 
+                 const cashFlowData = await cashFlowResponse.json();
+                 displayCashFlow(cashFlowData, totalRevenue, totalExpenses);
+                 
+                 // Load top products data
+                 const topProductsResponse = await fetch(`/api/analytics/top-products?from_date=${fromDate}&to_date=${toDate}`, {
+                     credentials: 'include'
+                 });
+                 
+                 if (!topProductsResponse.ok) {
+                     throw new Error('Failed to load top products data');
+                 }
+                 
+                 const topProductsData = await topProductsResponse.json();
+                 displayTopProducts(topProductsData.top_products || []);
+                 
+                 // Load top expenses data (reuse expense breakdown data)
+                 displayTopExpenses(breakdownData.category_breakdown || [], totalExpenses);
+                 
+             } catch (error) {
+                 console.error('Error loading insights:', error);
+                 alert('Failed to load financial insights. Please try again.');
+             } finally {
+                 // Remove loading state
+                 document.body.classList.remove('loading');
+             }
+         }
+
+        // Display expense breakdown
+        function displayExpenseBreakdown(breakdownData, totalExpenses) {
+            const tableBody = document.getElementById('expenseBreakdownTable');
+            const totalElement = document.getElementById('expenseBreakdownTotal');
+            
+            // Store breakdown data globally for use in other sections
+            window.currentBreakdownData = breakdownData;
+            
+            // Ensure totalExpenses is a number
+            const safeTotalExpenses = Number(totalExpenses) || 0;
+            totalElement.textContent = `AED ${safeTotalExpenses.toFixed(2)}`;
+            
+            if (!breakdownData || breakdownData.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-gray-500">No expense data available</td></tr>';
+                return;
+            }
+            
+            // Display only top 3 expenses
+            const top3Expenses = breakdownData.slice(0, 3);
+            
+            tableBody.innerHTML = top3Expenses.map(category => {
+                // Ensure all values are numbers with defaults
+                const amount = Number(category.total_amount) || 0;
+                const percentage = safeTotalExpenses > 0 ? (amount / safeTotalExpenses * 100) : 0;
+                
+                return `
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 rounded-full bg-blue-500 mr-3"></div>
+                                <div class="text-sm font-medium text-gray-900">${category.category_name || 'Unknown'}</div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            AED ${amount.toFixed(2)}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${percentage.toFixed(1)}%
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // Show/hide navigation button based on number of expenses
+            const navButton = document.querySelector('button[onclick="showAllExpenses()"]');
+            if (navButton) {
+                if (breakdownData.length > 3) {
+                    navButton.style.display = 'flex';
+                    navButton.querySelector('span').textContent = `View All Expenses (${breakdownData.length - 3} more)`;
+                } else {
+                    navButton.style.display = 'none';
+                }
+            }
+            
+            // Re-initialize icons for new elements
+            lucide.createIcons();
+        }
+
+         // Show all expenses in a modal
+         function showAllExpenses() {
+             const breakdownData = window.currentBreakdownData || [];
+             const totalExpenses = document.getElementById('expenseBreakdownTotal').textContent;
+             const safeTotalExpenses = parseFloat(totalExpenses.replace('AED ', '')) || 0;
+             
+             // Create modal content
+             const modalContent = `
+                 <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                     <div class="bg-white rounded-xl shadow-xl max-w-4xl w-full mx-4 max-h-[80vh] overflow-hidden">
+                         <div class="flex items-center justify-between p-6 border-b">
+                             <h3 class="text-xl font-semibold text-gray-900">All Expense Categories</h3>
+                             <button onclick="closeExpenseModal()" class="text-gray-400 hover:text-gray-600">
+                                 <i data-lucide="x" class="w-6 h-6"></i>
+                             </button>
+                         </div>
+                         <div class="p-6 overflow-y-auto max-h-[60vh]">
+                             <div class="mb-4">
+                                 <span class="text-sm text-gray-500">Total Expenses: </span>
+                                 <span class="text-lg font-semibold text-gray-900">${totalExpenses}</span>
+                             </div>
+                             <table class="min-w-full divide-y divide-gray-200">
+                                 <thead class="bg-gray-50">
+                                     <tr>
+                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Percentage</th>
+                                     </tr>
+                                 </thead>
+                                 <tbody class="bg-white divide-y divide-gray-200">
+                                     ${breakdownData.map(category => {
+                                         const amount = Number(category.total_amount) || 0;
+                                         const percentage = safeTotalExpenses > 0 ? (amount / safeTotalExpenses * 100) : 0;
+                                         
+                                         return `
+                                             <tr class="hover:bg-gray-50">
+                                                 <td class="px-6 py-4 whitespace-nowrap">
+                                                     <div class="flex items-center">
+                                                         <div class="w-3 h-3 rounded-full bg-blue-500 mr-3"></div>
+                                                         <div class="text-sm font-medium text-gray-900">${category.category_name || 'Unknown'}</div>
+                                                     </div>
+                                                 </td>
+                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                     AED ${amount.toFixed(2)}
+                                                 </td>
+                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                     ${percentage.toFixed(1)}%
+                                                 </td>
+                                             </tr>
+                                         `;
+                                     }).join('')}
+                                 </tbody>
+                             </table>
+                         </div>
+                     </div>
+                 </div>
+             `;
+             
+             // Add modal to page
+             const modalContainer = document.createElement('div');
+             modalContainer.id = 'expenseModal';
+             modalContainer.innerHTML = modalContent;
+             document.body.appendChild(modalContainer);
+             
+             // Initialize icons in modal
+             lucide.createIcons();
+         }
+         
+         // Close expense modal
+         function closeExpenseModal() {
+             const modal = document.getElementById('expenseModal');
+             if (modal) {
+                 modal.remove();
+             }
+         }
+         
+         // Display business metrics
+         function displayBusinessMetrics(metricsData) {
+             const customerMetrics = metricsData?.customer_metrics || {};
+             
+             // Update business metrics with proper error handling and defaults
+             const totalCustomers = customerMetrics.total_customers || 0;
+             const newCustomers30d = customerMetrics.new_customers_30d || 0;
+             const avgOrderValue = customerMetrics.avg_order_value || 0;
+             const revenuePerCustomer = customerMetrics.revenue_per_customer || 0;
+             
+             document.getElementById('totalCustomers').textContent = totalCustomers;
+             document.getElementById('newCustomers30d').textContent = newCustomers30d;
+             document.getElementById('avgOrderValue').textContent = `AED ${avgOrderValue.toFixed(2)}`;
+             document.getElementById('revenuePerCustomer').textContent = `AED ${revenuePerCustomer.toFixed(2)}`;
+         }
+
+         // Display revenue vs expenses
+         function displayRevenueExpenses(revenueData, currentRevenue, currentExpenses) {
+             const tableBody = document.getElementById('revenueExpensesTable');
+             
+             // Calculate current period data
+             const currentNetProfit = currentRevenue - currentExpenses;
+             const currentMargin = currentRevenue > 0 ? (currentNetProfit / currentRevenue * 100) : 0;
+             
+             // Get previous period data (assuming it's available in revenueData)
+             const previousRevenue = revenueData?.previous_period?.total_revenue || 0;
+             const previousExpenses = revenueData?.previous_period?.total_expenses || 0;
+             const previousNetProfit = previousRevenue - previousExpenses;
+             const previousMargin = previousRevenue > 0 ? (previousNetProfit / previousRevenue * 100) : 0;
+             
+             // Update summary table
+             tableBody.innerHTML = `
+                 <tr class="hover:bg-gray-50">
+                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Current Period</td>
+                     <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">AED ${currentRevenue.toFixed(2)}</td>
+                     <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600">AED ${currentExpenses.toFixed(2)}</td>
+                     <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">AED ${currentNetProfit.toFixed(2)}</td>
+                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${currentMargin.toFixed(1)}%</td>
+                 </tr>
+                 <tr class="hover:bg-gray-50">
+                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Previous Period</td>
+                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">AED ${previousRevenue.toFixed(2)}</td>
+                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">AED ${previousExpenses.toFixed(2)}</td>
+                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">AED ${previousNetProfit.toFixed(2)}</td>
+                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${previousMargin.toFixed(1)}%</td>
+                 </tr>
+             `;
+         }
+         
+         // Display cash flow
+         function displayCashFlow(cashFlowData, totalRevenue, totalExpenses) {
+             const tableBody = document.getElementById('cashFlowTable');
+             
+             const cashInflow = totalRevenue;
+             const cashOutflow = totalExpenses;
+             const netCashFlow = cashInflow - cashOutflow;
+             const outflowPercentage = cashInflow > 0 ? (cashOutflow / cashInflow * 100) : 0;
+             
+             tableBody.innerHTML = `
+                 <tr class="hover:bg-gray-50">
+                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Cash Inflow</td>
+                     <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">AED ${cashInflow.toFixed(2)}</td>
+                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">100%</td>
+                 </tr>
+                 <tr class="hover:bg-gray-50">
+                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Cash Outflow</td>
+                     <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600">AED ${cashOutflow.toFixed(2)}</td>
+                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${outflowPercentage.toFixed(1)}%</td>
+                 </tr>
+                 <tr class="hover:bg-gray-50">
+                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Net Cash Flow</td>
+                     <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">AED ${netCashFlow.toFixed(2)}</td>
+                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">-</td>
+                 </tr>
+             `;
+         }
+         
+         // Display top products
+         function displayTopProducts(productsData) {
+             const tableBody = document.getElementById('topProductsTable');
+             
+             if (!productsData || productsData.length === 0) {
+                 tableBody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-gray-500">No product data available</td></tr>';
+                 return;
+             }
+             
+             // Take top 5 products
+             const topProducts = productsData.slice(0, 5);
+             
+             tableBody.innerHTML = topProducts.map(product => {
+                 const revenue = Number(product.total_revenue) || 0;
+                 const unitsSold = Number(product.quantity_sold) || 0;
+                 
+                 return `
+                     <tr class="hover:bg-gray-50">
+                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${product.product_name || 'Unknown'}</td>
+                         <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">AED ${revenue.toFixed(2)}</td>
+                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${unitsSold}</td>
+                     </tr>
+                 `;
+             }).join('');
+         }
+         
+         // Display top expenses
+         function displayTopExpenses(expensesData, totalExpenses) {
+             const tableBody = document.getElementById('topExpensesTable');
+             
+             if (!expensesData || expensesData.length === 0) {
+                 tableBody.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-gray-500">No expense data available</td></tr>';
+                 return;
+             }
+             
+             // Take top 5 expenses
+             const topExpenses = expensesData.slice(0, 5);
+             const safeTotalExpenses = Number(totalExpenses) || 0;
+             
+             tableBody.innerHTML = topExpenses.map(expense => {
+                 const amount = Number(expense.total_amount) || 0;
+                 const percentage = safeTotalExpenses > 0 ? (amount / safeTotalExpenses * 100) : 0;
+                 
+                 return `
+                     <tr class="hover:bg-gray-50">
+                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${expense.category_name || 'Unknown'}</td>
+                         <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600">AED ${amount.toFixed(2)}</td>
+                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${percentage.toFixed(1)}%</td>
+                     </tr>
+                 `;
+             }).join('');
+         }
+         
+         // Download top products
+         function downloadTopProducts() {
+             const fromDate = document.getElementById('fromDate').value;
+             const toDate = document.getElementById('toDate').value;
+             
+             if (!fromDate || !toDate) {
+                 alert('Please select both start and end dates');
+                 return;
+             }
+             
+             // Get top products data from table
+             const tableRows = document.querySelectorAll('#topProductsTable tr');
+             const productsData = [];
+             
+             tableRows.forEach(row => {
+                 const cells = row.querySelectorAll('td');
+                 if (cells.length === 3) {
+                     productsData.push([
+                         cells[0].textContent.trim(),
+                         cells[1].textContent.trim(),
+                         cells[2].textContent.trim()
+                     ]);
+                 }
+             });
+             
+             // Create CSV content
+             const csvContent = [
+                 ['Top Products Report'],
+                 ['Period:', `${fromDate} to ${toDate}`],
+                 [''],
+                 ['Product', 'Revenue', 'Units Sold']
+             ];
+             
+             // Add products data
+             productsData.forEach(product => {
+                 csvContent.push(product);
+             });
+             
+             // Create and download file
+             const blob = new Blob([csvContent.map(row => row.join(',')).join('\n')], { type: 'text/csv' });
+             const url = window.URL.createObjectURL(blob);
+             const a = document.createElement('a');
+             a.href = url;
+             a.download = `top-products-${fromDate}-to-${toDate}.csv`;
+             document.body.appendChild(a);
+             a.click();
+             document.body.removeChild(a);
+             window.URL.revokeObjectURL(url);
+         }
+         
+         // Download top expenses
+         function downloadTopExpenses() {
+             const fromDate = document.getElementById('fromDate').value;
+             const toDate = document.getElementById('toDate').value;
+             
+             if (!fromDate || !toDate) {
+                 alert('Please select both start and end dates');
+                 return;
+             }
+             
+             // Get top expenses data from table
+             const tableRows = document.querySelectorAll('#topExpensesTable tr');
+             const expensesData = [];
+             
+             tableRows.forEach(row => {
+                 const cells = row.querySelectorAll('td');
+                 if (cells.length === 3) {
+                     expensesData.push([
+                         cells[0].textContent.trim(),
+                         cells[1].textContent.trim(),
+                         cells[2].textContent.trim()
+                     ]);
+                 }
+             });
+             
+             // Create CSV content
+             const csvContent = [
+                 ['Top Expenses Report'],
+                 ['Period:', `${fromDate} to ${toDate}`],
+                 [''],
+                 ['Category', 'Amount', 'Percentage']
+             ];
+             
+             // Add expenses data
+             expensesData.forEach(expense => {
+                 csvContent.push(expense);
+             });
+             
+             // Create and download file
+             const blob = new Blob([csvContent.map(row => row.join(',')).join('\n')], { type: 'text/csv' });
+             const url = window.URL.createObjectURL(blob);
+             const a = document.createElement('a');
+             a.href = url;
+             a.download = `top-expenses-${fromDate}-to-${toDate}.csv`;
+             document.body.appendChild(a);
+             a.click();
+             document.body.removeChild(a);
+             window.URL.revokeObjectURL(url);
+         }
+         
+         // Download revenue vs expenses
+         function downloadRevenueExpenses() {
+             const fromDate = document.getElementById('fromDate').value;
+             const toDate = document.getElementById('toDate').value;
+             
+             if (!fromDate || !toDate) {
+                 alert('Please select both start and end dates');
+                 return;
+             }
+             
+             // Create CSV content
+             const csvContent = [
+                 ['Revenue vs Expenses Report'],
+                 ['Period:', `${fromDate} to ${toDate}`],
+                 [''],
+                 ['Period', 'Revenue', 'Expenses', 'Net Profit', 'Margin'],
+                 ['Current Period', document.querySelector('#revenueExpensesTable tr:nth-child(1) td:nth-child(2)')?.textContent || 'AED 0.00', 
+                  document.querySelector('#revenueExpensesTable tr:nth-child(1) td:nth-child(3)')?.textContent || 'AED 0.00',
+                  document.querySelector('#revenueExpensesTable tr:nth-child(1) td:nth-child(4)')?.textContent || 'AED 0.00',
+                  document.querySelector('#revenueExpensesTable tr:nth-child(1) td:nth-child(5)')?.textContent || '0%'],
+                 ['Previous Period', document.querySelector('#revenueExpensesTable tr:nth-child(2) td:nth-child(2)')?.textContent || 'AED 0.00',
+                  document.querySelector('#revenueExpensesTable tr:nth-child(2) td:nth-child(3)')?.textContent || 'AED 0.00',
+                  document.querySelector('#revenueExpensesTable tr:nth-child(2) td:nth-child(4)')?.textContent || 'AED 0.00',
+                  document.querySelector('#revenueExpensesTable tr:nth-child(2) td:nth-child(5)')?.textContent || '0%']
+             ].map(row => row.join(',')).join('\n');
+             
+             // Create and download file
+             const blob = new Blob([csvContent], { type: 'text/csv' });
+             const url = window.URL.createObjectURL(blob);
+             const a = document.createElement('a');
+             a.href = url;
+             a.download = `revenue-vs-expenses-${fromDate}-to-${toDate}.csv`;
+             document.body.appendChild(a);
+             a.click();
+             document.body.removeChild(a);
+             window.URL.revokeObjectURL(url);
+         }
+         
+         // Download cash flow
+         function downloadCashFlow() {
+             const fromDate = document.getElementById('fromDate').value;
+             const toDate = document.getElementById('toDate').value;
+             
+             if (!fromDate || !toDate) {
+                 alert('Please select both start and end dates');
+                 return;
+             }
+             
+             // Create CSV content
+             const csvContent = [
+                 ['Cash Flow Report'],
+                 ['Period:', `${fromDate} to ${toDate}`],
+                 [''],
+                 ['Category', 'Amount', 'Percentage'],
+                 ['Cash Inflow', document.querySelector('#cashFlowTable tr:nth-child(1) td:nth-child(2)')?.textContent || 'AED 0.00', '100%'],
+                 ['Cash Outflow', document.querySelector('#cashFlowTable tr:nth-child(2) td:nth-child(2)')?.textContent || 'AED 0.00',
+                  document.querySelector('#cashFlowTable tr:nth-child(2) td:nth-child(3)')?.textContent || '0%'],
+                 ['Net Cash Flow', document.querySelector('#cashFlowTable tr:nth-child(3) td:nth-child(2)')?.textContent || 'AED 0.00', '-']
+             ].map(row => row.join(',')).join('\n');
+             
+             // Create and download file
+             const blob = new Blob([csvContent], { type: 'text/csv' });
+             const url = window.URL.createObjectURL(blob);
+             const a = document.createElement('a');
+             a.href = url;
+             a.download = `cash-flow-${fromDate}-to-${toDate}.csv`;
+             document.body.appendChild(a);
+             a.click();
+             document.body.removeChild(a);
+             window.URL.revokeObjectURL(url);
+         }
+         
+         // Download expense breakdown
+         function downloadExpenseBreakdown() {
+             const fromDate = document.getElementById('fromDate').value;
+             const toDate = document.getElementById('toDate').value;
+             
+             if (!fromDate || !toDate) {
+                 alert('Please select both start and end dates');
+                 return;
+             }
+             
+             // Get breakdown data
+             const breakdownData = window.currentBreakdownData || [];
+             const totalExpenses = document.getElementById('expenseBreakdownTotal').textContent;
+             
+             // Create CSV content
+             const csvContent = [
+                 ['Expense Breakdown Report'],
+                 ['Period:', `${fromDate} to ${toDate}`],
+                 ['Total Expenses:', totalExpenses],
+                 [''],
+                 ['Category', 'Amount', 'Percentage']
+             ];
+             
+             // Add breakdown data
+             breakdownData.forEach(category => {
+                 const amount = Number(category.total_amount) || 0;
+                 const percentage = (amount / parseFloat(totalExpenses.replace('AED ', '')) * 100) || 0;
+                 csvContent.push([
+                     category.category_name || 'Unknown',
+                     `AED ${amount.toFixed(2)}`,
+                     `${percentage.toFixed(1)}%`
+                 ]);
+             });
+             
+             // Create and download file
+             const blob = new Blob([csvContent.map(row => row.join(',')).join('\n')], { type: 'text/csv' });
+             const url = window.URL.createObjectURL(blob);
+             const a = document.createElement('a');
+             a.href = url;
+             a.download = `expense-breakdown-${fromDate}-to-${toDate}.csv`;
+             document.body.appendChild(a);
+             a.click();
+             document.body.removeChild(a);
+             window.URL.revokeObjectURL(url);
+         }
+         
+         // Download business metrics
+         function downloadBusinessMetrics() {
+             const fromDate = document.getElementById('fromDate').value;
+             const toDate = document.getElementById('toDate').value;
+             
+             if (!fromDate || !toDate) {
+                 alert('Please select both start and end dates');
+                 return;
+             }
+             
+             // Create CSV content
+             const csvContent = [
+                 ['Business Metrics Report'],
+                 ['Period:', `${fromDate} to ${toDate}`],
+                 [''],
+                 ['Metric', 'Value'],
+                 ['Total Customers', document.getElementById('totalCustomers').textContent],
+                 ['New Customers (30d)', document.getElementById('newCustomers30d').textContent],
+                 ['Average Order Value', document.getElementById('avgOrderValue').textContent],
+                 ['Revenue per Customer', document.getElementById('revenuePerCustomer').textContent]
+             ].map(row => row.join(',')).join('\n');
+             
+             // Create and download file
+             const blob = new Blob([csvContent], { type: 'text/csv' });
+             const url = window.URL.createObjectURL(blob);
+             const a = document.createElement('a');
+             a.href = url;
+             a.download = `business-metrics-${fromDate}-to-${toDate}.csv`;
+             document.body.appendChild(a);
+             a.click();
+             document.body.removeChild(a);
+             window.URL.revokeObjectURL(url);
+         }
+
+        // Date range selector functionality
+        document.getElementById('dateRange').addEventListener('change', function() {
+            const selectedValue = this.value;
+            const customDateRange = document.getElementById('customDateRange');
+            
+            if (selectedValue === 'custom') {
+                customDateRange.classList.remove('hidden');
+                setDefaultDateRange();
+            } else {
+                customDateRange.classList.add('hidden');
+                setDateRange(parseInt(selectedValue));
+                loadInsights(); // Reload data when date range changes
+            }
+        });
+
+        // Set date range based on days
+        function setDateRange(days) {
+            const toDate = new Date();
+            const fromDate = new Date();
+            fromDate.setDate(toDate.getDate() - days);
+            
+            document.getElementById('fromDate').value = fromDate.toISOString().split('T')[0];
+            document.getElementById('toDate').value = toDate.toISOString().split('T')[0];
+        }
+
+        // Set default date range (last 30 days)
+        function setDefaultDateRange() {
+            const toDate = new Date();
+            const fromDate = new Date();
+            fromDate.setDate(toDate.getDate() - 30);
+            
+            document.getElementById('fromDate').value = fromDate.toISOString().split('T')[0];
+            document.getElementById('toDate').value = toDate.toISOString().split('T')[0];
+            
+            // Add event listeners for custom date inputs
+            document.getElementById('fromDate').addEventListener('change', loadInsights);
+            document.getElementById('toDate').addEventListener('change', loadInsights);
+        }
+
+        // Calculate last period comparison
+        async function calculateLastPeriodComparison(fromDate, toDate) {
+            try {
+                // Calculate the duration of the current period
+                const currentFrom = new Date(fromDate);
+                const currentTo = new Date(toDate);
+                const periodDays = Math.ceil((currentTo - currentFrom) / (1000 * 60 * 60 * 24)) + 1;
+                
+                // Calculate last period dates
+                const lastPeriodTo = new Date(currentFrom);
+                lastPeriodTo.setDate(lastPeriodTo.getDate() - 1);
+                const lastPeriodFrom = new Date(lastPeriodTo);
+                lastPeriodFrom.setDate(lastPeriodFrom.getDate() - periodDays + 1);
+                
+                // Fetch last period data
+                const lastPeriodResponse = await fetch(`/api/analytics/financial-overview?from_date=${lastPeriodFrom.toISOString().split('T')[0]}&to_date=${lastPeriodTo.toISOString().split('T')[0]}`, {
+                    credentials: 'include'
+                });
+                
+                if (!lastPeriodResponse.ok) {
+                    throw new Error('Failed to load last period data');
+                }
+                
+                const lastPeriodData = await lastPeriodResponse.json();
+                
+                return {
+                    revenue: lastPeriodData?.revenue?.total_revenue || 0,
+                    profit: lastPeriodData?.profitability?.net_profit || 0,
+                    expenses: lastPeriodData?.expenses?.total_expenses || 0,
+                    margin: lastPeriodData?.profitability?.net_margin || 0
+                };
+            } catch (error) {
+                console.error('Error calculating last period comparison:', error);
+                return { revenue: 0, profit: 0, expenses: 0, margin: 0 };
+            }
+        }
+        
+        // Update metric with comparison
+        function updateMetricWithComparison(metricId, currentValue, lastPeriodValue, prefix) {
+            const metricElement = document.getElementById(metricId);
+            const changeElement = document.getElementById(metricId.replace('totalRevenue', 'revenueChange')
+                                                           .replace('netProfit', 'profitChange')
+                                                           .replace('totalExpenses', 'expensesChange')
+                                                           .replace('profitMargin', 'marginChange'));
+            
+            // Update the main metric value
+            if (prefix === 'AED') {
+                metricElement.textContent = `${prefix} ${currentValue.toFixed(2)}`;
+            } else {
+                metricElement.textContent = `${currentValue.toFixed(2)}${prefix}`;
+            }
+            
+            // Calculate percentage change
+            let percentageChange = 0;
+            if (lastPeriodValue !== 0) {
+                percentageChange = ((currentValue - lastPeriodValue) / lastPeriodValue) * 100;
+            } else if (currentValue !== 0) {
+                percentageChange = 100; // If last period was 0 and current is not 0, it's 100% increase
+            }
+            
+            // Update the change indicator
+            const changeText = percentageChange >= 0 ? `+${percentageChange.toFixed(1)}%` : `${percentageChange.toFixed(1)}%`;
+            const changeColor = percentageChange >= 0 ? 'text-green-600' : 'text-red-600';
+            
+            changeElement.textContent = `${changeText} vs last period`;
+            changeElement.className = `text-sm ${changeColor}`;
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            setDefaultDateRange();
+            loadInsights();
+            
+            // Add event listeners for custom date inputs
+            document.getElementById('fromDate').addEventListener('change', loadInsights);
+            document.getElementById('toDate').addEventListener('change', loadInsights);
+            
+            // Initialize icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

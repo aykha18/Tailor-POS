@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Tajir</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="{{ url_for('static', filename='css/libs/tailwindcss.min.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/libs/lucide.min.js') }}"></script>
+  <style>
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+    }
+    
+    .login-wrapper {
+      max-width: 28rem;
+      width: 100%;
+      margin: 0 auto;
+    }
+    
+    .login-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .login-title {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+    
+    .login-subtitle {
+      color: #9ca3af;
+      font-size: 1.125rem;
+    }
+    
+    .login-card {
+      background-color: rgba(38, 38, 38, 0.6);
+      border-radius: 1rem;
+      border: 1px solid #404040;
+      padding: 2rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+    
+    .auth-tabs {
+      display: flex;
+      margin-bottom: 2rem;
+      background-color: rgba(55, 65, 81, 0.3);
+      border-radius: 0.5rem;
+      padding: 0.25rem;
+    }
+    
+    .auth-tab {
+      flex: 1;
+      padding: 0.75rem 1.5rem;
+      text-align: center;
+      color: #9ca3af;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-radius: 0.375rem;
+      font-weight: 500;
+    }
+    
+    .auth-tab.active {
+      color: white;
+      background-color: #9333ea;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .login-form {
+      display: none;
+    }
+    
+    .login-form.active {
+      display: block;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #d1d5db;
+      margin-bottom: 0.75rem;
+    }
+    
+    .form-input {
+      width: 100%;
+      background-color: rgba(55, 65, 81, 0.5);
+      border: 1px solid #525252;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      color: white;
+      font-size: 1.125rem;
+      transition: all 0.2s;
+    }
+    
+    .form-input::placeholder {
+      color: #9ca3af;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+    }
+    
+    .btn-primary {
+      width: 100%;
+      background-color: #9333ea;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.125rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      transform: scale(1);
+    }
+    
+    .btn-primary:hover {
+      background-color: #a855f7;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      transform: scale(1.02);
+    }
+    
+    .btn-secondary {
+      width: 100%;
+      background-color: #374151;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.125rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      transform: scale(1);
+    }
+    
+    .btn-secondary:hover {
+      background-color: #4b5563;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      transform: scale(1.02);
+    }
+    
+    .forgot-link {
+      font-size: 0.875rem;
+      color: #60a5fa;
+      text-align: center;
+      display: block;
+      margin-top: 1rem;
+      transition: color 0.2s;
+    }
+    
+    .forgot-link:hover {
+      color: #93c5fd;
+    }
+    
+    .register-link {
+      font-size: 0.875rem;
+      color: #9ca3af;
+      text-align: center;
+      display: block;
+      margin-top: 2rem;
+      padding: 1rem;
+      background-color: rgba(55, 65, 81, 0.3);
+      border-radius: 0.5rem;
+      border: 1px solid #525252;
+    }
+    
+    .register-link a {
+      color: #60a5fa;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    
+    .register-link a:hover {
+      color: #93c5fd;
+    }
+    
+    .input-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+    }
+    
+    .input-wrapper {
+      position: relative;
+    }
+    
+    .input-with-icon {
+      padding-left: 3rem;
+    }
+    
+    .password-toggle {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    
+    .password-toggle:hover {
+      color: white;
+    }
+
+    /* Toast Notification Styles */
+    .toast-container {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .toast {
+      display: flex;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(10px);
+      border: 1px solid;
+      min-width: 300px;
+      max-width: 400px;
+      transform: translateX(100%);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .toast.show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .toast.success {
+      background-color: rgba(34, 197, 94, 0.1);
+      border-color: rgba(34, 197, 94, 0.3);
+      color: #22c55e;
+    }
+
+    .toast.error {
+      background-color: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+    }
+
+    .toast.warning {
+      background-color: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.3);
+      color: #f59e0b;
+    }
+
+    .toast.info {
+      background-color: rgba(59, 130, 246, 0.1);
+      border-color: rgba(59, 130, 246, 0.3);
+      color: #3b82f6;
+    }
+
+    .toast-icon {
+      margin-right: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .toast-content {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .toast-message {
+      font-size: 0.75rem;
+      opacity: 0.9;
+    }
+
+    .toast-close {
+      margin-left: 0.75rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+      flex-shrink: 0;
+    }
+
+    .toast-close:hover {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-neutral-900 text-white font-sans antialiased">
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <div class="login-container">
+    <div class="login-wrapper">
+      <!-- Header -->
+      <div class="login-header">
+        <h1 class="login-title">Welcome Back</h1>
+        <p class="login-subtitle">Sign in to your account to continue</p>
+      </div>
+
+      <!-- Login Card -->
+      <div class="login-card">
+        <!-- Auth Tabs -->
+        <div class="auth-tabs">
+          <div class="auth-tab active" data-tab="signin">Sign In</div>
+          <div class="auth-tab" data-tab="signup">Sign Up</div>
+        </div>
+
+        <!-- Sign In Form -->
+        <form class="login-form active" id="signin-form"><div class="form-group">
+            <label class="form-label">Email Address</label>
+            <div class="input-wrapper">
+              <svg data-lucide="mail" class="input-icon w-5 h-5"></svg>
+              <input type="email" id="signin-email" class="form-input input-with-icon" placeholder="your@email.com" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="input-wrapper">
+              <svg data-lucide="lock" class="input-icon w-5 h-5"></svg>
+              <input type="password" id="signin-password" class="form-input input-with-icon" placeholder="Enter your password" required>
+              <svg data-lucide="eye" class="password-toggle w-5 h-5" onclick="togglePassword('signin-password')"></svg>
+            </div>
+          </div>
+          
+          <button type="submit" class="btn-primary">
+            Sign In
+          </button>
+          <a href="#" class="forgot-link">Forgot Password?</a>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form class="login-form" id="signup-form"><div class="form-group">
+            <label class="form-label">Full Name</label>
+            <div class="input-wrapper">
+              <svg data-lucide="user" class="input-icon w-5 h-5"></svg>
+              <input type="text" id="signup-name" class="form-input input-with-icon" placeholder="Enter your full name" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <div class="input-wrapper">
+              <svg data-lucide="mail" class="input-icon w-5 h-5"></svg>
+              <input type="email" id="signup-email" class="form-input input-with-icon" placeholder="your@email.com" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="input-wrapper">
+              <svg data-lucide="lock" class="input-icon w-5 h-5"></svg>
+              <input type="password" id="signup-password" class="form-input input-with-icon" placeholder="Create a password" required>
+              <svg data-lucide="eye" class="password-toggle w-5 h-5" onclick="togglePassword('signup-password')"></svg>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <div class="input-wrapper">
+              <svg data-lucide="lock" class="input-icon w-5 h-5"></svg>
+              <input type="password" id="signup-confirm-password" class="form-input input-with-icon" placeholder="Confirm your password" required>
+              <svg data-lucide="eye" class="password-toggle w-5 h-5" onclick="togglePassword('signup-confirm-password')"></svg>
+            </div>
+          </div>
+          
+          <button type="submit" class="btn-primary">
+            Sign Up
+          </button>
+        </form>
+
+        <div class="register-link">
+          <svg data-lucide="plus-circle" class="w-4 h-4 inline mr-2"></svg>
+          Don't have an account? <a href="/setup-wizard">Create your shop</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  let currentTab = 'signin';
+
+  // Toast Notification System
+  function showToast(type, title, message, duration = 5000) {
+    const container = document.getElementById('toast-container');
+    
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    const icons = {
+      success: 'check-circle',
+      error: 'x-circle',
+      warning: 'alert-triangle',
+      info: 'info'
+    };
+    
+    toast.innerHTML = `
+      <svg data-lucide="${icons[type]}" class="toast-icon w-5 h-5"></svg>
+      <div class="toast-content">
+        <div class="toast-title">${title}</div>
+        <div class="toast-message">${message}</div>
+      </div>
+      <svg data-lucide="x" class="toast-close w-4 h-4" onclick="this.parentElement.remove()"></svg>
+    `;
+    
+    container.appendChild(toast);
+    
+    // Reinitialize Lucide icons
+    lucide.createIcons();
+    
+    // Show animation
+    setTimeout(() => {
+      toast.classList.add('show');
+    }, 100);
+    
+    // Auto remove
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => {
+        if (toast.parentElement) {
+          toast.remove();
+        }
+      }, 300);
+    }, duration);
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // Tab switching
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        const tabName = this.dataset.tab;
+        switchTab(tabName);
+      });
+    });
+
+    // Form submissions
+    document.getElementById('signin-form').addEventListener('submit', handleSignIn);
+    document.getElementById('signup-form').addEventListener('submit', handleSignUp);
+  });
+
+  function switchTab(tabName) {
+    // Update tab styles
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+      tab.classList.remove('active');
+    });
+    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+    // Update form visibility
+    document.querySelectorAll('.login-form').forEach(form => {
+      form.classList.remove('active');
+    });
+    document.getElementById(`${tabName}-form`).classList.add('active');
+
+    currentTab = tabName;
+  }
+
+  function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const icon = input.parentElement.querySelector('.password-toggle');
+    
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.innerHTML = '<svg data-lucide="eye-off" class="w-5 h-5"></svg>';
+    } else {
+      input.type = 'password';
+      icon.innerHTML = '<svg data-lucide="eye" class="w-5 h-5"></svg>';
+    }
+    
+    // Reinitialize Lucide icons
+    lucide.createIcons();
+  }
+
+  function handleSignIn(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('signin-email').value.trim();
+    const password = document.getElementById('signin-password').value;
+
+    if (!email || !password) {
+      showToast('error', 'Validation Error', 'Please fill in all fields');
+      return;
+    }
+
+    // Show loading state
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Signing In...';
+    submitBtn.disabled = true;
+
+    fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        method: 'email',
+        email: email,
+        password: password
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        showToast('success', 'Login Successful', 'Welcome back! Redirecting...', 2000);
+        setTimeout(() => {
+          // Check if there's a redirect URL from the server
+          if (data.redirect) {
+            window.location.href = data.redirect;
+          } else {
+            window.location.href = '/app';
+          }
+        }, 2000);
+      } else {
+        showToast('error', 'Login Failed', data.message || 'Invalid email or password');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      showToast('error', 'Connection Error', 'Unable to connect to server. Please try again.');
+    })
+    .finally(() => {
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+    });
+  }
+
+  function handleSignUp(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('signup-name').value.trim();
+    const email = document.getElementById('signup-email').value.trim();
+    const password = document.getElementById('signup-password').value;
+    const confirmPassword = document.getElementById('signup-confirm-password').value;
+
+    if (!name || !email || !password || !confirmPassword) {
+      showToast('error', 'Validation Error', 'Please fill in all fields');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      showToast('error', 'Password Mismatch', 'Passwords do not match');
+      return;
+    }
+
+    // Show loading state
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Creating Account...';
+    submitBtn.disabled = true;
+
+    // For now, redirect to setup wizard
+    showToast('info', 'Redirecting', 'Taking you to the setup wizard...', 2000);
+    setTimeout(() => {
+      window.location.href = '/setup-wizard';
+    }, 2000);
+  }
+  </script>
+</body>
+</html> 

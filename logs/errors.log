@@ -1,0 +1,320 @@
+2025-11-25 00:31:28,370 - root - ERROR - init_db:476 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 00:31:28,370 - root - ERROR - init_db:476 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 00:37:53,705 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 00:37:53,705 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 00:52:02,936 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 00:52:02,936 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 01:06:31,883 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 01:06:31,883 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 01:11:56,757 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 01:11:56,757 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 01:27:28,645 - app - ERROR - log_exception:1414 - Exception on /api/bills/1592/print [GET]
+Traceback (most recent call last):
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Khana\tajir.pos\app.py", line 2585, in print_bill
+NameError: name 'get_invoice_summary_data' is not defined
+2025-11-25 01:27:28,645 - app - ERROR - log_exception:1414 - Exception on /api/bills/1592/print [GET]
+Traceback (most recent call last):
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Khana\tajir.pos\app.py", line 2585, in print_bill
+NameError: name 'get_invoice_summary_data' is not defined
+2025-11-25 01:28:05,263 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 01:28:05,263 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 01:32:43,213 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 01:32:43,213 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 01:34:38,315 - app - ERROR - log_exception:1414 - Exception on /api/bills/1592/print [GET]
+Traceback (most recent call last):
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Khana\tajir.pos\app.py", line 2607, in print_bill
+    summary_data = get_invoice_summary_data(user_id, bill_date)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'get_invoice_summary_data' is not defined
+2025-11-25 01:34:38,315 - app - ERROR - log_exception:1414 - Exception on /api/bills/1592/print [GET]
+Traceback (most recent call last):
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Khana\tajir.pos\app.py", line 2607, in print_bill
+    summary_data = get_invoice_summary_data(user_id, bill_date)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'get_invoice_summary_data' is not defined
+2025-11-25 01:34:40,886 - app - ERROR - log_exception:1414 - Exception on /api/bills/1592/print [GET]
+Traceback (most recent call last):
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Khana\tajir.pos\app.py", line 2607, in print_bill
+    summary_data = get_invoice_summary_data(user_id, bill_date)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'get_invoice_summary_data' is not defined
+2025-11-25 01:34:40,886 - app - ERROR - log_exception:1414 - Exception on /api/bills/1592/print [GET]
+Traceback (most recent call last):
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Khana\tajir.pos\app.py", line 2607, in print_bill
+    summary_data = get_invoice_summary_data(user_id, bill_date)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'get_invoice_summary_data' is not defined
+2025-11-25 01:36:06,465 - app - ERROR - log_exception:1414 - Exception on /api/bills/1593/print [GET]
+Traceback (most recent call last):
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Khana\tajir.pos\app.py", line 2607, in print_bill
+    summary_data = get_invoice_summary_data(user_id, bill_date)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'get_invoice_summary_data' is not defined
+2025-11-25 01:36:06,465 - app - ERROR - log_exception:1414 - Exception on /api/bills/1593/print [GET]
+Traceback (most recent call last):
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Khana\tajir.pos\app.py", line 2607, in print_bill
+    summary_data = get_invoice_summary_data(user_id, bill_date)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'get_invoice_summary_data' is not defined
+2025-11-25 01:37:49,337 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 01:37:49,337 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 01:43:10,775 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 01:43:10,775 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 01:44:24,349 - app - ERROR - log_exception:1414 - Exception on /api/bills/1594/print [GET]
+Traceback (most recent call last):
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Khana\tajir.pos\app.py", line 2658, in print_bill
+    summary_data = get_invoice_summary_data(user_id, bill_date)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'get_invoice_summary_data' is not defined
+2025-11-25 01:44:24,349 - app - ERROR - log_exception:1414 - Exception on /api/bills/1594/print [GET]
+Traceback (most recent call last):
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Khana\tajir.pos\app.py", line 2658, in print_bill
+    summary_data = get_invoice_summary_data(user_id, bill_date)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'get_invoice_summary_data' is not defined
+2025-11-25 01:48:07,106 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 01:48:07,106 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 01:52:33,215 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 01:52:33,215 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 02:00:27,044 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 02:00:27,044 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 02:11:06,857 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 02:11:06,857 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 02:18:42,426 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 02:18:42,426 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 02:28:28,156 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 02:28:28,156 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 02:46:56,892 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 02:46:56,892 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 03:01:48,440 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 03:01:48,440 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 13:12:14,254 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 13:12:14,254 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 13:13:42,978 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 13:13:42,978 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 13:17:55,020 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 13:17:55,020 - root - ERROR - init_db:486 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 13:18:34,318 - app - ERROR - log_exception:1414 - Exception on /api/bills/1595/print [GET]
+Traceback (most recent call last):
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Khana\tajir.pos\app.py", line 2746, in print_bill
+    summary_data = get_invoice_summary_data(user_id, bill_date)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'get_invoice_summary_data' is not defined
+2025-11-25 13:18:34,318 - app - ERROR - log_exception:1414 - Exception on /api/bills/1595/print [GET]
+Traceback (most recent call last):
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Khana\tajir.pos\app.py", line 2746, in print_bill
+    summary_data = get_invoice_summary_data(user_id, bill_date)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'get_invoice_summary_data' is not defined
+2025-11-25 13:20:51,279 - app - ERROR - log_exception:1414 - Exception on /api/bills/1595/print [GET]
+Traceback (most recent call last):
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Khana\tajir.pos\app.py", line 2746, in print_bill
+    summary_data = get_invoice_summary_data(user_id, bill_date)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'get_invoice_summary_data' is not defined
+2025-11-25 13:20:51,279 - app - ERROR - log_exception:1414 - Exception on /api/bills/1595/print [GET]
+Traceback (most recent call last):
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Khana\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Khana\tajir.pos\app.py", line 2746, in print_bill
+    summary_data = get_invoice_summary_data(user_id, bill_date)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'get_invoice_summary_data' is not defined
+2025-11-25 13:21:57,481 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 13:21:57,481 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 13:28:08,211 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 13:28:08,211 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 13:39:09,344 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 13:39:09,344 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 13:49:22,151 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 13:49:22,151 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 14:00:17,626 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 14:00:17,626 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 14:06:22,397 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 14:06:22,397 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 14:26:38,346 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 14:26:38,346 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 14:37:04,565 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 14:37:04,565 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 14:46:53,911 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 14:46:53,911 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 14:51:15,733 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 14:51:15,733 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 15:03:17,941 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 15:03:17,941 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 15:07:58,188 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 15:07:58,188 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 15:17:37,281 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 15:17:37,281 - root - ERROR - init_db:519 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 15:28:34,013 - root - ERROR - init_db:521 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 15:28:34,013 - root - ERROR - init_db:521 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 15:32:20,031 - root - ERROR - init_db:521 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 15:32:20,031 - root - ERROR - init_db:521 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 15:41:35,375 - root - ERROR - init_db:521 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+2025-11-25 15:41:35,375 - root - ERROR - init_db:521 - Failed to setup admin user: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step by Step Debug</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #111827;
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .content {
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+        
+        .debug-section {
+            background: #1f2937;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #374151;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        
+        .status.success {
+            background: #065f46;
+            color: #d1fae5;
+        }
+        
+        .status.error {
+            background: #991b1b;
+            color: #fecaca;
+        }
+        
+        .status.warning {
+            background: #92400e;
+            color: #fed7aa;
+        }
+        
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #2563eb;
+        }
+        
+        /* Test navigation styles */
+        .test-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #374151;
+            padding: 8px 0;
+            z-index: 9999;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            height: auto;
+            min-height: 76px;
+        }
+        
+        .test-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 12px;
+            min-height: 60px;
+            color: #9ca3af;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border-radius: 8px;
+            min-width: 60px;
+            justify-content: center;
+            flex-shrink: 0;
+            flex-grow: 0;
+        }
+        
+        .test-nav-item.active {
+            color: #6366f1;
+            background: rgba(99, 102, 241, 0.2);
+        }
+        
+        .test-nav-item svg {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+        }
+        
+        .test-nav-item span {
+            font-size: 11px;
+            font-weight: 500;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Step by Step Debug</h1>
+        
+        <div class="debug-section">
+            <h2>Step 1: Check Device</h2>
+            <div id="device-check"></div>
+        </div>
+        
+        <div class="debug-section">
+            <h2>Step 2: Check Mobile Navigation Class</h2>
+            <div id="class-check"></div>
+        </div>
+        
+        <div class="debug-section">
+            <h2>Step 3: Check Current Navigation</h2>
+            <div id="nav-check"></div>
+        </div>
+        
+        <div class="debug-section">
+            <h2>Step 4: Actions</h2>
+            <button onclick="step1()">Step 1: Check Device</button>
+            <button onclick="step2()">Step 2: Check MobileNavigation Class</button>
+            <button onclick="step3()">Step 3: Check Current Navigation</button>
+            <button onclick="step4()">Step 4: Create Test Navigation</button>
+            <button onclick="step5()">Step 5: Initialize MobileNavigation</button>
+        </div>
+        
+        <div class="debug-section">
+            <h2>Console Log</h2>
+            <div id="console-log" style="background: #000; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 12px; max-height: 300px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Override console.log to capture logs
+        const originalLog = console.log;
+        const originalError = console.error;
+        const logContainer = document.getElementById('console-log');
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            logContainer.innerHTML += '<div style="color: #10b981;">' + args.join(' ') + '</div>';
+            logContainer.scrollTop = logContainer.scrollHeight;
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            logContainer.innerHTML += '<div style="color: #ef4444;">ERROR: ' + args.join(' ') + '</div>';
+            logContainer.scrollTop = logContainer.scrollHeight;
+        };
+        
+        function step1() {
+            console.log('=== STEP 1: DEVICE CHECK ===');
+            const deviceCheck = document.getElementById('device-check');
+            
+            const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isMobileWidth = window.innerWidth <= 768;
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            
+            console.log('User Agent:', navigator.userAgent);
+            console.log('Window Width:', window.innerWidth);
+            console.log('Window Height:', window.innerHeight);
+            console.log('Is Mobile Device:', isMobileDevice);
+            console.log('Is Mobile Width:', isMobileWidth);
+            console.log('Is Touch Device:', isTouchDevice);
+            
+            deviceCheck.innerHTML = `
+                <div class="status ${isMobileDevice ? 'success' : 'warning'}">
+                    Mobile Device: ${isMobileDevice ? 'Yes' : 'No'}
+                </div>
+                <div class="status ${isMobileWidth ? 'success' : 'warning'}">
+                    Mobile Width (≤768px): ${isMobileWidth ? 'Yes' : 'No'} (${window.innerWidth}px)
+                </div>
+                <div class="status ${isTouchDevice ? 'success' : 'warning'}">
+                    Touch Device: ${isTouchDevice ? 'Yes' : 'No'}
+                </div>
+                <div class="status">
+                    Viewport: ${window.innerWidth}x${window.innerHeight}
+                </div>
+            `;
+        }
+        
+        function step2() {
+            console.log('=== STEP 2: MOBILENAVIGATION CLASS CHECK ===');
+            const classCheck = document.getElementById('class-check');
+            
+            console.log('window.MobileNavigation:', window.MobileNavigation);
+            console.log('typeof window.MobileNavigation:', typeof window.MobileNavigation);
+            
+            if (window.MobileNavigation) {
+                console.log('MobileNavigation.initializeMobileNavigation:', window.MobileNavigation.initializeMobileNavigation);
+                console.log('MobileNavigation.prototype:', window.MobileNavigation.prototype);
+            }
+            
+            classCheck.innerHTML = `
+                <div class="status ${window.MobileNavigation ? 'success' : 'error'}">
+                    MobileNavigation Class: ${window.MobileNavigation ? 'Available' : 'Not Available'}
+                </div>
+                <div class="status ${window.MobileNavigation && window.MobileNavigation.initializeMobileNavigation ? 'success' : 'error'}">
+                    initializeMobileNavigation Method: ${window.MobileNavigation && window.MobileNavigation.initializeMobileNavigation ? 'Available' : 'Not Available'}
+                </div>
+                <div class="status ${window.mobileNavigation ? 'success' : 'error'}">
+                    mobileNavigation Instance: ${window.mobileNavigation ? 'Available' : 'Not Available'}
+                </div>
+            `;
+        }
+        
+        function step3() {
+            console.log('=== STEP 3: CURRENT NAVIGATION CHECK ===');
+            const navCheck = document.getElementById('nav-check');
+            
+            const mobileNav = document.querySelector('.mobile-nav, #mobile-navigation-bar');
+            const testNav = document.querySelector('.test-nav');
+            const allNavs = document.querySelectorAll('nav');
+            
+            console.log('All nav elements:', allNavs.length);
+            allNavs.forEach((nav, index) => {
+                console.log(`Nav ${index}:`, nav.className, nav.id, nav.style.display, nav.style.flexDirection);
+            });
+            
+            console.log('Mobile nav element:', mobileNav);
+            console.log('Test nav element:', testNav);
+            
+            navCheck.innerHTML = `
+                <div class="status ${mobileNav ? 'success' : 'error'}">
+                    Mobile Navigation Element: ${mobileNav ? 'Found' : 'Not Found'}
+                </div>
+                <div class="status ${testNav ? 'success' : 'error'}">
+                    Test Navigation Element: ${testNav ? 'Found' : 'Not Found'}
+                </div>
+                <div class="status">
+                    Total Nav Elements: ${allNavs.length}
+                </div>
+            `;
+        }
+        
+        function step4() {
+            console.log('=== STEP 4: CREATE TEST NAVIGATION ===');
+            
+            // Remove existing test nav
+            const existingTestNav = document.querySelector('.test-nav');
+            if (existingTestNav) {
+                existingTestNav.remove();
+                console.log('Removed existing test navigation');
+            }
+            
+            // Create test navigation
+            const testNav = document.createElement('nav');
+            testNav.className = 'test-nav';
+            testNav.id = 'test-navigation';
+            
+            testNav.innerHTML = `
+                <a href="#dashboard" class="test-nav-item active" data-section="dashboard">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#billing" class="test-nav-item" data-section="billing">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Billing</span>
+                </a>
+                <a href="#products" class="test-nav-item" data-section="products">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                    <span>Products</span>
+                </a>
+                <a href="#employees" class="test-nav-item" data-section="employees">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span>Employees</span>
+                </a>
+                <a href="#more" class="test-nav-item" data-section="more">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6a2 2 0 110-4 2 2 0 010 4zm0 8a2 2 0 110-4 2 2 0 010 4zm0 8a2 2 0 110-4 2 2 0 010 4z"></path>
+                    </svg>
+                    <span>More</span>
+                </a>
+            `;
+            
+            document.body.appendChild(testNav);
+            console.log('Test navigation created');
+            
+            // Add click handlers
+            const navItems = testNav.querySelectorAll('.test-nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    console.log('Test nav clicked:', this.dataset.section);
+                });
+            });
+            
+            step3(); // Update navigation check
+        }
+        
+        function step5() {
+            console.log('=== STEP 5: INITIALIZE MOBILENAVIGATION ===');
+            
+            if (window.MobileNavigation && window.MobileNavigation.initializeMobileNavigation) {
+                console.log('Attempting to initialize MobileNavigation...');
+                window.MobileNavigation.initializeMobileNavigation().then(mobileNav => {
+                    console.log('MobileNavigation initialized successfully:', mobileNav);
+                    window.mobileNavigation = mobileNav;
+                    step3(); // Update navigation check
+                }).catch(error => {
+                    console.error('Failed to initialize MobileNavigation:', error);
+                });
+            } else {
+                console.error('MobileNavigation class or initializeMobileNavigation method not available');
+            }
+        }
+        
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Debug page loaded');
+            step1();
+            step2();
+            step3();
+        });
+    </script>
+</body>
+</html>

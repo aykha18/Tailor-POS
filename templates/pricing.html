@@ -1,0 +1,371 @@
+{% extends "base.html" %}
+
+{% block title %}Pricing - Tajir{% endblock %}
+
+{% block extra_head %}
+<style>
+  .pricing-card {
+    @apply bg-neutral-800/60 px-8 py-6 rounded-2xl border border-neutral-700 transition-all duration-300;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 2px 16px 0 rgba(0,0,0,0.12);
+    border-image: linear-gradient(90deg, #6366f1 0%, #06b6d4 100%) 1;
+    border-width: 2px;
+    border-style: solid;
+    border-image-slice: 1;
+    border-image-source: linear-gradient(90deg, #27272a 0%, #27272a 100%);
+  }
+  .pricing-card:hover {
+    @apply shadow-2xl;
+    transform: scale(1.045) translateY(-8px);
+    border-image-source: linear-gradient(90deg, #6366f1 0%, #06b6d4 100%);
+    box-shadow: 0 8px 32px 0 rgba(34,211,238,0.25), 0 2px 16px 0 rgba(99,102,241,0.18);
+    transition: transform 0.25s cubic-bezier(.33,1,.68,1), box-shadow 0.25s, border-image-source 0.4s;
+  }
+  .pricing-card.popular {
+    @apply border-indigo-500 shadow-lg shadow-indigo-500/20;
+  }
+  .feature-check {
+    @apply text-green-400;
+  }
+  .feature-lock {
+    @apply text-neutral-500;
+  }
+  .pricing-card .btn-container {
+    margin-top: auto;
+    padding-top: 1rem;
+  }
+  .popular-badge {
+    @apply absolute -top-4 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full z-10;
+  }
+  .card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .features-section {
+    flex: 1;
+  }
+  .features-section .flex {
+    gap: 1rem;
+    padding-left: 2rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+  <!-- Header -->
+  <div class="text-center mb-16">
+    <h2 class="text-4xl font-bold text-white mb-4">Pricing</h2>
+    <p class="text-xl text-neutral-300 mb-8">Start for free. Upgrade as you go.</p>
+  </div>
+
+  <!-- Pricing Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <!-- Tajir Trial -->
+    <div class="pricing-card">
+      <div class="card-content">
+        <div class="text-center">
+          <h3 class="text-xl font-semibold text-white mb-2">Tajir Trial</h3>
+          <div class="mb-6">
+            <span class="text-3xl font-bold text-white">Free</span>
+            <span class="text-neutral-400">30 days</span>
+            <div>Full PRO features</div>
+            <span class="text-neutral-400"> No payment required</span>
+          </div>
+        </div>
+        <div class="features-section space-y-4">
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Billing</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Product Management</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Customer Management</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Dashboard</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Customer Search</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Data backup/Restore</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">WhatsApp Bill</span>
+          </div>
+          
+          <!-- Upcoming Features Section -->
+          <!--
+          <div class="border-t border-neutral-700 pt-4 mt-4">
+            <h4 class="text-sm font-semibold text-indigo-400 mb-3 text-center">Upcoming Features</h4>
+            <div class="space-y-2">
+              <div class="flex items-center">
+                <svg data-lucide="check" class="w-4 h-4 feature-check"></svg>
+                <span class="text-xs text-neutral-400">Advanced reporting and analytics</span>
+              </div>
+              <div class="flex items-center">
+                <svg data-lucide="check" class="w-4 h-4 feature-check"></svg>
+                <span class="text-xs text-neutral-400">Mobile App integration</span>
+              </div>
+              <div class="flex items-center">
+                <svg data-lucide="check" class="w-4 h-4 feature-check"></svg>
+                <span class="text-xs text-neutral-400">Payment gateway integration</span>
+              </div>
+              <div class="flex items-center">
+                <svg data-lucide="check" class="w-4 h-4 feature-check"></svg>
+                <span class="text-xs text-neutral-400">Inventory management</span>
+              </div>
+            </div>
+          </div>
+          -->
+        </div>
+      </div>
+      <div class="btn-container">
+        <button onclick="selectPlan('trial')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg px-6 py-3 font-semibold transition-colors">
+          Get started
+        </button>
+      </div>
+    </div>
+
+    <!-- Tajir Basic -->
+    <div class="pricing-card popular relative">
+      <div class="popular-badge" align="center">Popular</div>
+      <div class="card-content">
+        <div class="text-center">
+          <h3 class="text-xl font-semibold text-white mb-2">Tajir Basic</h3>
+          <div class="mb-6">
+            <span class="text-3xl font-bold text-white">AED 499</span>
+            <span class="text-sm text-neutral-500 block">Annual Subscription</span>
+          </div>
+        </div>
+        <div class="features-section space-y-4">
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Billing</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Product Management</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Customer Management</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="lock" class="w-5 h-5 feature-lock"></svg>
+            <span class="text-neutral-500">Dashboard</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="lock" class="w-5 h-5 feature-lock"></svg>
+            <span class="text-neutral-500">Customer Search</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="lock" class="w-5 h-5 feature-lock"></svg>
+            <span class="text-neutral-500">Data backup/Restore</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">WhatsApp Bill</span>
+          </div>
+          
+          <!-- Upcoming Features Section -->
+          <!--
+          <div class="border-t border-neutral-700 pt-4 mt-4">
+            <h4 class="text-sm font-semibold text-red-400 mb-3 text-center">Upcoming Features: Locked</h4>
+            <div class="space-y-2">
+              <div class="flex items-center">
+                <svg data-lucide="lock" class="w-4 h-4 feature-lock"></svg>
+                <span class="text-xs text-neutral-500">Advanced reporting and analytics</span>
+              </div>
+              <div class="flex items-center">
+                <svg data-lucide="lock" class="w-4 h-4 feature-lock"></svg>
+                <span class="text-xs text-neutral-500">Mobile App integration</span>
+              </div>
+              <div class="flex items-center">
+                <svg data-lucide="lock" class="w-4 h-4 feature-lock"></svg>
+                <span class="text-xs text-neutral-500">Payment gateway integration</span>
+              </div>
+              <div class="flex items-center">
+                <svg data-lucide="lock" class="w-4 h-4 feature-lock"></svg>
+                <span class="text-xs text-neutral-500">Inventory management</span>
+              </div>
+            </div>
+          </div>
+          -->
+        </div>
+      </div>
+      <div class="btn-container">
+        <button onclick="selectPlan('basic')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg px-6 py-3 font-semibold transition-colors">
+          Get started
+        </button>
+      </div>
+    </div>
+
+    <!-- Tajir PRO -->
+    <div class="pricing-card">
+      <div class="card-content">
+        <div class="text-center">
+          <h3 class="text-xl font-semibold text-white mb-2">Tajir PRO</h3>
+          <div class="mb-6">
+            <span class="text-3xl font-bold text-white">AED 899</span>
+            <span class="text-sm text-neutral-500 block">Annual subscription</span>
+            <div>&nbsp</div>
+          </div>
+        </div>
+        <div class="features-section space-y-4">
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Everything in Basic</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">EmaraTax API Integration</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Real-time invoice validation</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Digital signature management</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">VAT return reports (VAT 201)</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Bulk invoice upload/download</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Branch-wise TRN configuration</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Priority support</span>
+          </div>
+          
+          <!-- Upcoming Features Section -->
+          <!--
+          <div class="border-t border-neutral-700 pt-4 mt-4">
+            <h4 class="text-sm font-semibold text-indigo-400 mb-3 text-center">Upcoming Features</h4>
+            <div class="space-y-2">
+              <div class="flex items-center">
+                <svg data-lucide="check" class="w-4 h-4 feature-check"></svg>
+                <span class="text-xs text-neutral-400">Advanced reporting and analytics</span>
+              </div>
+              <div class="flex items-center">
+                <svg data-lucide="check" class="w-4 h-4 feature-check"></svg>
+                <span class="text-xs text-neutral-400">Mobile App integration</span>
+              </div>
+              <div class="flex items-center">
+                <svg data-lucide="check" class="w-4 h-4 feature-check"></svg>
+                <span class="text-xs text-neutral-400">Payment gateway integration</span>
+              </div>
+              <div class="flex items-center">
+                <svg data-lucide="check" class="w-4 h-4 feature-check"></svg>
+                <span class="text-xs text-neutral-400">Inventory management</span>
+              </div>
+            </div>
+          </div>
+          -->
+        </div>
+      </div>
+      <div class="btn-container">
+        <button onclick="selectPlan('pro')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg px-6 py-3 font-semibold transition-colors">
+          Get started
+        </button>
+      </div>
+    </div>
+
+    <!-- Enterprise -->
+    <div class="pricing-card">
+      <div class="card-content">
+        <div class="text-center">
+          <h3 class="text-xl font-semibold text-white mb-2">Enterprise</h3>
+          <div class="mb-6">
+            <span class="text-3xl font-bold text-white">Custom</span>
+          </div>
+        </div>
+        <div class="features-section space-y-4">
+          <p class="text-sm text-neutral-400 mb-4 text-center">Everything in PRO, plus:</p>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">User authentication and role-based access</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Inventory management</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Customer loyalty program</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Multi-branch support</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Advanced reporting and analytics</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Mobile app integration</span>
+          </div>
+          <div class="flex items-center">
+            <svg data-lucide="check" class="w-5 h-5 feature-check"></svg>
+            <span class="text-neutral-300">Payment gateway integration</span>
+          </div>
+        </div>
+      </div>
+      <div class="btn-container">
+        <button onclick="selectPlan('enterprise')" class="w-full bg-neutral-700 hover:bg-neutral-600 text-white rounded-lg px-6 py-3 font-semibold transition-colors">
+          Ask for a quote
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ Section -->
+  <div class="mt-20 text-center">
+    <h2 class="text-3xl font-bold text-white mb-8">Frequently Asked Questions</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <div class="text-left">
+        <h3 class="text-lg font-semibold text-white mb-2">Can I change plans anytime?</h3>
+        <p class="text-neutral-400">Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.</p>
+      </div>
+      <div class="text-left">
+        <h3 class="text-lg font-semibold text-white mb-2">Is there a free trial?</h3>
+        <p class="text-neutral-400">Yes, you can try our Pro plan free for 15 days. No credit card required.</p>
+      </div>
+      <div class="text-left">
+        <h3 class="text-lg font-semibold text-white mb-2">What payment methods do you accept?</h3>
+        <p class="text-neutral-400">We accept all major credit cards, PayPal, and bank transfers for Enterprise plans.</p>
+      </div>
+      <div class="text-left">
+        <h3 class="text-lg font-semibold text-white mb-2">Do you offer refunds?</h3>
+        <p class="text-neutral-400">We offer a 30-day money-back guarantee for all paid plans.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{% endblock %} 

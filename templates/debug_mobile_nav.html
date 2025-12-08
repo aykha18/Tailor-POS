@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Navigation Debug</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #111827;
+            color: white;
+        }
+        
+        .debug-content {
+            padding: 20px;
+            min-height: 100vh;
+            padding-bottom: 100px;
+        }
+        
+        .debug-section {
+            background: #1f2937;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #374151;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-success { background: #10b981; }
+        .status-error { background: #ef4444; }
+        .status-warning { background: #f59e0b; }
+        
+        .mobile-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #374151;
+            padding: 8px 0;
+            z-index: 1000;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 12px;
+            min-height: 60px;
+            color: #9ca3af;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border-radius: 8px;
+            min-width: 60px;
+            justify-content: center;
+        }
+        
+        .mobile-nav-item:hover {
+            color: #f9fafb;
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        .mobile-nav-item.active {
+            color: #6366f1;
+            background: rgba(99, 102, 241, 0.2);
+        }
+        
+        .mobile-nav-item svg {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+            stroke-width: 2;
+        }
+        
+        .mobile-nav-item span {
+            font-size: 11px;
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        .debug-log {
+            background: #000;
+            color: #00ff00;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-content">
+        <h1>Mobile Navigation Debug</h1>
+        
+        <div class="debug-section">
+            <h2>System Status</h2>
+            <div id="status-list">
+                <div><span class="status-indicator status-success"></span>Page loaded successfully</div>
+                <div><span class="status-indicator status-warning"></span>Checking mobile detection...</div>
+                <div><span class="status-indicator status-warning"></span>Checking navigation initialization...</div>
+            </div>
+        </div>
+        
+        <div class="debug-section">
+            <h2>Device Information</h2>
+            <div id="device-info">
+                <p><strong>User Agent:</strong> <span id="user-agent"></span></p>
+                <p><strong>Screen Width:</strong> <span id="screen-width"></span></p>
+                <p><strong>Screen Height:</strong> <span id="screen-height"></span></p>
+                <p><strong>Touch Support:</strong> <span id="touch-support"></span></p>
+                <p><strong>Mobile Detection:</strong> <span id="mobile-detection"></span></p>
+            </div>
+        </div>
+        
+        <div class="debug-section">
+            <h2>Navigation Status</h2>
+            <div id="nav-status">
+                <p><strong>Navigation Element:</strong> <span id="nav-element"></span></p>
+                <p><strong>Navigation Items:</strong> <span id="nav-items"></span></p>
+                <p><strong>Active Section:</strong> <span id="active-section"></span></p>
+            </div>
+        </div>
+        
+        <div class="debug-section">
+            <h2>Debug Log</h2>
+            <div id="debug-log" class="debug-log"></div>
+        </div>
+        
+        <div class="debug-section">
+            <h2>Test Actions</h2>
+            <button onclick="testNavigation()" style="background: #6366f1; color: white; padding: 10px 20px; border: none; border-radius: 4px; margin: 5px;">Test Navigation</button>
+            <button onclick="forceMobileNav()" style="background: #10b981; color: white; padding: 10px 20px; border: none; border-radius: 4px; margin: 5px;">Force Mobile Nav</button>
+            <button onclick="clearLog()" style="background: #6b7280; color: white; padding: 10px 20px; border: none; border-radius: 4px; margin: 5px;">Clear Log</button>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobile-navigation-bar">
+        <div class="flex justify-around items-center w-full">
+            <a href="#dashboard" class="mobile-nav-item active" data-section="dashboard">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="#billing" class="mobile-nav-item" data-section="billing">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span>Billing</span>
+            </a>
+            <a href="#products" class="mobile-nav-item" data-section="products">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                </svg>
+                <span>Products</span>
+            </a>
+            <a href="#employees" class="mobile-nav-item" data-section="employees">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                <span>Employees</span>
+            </a>
+            <a href="#more" class="mobile-nav-item" data-section="more">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6a2 2 0 110-4 2 2 0 010 4zm0 8a2 2 0 110-4 2 2 0 010 4zm0 8a2 2 0 110-4 2 2 0 010 4z"></path>
+                </svg>
+                <span>More</span>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        function log(message) {
+            const logElement = document.getElementById('debug-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.innerHTML += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+            console.log(`[DEBUG] ${message}`);
+        }
+        
+        function clearLog() {
+            document.getElementById('debug-log').innerHTML = '';
+        }
+        
+        function updateStatus(index, status, message) {
+            const statusList = document.getElementById('status-list');
+            const statusItems = statusList.children;
+            if (statusItems[index]) {
+                statusItems[index].innerHTML = `<span class="status-indicator status-${status}"></span>${message}`;
+            }
+        }
+        
+        function testNavigation() {
+            log('Testing navigation functionality...');
+            const navItems = document.querySelectorAll('.mobile-nav-item');
+            log(`Found ${navItems.length} navigation items`);
+            
+            navItems.forEach((item, index) => {
+                const section = item.dataset.section;
+                log(`Item ${index + 1}: ${section}`);
+                
+                // Simulate click
+                item.click();
+                setTimeout(() => {
+                    const isActive = item.classList.contains('active');
+                    log(`Item ${section} active: ${isActive}`);
+                }, 100);
+            });
+        }
+        
+        function forceMobileNav() {
+            log('Forcing mobile navigation display...');
+            const nav = document.getElementById('mobile-navigation-bar');
+            if (nav) {
+                nav.style.display = 'flex';
+                nav.style.visibility = 'visible';
+                nav.style.opacity = '1';
+                nav.style.zIndex = '1000';
+                log('Mobile navigation forced to display');
+            } else {
+                log('ERROR: Mobile navigation element not found');
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            log('Page loaded, starting debug...');
+            
+            // Update device information
+            document.getElementById('user-agent').textContent = navigator.userAgent;
+            document.getElementById('screen-width').textContent = window.innerWidth + 'px';
+            document.getElementById('screen-height').textContent = window.innerHeight + 'px';
+            document.getElementById('touch-support').textContent = 'ontouchstart' in window ? 'Yes' : 'No';
+            
+            // Mobile detection
+            const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isMobileWidth = window.innerWidth <= 768;
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            const isMobile = isMobileDevice || isMobileWidth || isTouchDevice;
+            
+            document.getElementById('mobile-detection').textContent = isMobile ? 'Yes' : 'No';
+            log(`Mobile detection: ${isMobile} (Device: ${isMobileDevice}, Width: ${isMobileWidth}, Touch: ${isTouchDevice})`);
+            
+            // Check navigation
+            const nav = document.getElementById('mobile-navigation-bar');
+            const navItems = document.querySelectorAll('.mobile-nav-item');
+            const activeItem = document.querySelector('.mobile-nav-item.active');
+            
+            document.getElementById('nav-element').textContent = nav ? 'Found' : 'Not Found';
+            document.getElementById('nav-items').textContent = navItems.length;
+            document.getElementById('active-section').textContent = activeItem ? activeItem.dataset.section : 'None';
+            
+            log(`Navigation element: ${nav ? 'Found' : 'Not Found'}`);
+            log(`Navigation items: ${navItems.length}`);
+            log(`Active section: ${activeItem ? activeItem.dataset.section : 'None'}`);
+            
+            // Update status
+            updateStatus(0, 'success', 'Page loaded successfully');
+            updateStatus(1, 'success', `Mobile detection: ${isMobile ? 'Yes' : 'No'}`);
+            updateStatus(2, nav ? 'success' : 'error', `Navigation: ${nav ? 'Found' : 'Not Found'}`);
+            
+            // Add click handlers
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all items
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    const section = this.dataset.section;
+                    log(`Navigated to: ${section}`);
+                    document.getElementById('active-section').textContent = section;
+                    
+                    if (section === 'more') {
+                        log('More menu clicked - showing alert');
+                        alert('More menu - Coming soon!');
+                    }
+                });
+            });
+            
+            log('Debug initialization complete');
+        });
+        
+        // Monitor window resize
+        window.addEventListener('resize', function() {
+            document.getElementById('screen-width').textContent = window.innerWidth + 'px';
+            document.getElementById('screen-height').textContent = window.innerHeight + 'px';
+            log(`Window resized to: ${window.innerWidth}x${window.innerHeight}`);
+        });
+    </script>
+</body>
+</html>

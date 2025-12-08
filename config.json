@@ -1,0 +1,20 @@
+{
+  "app_name": "Tajir",
+  "version": "1.0.0",
+  "description": "Modern Multi-Tenant POS System for UAE Businesses",
+  "pricing_plans": {
+    "trial": {
+      "duration_days": 15,
+      "expiry_behavior": "lock_all"
+    },
+    "basic": {
+      "duration_days": 365,
+      "expiry_behavior": "lock_pro_features",
+      "pro_features": ["dashboard", "customer_search", "db_backup_restore"]
+    },
+    "pro": {
+      "lifetime": true,
+      "expiry_behavior": "never_expires"
+    }
+  }
+} 

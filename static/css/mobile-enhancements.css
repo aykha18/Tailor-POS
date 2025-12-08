@@ -1,0 +1,2325 @@
+/* Mobile Enhancements for Tajir POS PWA - PROPERLY SCOPED */
+
+/* Touch-friendly button sizes - MOBILE ONLY */
+@media (max-width: 768px) {
+  .btn-mobile {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px 16px;
+    font-size: 16px;
+    border-radius: 8px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Mobile-optimized input fields */
+  .input-mobile {
+    min-height: 44px;
+    font-size: 16px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    transition: border-color 0.2s ease;
+  }
+
+  .input-mobile:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  /* Mobile navigation - Force horizontal bottom bar */
+  .mobile-nav {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    background: rgba(17, 24, 39, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border-top: 1px solid #374151 !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    padding: 8px 0 !important;
+    z-index: 1000 !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3) !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 76px !important;
+  }
+  
+  /* Force the inner container to be horizontal */
+  .mobile-nav .flex {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  .mobile-nav-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 8px 12px !important;
+    min-height: 60px !important;
+    color: #9ca3af !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    border-radius: 8px !important;
+    min-width: 60px !important;
+    justify-content: center !important;
+    width: auto !important;
+    height: auto !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+  }
+
+  .mobile-nav-item:hover {
+    color: #f9fafb;
+    background: rgba(99, 102, 241, 0.1);
+  }
+
+  .mobile-nav-item.active {
+    color: #6366f1;
+    background: rgba(99, 102, 241, 0.2);
+  }
+
+  .mobile-nav-item svg {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+    stroke-width: 2;
+  }
+
+  .mobile-nav-item span {
+    font-size: 11px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  /* Ensure mobile nav is visible on mobile devices */
+  .mobile-nav {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+  
+  /* Force mobile navigation to be visible on mobile devices */
+  @media (max-width: 768px) {
+    .mobile-nav,
+    #mobile-navigation-bar {
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      z-index: 1000 !important;
+      pointer-events: auto !important;
+    }
+  }
+  
+  /* Hide mobile navigation on desktop/larger screens */
+  @media (min-width: 769px) {
+    .mobile-nav,
+    #mobile-navigation-bar {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+  }
+  
+  /* Override any conflicting navigation styles */
+  body .mobile-nav,
+  html .mobile-nav,
+  .mobile-container .mobile-nav {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    background: rgba(17, 24, 39, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border-top: 1px solid #374151 !important;
+    z-index: 9999 !important;
+  }
+  
+  /* Add bottom padding to main content to account for mobile nav */
+  main, .mobile-container, body {
+    padding-bottom: 80px;
+  }
+  
+  /* Ensure the main container has proper spacing */
+  .mobile-container {
+    min-height: calc(100vh - 80px);
+  }
+  
+  /* Ensure all sections have proper bottom spacing */
+  .page, section {
+    margin-bottom: 80px;
+  }
+  
+  /* Hide desktop sidebar on mobile */
+  aside, .sidebar, nav:not(.mobile-nav) {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+  
+  /* Force mobile navigation to be visible */
+  .mobile-nav, #mobile-navigation-bar {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* Force horizontal layout for all navigation elements */
+  .mobile-nav *,
+  .mobile-nav > *,
+  .mobile-nav .flex,
+  .mobile-nav .flex > * {
+    display: flex !important;
+    flex-direction: row !important;
+  }
+  
+  /* Ensure navigation items are inline */
+  .mobile-nav-item,
+  .mobile-nav a {
+    display: inline-flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+  }
+
+  /* Product Section Mobile Styles */
+  #productSec .page {
+    padding: 16px;
+  }
+
+  #productSec .modern-card {
+    margin-bottom: 20px;
+    border-radius: 12px;
+    background: rgba(17, 24, 39, 0.9);
+    border: 1px solid #374151;
+  }
+
+  /* Mobile Product Search */
+  #productSearch {
+    width: 100% !important;
+    min-height: 48px !important;
+    font-size: 16px !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    border: 1px solid #374151 !important;
+    background-color: rgba(17, 24, 39, 0.7) !important;
+    color: #f9fafb !important;
+    margin-bottom: 16px !important;
+  }
+
+  #productSearch:focus {
+    outline: none !important;
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+  }
+
+  /* Mobile Product Form Layout */
+  #productForm {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  #productForm .grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  #productForm .col-span-3,
+  #productForm .col-span-5,
+  #productForm .col-span-2 {
+    width: 100% !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Mobile Product Form Inputs */
+  #productForm input,
+  #productForm select {
+    width: 100% !important;
+    min-height: 48px !important;
+    font-size: 16px !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    border: 1px solid #374151 !important;
+    background-color: rgba(17, 24, 39, 0.7) !important;
+    color: #f9fafb !important;
+  }
+
+  #productForm input:focus,
+  #productForm select:focus {
+    outline: none !important;
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+  }
+
+  /* Mobile Product Form Labels */
+  #productForm label {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #d1d5db !important;
+    margin-bottom: 6px !important;
+    display: block !important;
+  }
+
+  /* Mobile Product Submit Button */
+  #productForm button[type="submit"] {
+    width: 100% !important;
+    min-height: 52px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    padding: 16px 24px !important;
+    border-radius: 12px !important;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+    transition: all 0.3s ease !important;
+    margin-top: 8px !important;
+  }
+
+  #productForm button[type="submit"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4) !important;
+  }
+
+  #productForm button[type="submit"]:active {
+    transform: translateY(0) !important;
+  }
+
+  /* Customer Section Mobile Styles */
+  #customerSec .page {
+    padding: 16px;
+  }
+
+  #customerSec .modern-card {
+    margin-bottom: 20px;
+    border-radius: 12px;
+    background: rgba(17, 24, 39, 0.9);
+    border: 1px solid #374151;
+  }
+
+  #customerSearch {
+    width: 100% !important;
+    min-height: 48px !important;
+    font-size: 16px !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    border: 1px solid #374151 !important;
+    background-color: rgba(17, 24, 39, 0.7) !important;
+    color: #f9fafb !important;
+    margin-bottom: 16px !important;
+  }
+
+  #customerSearch:focus {
+    outline: none !important;
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+  }
+
+  #customerForm {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  #customerForm .grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  #customerForm .col-span-4,
+  #customerForm .col-span-2 {
+    width: 100% !important;
+    margin-bottom: 0 !important;
+  }
+
+  #customerForm input {
+    width: 100% !important;
+    min-height: 48px !important;
+    font-size: 16px !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    border: 1px solid #374151 !important;
+    background-color: rgba(17, 24, 39, 0.7) !important;
+    color: #f9fafb !important;
+  }
+
+  #customerForm input:focus {
+    outline: none !important;
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+  }
+
+  #customerForm label {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #d1d5db !important;
+    margin-bottom: 6px !important;
+    display: block !important;
+  }
+
+  #customerForm button[type="submit"] {
+    width: 100% !important;
+    min-height: 52px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    padding: 16px 24px !important;
+    border-radius: 12px !important;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+    transition: all 0.3s ease !important;
+    margin-top: 8px !important;
+  }
+
+  #customerForm button[type="submit"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4) !important;
+  }
+
+  #customerForm button[type="submit"]:active {
+    transform: translateY(0) !important;
+  }
+
+  /* Customer Table Mobile Styles */
+  #customerTable {
+    overflow-x: auto !important;
+    display: block !important;
+    white-space: nowrap !important;
+  }
+  
+  #customerTable thead,
+  #customerTable tbody {
+    display: table !important;
+    width: 100% !important;
+    min-width: 600px !important;
+  }
+  
+  #customerTable th,
+  #customerTable td {
+    white-space: nowrap !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  /* Employee Section Mobile Enhancements - Mirroring Products */
+  #employeeSec .page {
+    padding: 16px;
+  }
+
+  #employeeSec .modern-card {
+    background: rgba(17, 24, 39, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  #employeeSearch {
+    background: rgba(17, 24, 39, 0.9);
+    border: 2px solid #374151;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 16px;
+    color: #f9fafb;
+    width: 100%;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+  }
+
+  #employeeSearch:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    outline: none;
+  }
+
+  #employeeForm {
+    background: rgba(17, 24, 39, 0.9);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  #employeeForm .grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  #employeeForm .col-span-4,
+  #employeeForm .col-span-3,
+  #employeeForm .col-span-2 {
+    grid-column: span 1;
+  }
+
+  #employeeForm input,
+  #employeeForm select {
+    background: rgba(31, 41, 55, 0.9);
+    border: 2px solid #374151;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 16px;
+    color: #f9fafb;
+    width: 100%;
+    transition: all 0.3s ease;
+  }
+
+  #employeeForm input:focus,
+  #employeeForm select:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    outline: none;
+  }
+
+  #employeeForm label {
+    color: #d1d5db;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  #employeeForm button[type="submit"] {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 16px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  }
+
+  #employeeForm button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+  }
+
+  #employeeForm button[type="submit"]:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+  }
+
+  #employeeTable {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  #employeeTable thead,
+  #employeeTable tbody {
+    background: transparent;
+  }
+
+  #employeeTable th,
+  #employeeTable td {
+    padding: 16px 12px;
+    font-size: 14px;
+  }
+
+  /* Mobile Cards Container */
+  .mobile-cards-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .product-card-mobile,
+  .customer-card-mobile,
+  .employee-card-mobile,
+  .vat-card-mobile {
+    background: rgba(17, 24, 39, 0.8);
+    border: 1px solid #374151;
+    border-radius: 12px;
+    padding: 16px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .product-card-mobile:hover,
+  .customer-card-mobile:hover,
+  .employee-card-mobile:hover,
+  .vat-card-mobile:hover {
+    background: rgba(17, 24, 39, 0.9);
+    border-color: #6366f1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+  }
+
+  .product-card-content,
+  .customer-card-content,
+  .employee-card-content,
+  .vat-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .product-name,
+  .customer-name,
+  .employee-name,
+  .vat-rate {
+    font-size: 16px;
+    font-weight: 600;
+    color: #f9fafb;
+    margin-bottom: 4px;
+  }
+
+  .product-type,
+  .customer-type,
+  .employee-role,
+  .vat-description {
+    font-size: 14px;
+    color: #9ca3af;
+    margin-bottom: 4px;
+  }
+
+  .product-price,
+  .customer-phone,
+  .employee-mobile,
+  .vat-effective {
+    font-size: 14px;
+    color: #6366f1;
+    font-weight: 500;
+  }
+
+  .product-card-actions,
+  .customer-card-actions,
+  .employee-card-actions,
+  .vat-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .edit-product-btn,
+  .edit-customer-btn,
+  .edit-employee-btn,
+  .edit-vat-btn,
+  .delete-product-btn,
+  .delete-customer-btn,
+  .delete-employee-btn,
+  .delete-vat-btn {
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    min-height: 36px;
+    min-width: 36px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .edit-product-btn:hover,
+  .edit-customer-btn:hover,
+  .edit-employee-btn:hover,
+  .edit-vat-btn:hover {
+    background: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+  }
+
+  .delete-product-btn:hover,
+  .delete-customer-btn:hover,
+  .delete-employee-btn:hover,
+  .delete-vat-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+  }
+
+  /* Mobile View Toggle */
+  .mobile-view-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(17, 24, 39, 0.8);
+    border: 1px solid #374151;
+    border-radius: 8px;
+    color: #d1d5db;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 16px;
+  }
+
+  .mobile-view-toggle:hover {
+    background: rgba(17, 24, 39, 0.9);
+    border-color: #6366f1;
+    color: #f9fafb;
+  }
+
+  /* Mobile Search Inputs */
+  #customerSearch,
+  #productSearch,
+  #employeeSearch {
+    width: 100% !important;
+    min-height: 48px !important;
+    font-size: 16px !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    border: 1px solid #374151 !important;
+    background-color: rgba(17, 24, 39, 0.7) !important;
+    color: #f9fafb !important;
+    margin-bottom: 16px !important;
+  }
+
+  #customerSearch:focus,
+  #productSearch:focus,
+  #employeeSearch:focus {
+    outline: none !important;
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+  }
+}
+
+/* Additional mobile-specific styles for smaller screens */
+@media (max-width: 480px) {
+  .mobile-nav-item {
+    min-width: 50px;
+    padding: 6px 8px;
+  }
+
+  .mobile-nav-item svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .mobile-nav-item span {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .container-mobile {
+    padding: 12px;
+  }
+
+  .card-mobile-body {
+    padding: 12px;
+  }
+
+  .modal-mobile-content {
+    margin: 12px;
+    padding: 16px;
+  }
+} 
+
+/* ===== SHOP SETTINGS SCREEN MOBILE OPTIMIZATIONS ===== */
+
+/* Mobile Shop Settings Form */
+#shopSettingsSec .page {
+  padding: 16px;
+}
+
+#shopSettingsSec .modern-card {
+  margin-bottom: 20px;
+  border-radius: 12px;
+  background: rgba(17, 24, 39, 0.9);
+  border: 1px solid #374151;
+}
+
+/* Enhanced Mobile Shop Settings Header */
+@media (max-width: 768px) {
+  #shopSettingsSec .flex.items-center.gap-3 {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  #shopSettingsSec h2 {
+    font-size: 24px;
+    line-height: 1.2;
+  }
+  
+  #shopSettingsSec p {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+}
+
+/* Mobile Tab Navigation Enhancement */
+@media (max-width: 768px) {
+  #shopSettingsTabs {
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  
+  #shopSettingsTabs button {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 14px;
+    border-radius: 8px;
+    min-height: 44px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  #shopSettingsTabs button:hover {
+    transform: translateY(-1px);
+  }
+  
+  #shopSettingsTabs button:active {
+    transform: translateY(0);
+  }
+}
+
+/* Mobile Shop Settings Form Layout */
+@media (max-width: 768px) {
+  #shopSettingsForm {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  #shopSettingsForm .grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  #shopSettingsForm .col-span-6,
+  #shopSettingsForm .col-span-8,
+  #shopSettingsForm .col-span-4,
+  #shopSettingsForm .col-span-12 {
+    width: 100% !important;
+    margin-bottom: 0 !important;
+  }
+}
+
+/* Mobile Shop Settings Form Inputs */
+@media (max-width: 768px) {
+  #shopSettingsForm input,
+  #shopSettingsForm textarea {
+    width: 100% !important;
+    min-height: 48px !important;
+    font-size: 16px !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    border: 1px solid #374151 !important;
+    background-color: rgba(17, 24, 39, 0.7) !important;
+    color: #f9fafb !important;
+  }
+
+  #shopSettingsForm textarea {
+    min-height: 80px !important;
+    resize: vertical !important;
+  }
+
+  #shopSettingsForm input:focus,
+  #shopSettingsForm textarea:focus {
+    outline: none !important;
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+  }
+}
+
+/* Mobile Shop Settings Form Labels */
+@media (max-width: 768px) {
+  #shopSettingsForm label {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #d1d5db !important;
+    margin-bottom: 6px !important;
+    display: block !important;
+  }
+}
+
+/* Mobile Shop Settings Checkbox */
+@media (max-width: 768px) {
+  #shopSettingsForm input[type="checkbox"] {
+    width: 20px !important;
+    height: 20px !important;
+    min-height: auto !important;
+    margin-right: 8px !important;
+  }
+
+  #shopSettingsForm .flex.items-center.gap-3 {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 12px 0 !important;
+  }
+
+  /* Mobile Shop Settings Submit Button */
+  #shopSettingsForm button[type="submit"] {
+    width: 100% !important;
+    min-height: 52px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    padding: 16px 24px !important;
+    border-radius: 12px !important;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+    transition: all 0.3s ease !important;
+    margin-top: 8px !important;
+  }
+
+  #shopSettingsForm button[type="submit"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4) !important;
+  }
+
+  #shopSettingsForm button[type="submit"]:active {
+    transform: translateY(0) !important;
+  }
+}
+
+/* Enhanced Mobile Billing Configuration Section */
+@media (max-width: 768px) {
+  /* Billing Configuration Container */
+  #billingConfigTabContent .bg-gradient-to-br {
+    padding: 16px !important;
+    border-radius: 12px !important;
+  }
+  
+  #billingConfigTabContent h3 {
+    font-size: 18px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  #billingConfigTabContent p {
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    margin-bottom: 16px !important;
+  }
+  
+  /* Configurable Fields Grid - Mobile Optimization */
+  #billingConfigTabContent .grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3 {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  
+  /* Individual Field Cards */
+  #billingConfigTabContent .flex.items-center.justify-between {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    padding: 16px !important;
+    border-radius: 8px !important;
+  }
+  
+  /* Field Labels and Icons */
+  #billingConfigTabContent .flex.items-center.gap-3 {
+    width: 100% !important;
+    justify-content: flex-start !important;
+  }
+  
+  #billingConfigTabContent label {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #f9fafb !important;
+  }
+  
+  #billingConfigTabContent svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+  
+  /* Input Fields and Controls */
+  #billingConfigTabContent input[type="number"] {
+    width: 80px !important;
+    min-height: 40px !important;
+    font-size: 14px !important;
+    text-align: center !important;
+  }
+  
+  #billingConfigTabContent select {
+    width: 100% !important;
+    min-height: 40px !important;
+    font-size: 14px !important;
+  }
+  
+  #billingConfigTabContent .text-xs {
+    font-size: 11px !important;
+    color: #9ca3af !important;
+    margin-top: 4px !important;
+  }
+  
+  /* Quick Presets Section */
+  #billingConfigTabContent .border-t {
+    margin-top: 20px !important;
+    padding-top: 16px !important;
+  }
+  
+  #billingConfigTabContent h4 {
+    font-size: 14px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  #billingConfigTabContent .grid.grid-cols-2.md\\:grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+  
+  #billingConfigTabContent button[id^="preset"] {
+    padding: 10px 12px !important;
+    font-size: 12px !important;
+    min-height: 44px !important;
+    border-radius: 6px !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  
+  #billingConfigTabContent button[id^="preset"]:hover {
+    transform: translateY(-1px) !important;
+  }
+  
+  #billingConfigTabContent button[id^="preset"]:active {
+    transform: translateY(0) !important;
+  }
+}
+
+/* Mobile Shop Settings Display */
+#shopSettingsDisplay {
+  background: rgba(17, 24, 39, 0.8) !important;
+  border: 1px solid #374151 !important;
+  border-radius: 12px !important;
+  padding: 20px !important;
+  margin-top: 20px !important;
+}
+
+/* Enhanced Mobile Action Buttons */
+@media (max-width: 768px) {
+  /* Action Buttons Container */
+  #shopSettingsForm .flex.gap-4.justify-center {
+    flex-direction: column !important;
+    gap: 12px !important;
+    margin-top: 20px !important;
+  }
+  
+  /* Individual Buttons */
+  #shopSettingsForm button[type="submit"],
+  #openChangePassword {
+    width: 100% !important;
+    min-height: 52px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    padding: 16px 24px !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  #shopSettingsForm button[type="submit"]:hover,
+  #openChangePassword:hover {
+    transform: translateY(-2px) !important;
+  }
+  
+  #shopSettingsForm button[type="submit"]:active,
+  #openChangePassword:active {
+    transform: translateY(0) !important;
+  }
+  
+  /* Button Icons */
+  #shopSettingsForm button svg {
+    width: 20px !important;
+    height: 20px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+/* Enhanced Mobile Current Settings Display */
+@media (max-width: 768px) {
+  #shopSettingsDisplay {
+    padding: 16px !important;
+    margin-top: 16px !important;
+  }
+  
+  #shopSettingsDisplay h4 {
+    font-size: 18px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  #shopSettingsContent {
+    gap: 8px !important;
+  }
+  
+  #shopSettingsContent .grid > div {
+    padding: 12px 0 !important;
+    border-bottom: 1px solid #374151 !important;
+  }
+  
+  #shopSettingsContent .text-neutral-400 {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+  }
+  
+  #shopSettingsContent .text-white {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+  }
+}
+
+#shopSettingsDisplay h4 {
+  color: #f9fafb !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  margin-bottom: 16px !important;
+}
+
+#shopSettingsContent .grid {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+#shopSettingsContent .grid > div {
+  padding: 8px 0 !important;
+  border-bottom: 1px solid #374151 !important;
+}
+
+#shopSettingsContent .grid > div:last-child {
+  border-bottom: none !important;
+}
+
+#shopSettingsContent .text-neutral-400 {
+  color: #9ca3af !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+#shopSettingsContent .text-white {
+  color: #f9fafb !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+/* ===== RESPONSIVE BREAKPOINTS FOR SHOP SETTINGS ===== */
+
+@media (max-width: 640px) {
+  #shopSettingsSec .page {
+    padding: 12px !important;
+  }
+  
+  #shopSettingsForm {
+    gap: 12px !important;
+  }
+  
+  #shopSettingsForm input,
+  #shopSettingsForm textarea {
+    font-size: 18px !important;
+  }
+  
+  #shopSettingsForm label {
+    font-size: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #shopSettingsSec .page {
+    padding: 8px !important;
+  }
+  
+  #shopSettingsForm {
+    gap: 8px !important;
+  }
+  
+  #shopSettingsForm input,
+  #shopSettingsForm textarea {
+    min-height: 52px !important;
+    font-size: 18px !important;
+  }
+  
+  #shopSettingsForm button[type="submit"] {
+    min-height: 56px !important;
+    font-size: 18px !important;
+  }
+}
+
+/* ===== TOUCH OPTIMIZATIONS FOR SHOP SETTINGS ===== */
+
+/* Prevent zoom on input focus */
+@media (max-width: 768px) {
+  #shopSettingsForm input,
+  #shopSettingsForm textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Touch-friendly focus states */
+#shopSettingsForm input:focus,
+#shopSettingsForm textarea:focus {
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Enhanced Mobile Touch Interactions */
+@media (max-width: 768px) {
+  /* Prevent zoom on input focus */
+  #shopSettingsForm input,
+  #shopSettingsForm textarea,
+  #shopSettingsForm select {
+    font-size: 16px !important;
+  }
+  
+  /* Enhanced touch targets */
+  #shopSettingsForm input[type="checkbox"],
+  #shopSettingsForm input[type="radio"] {
+    min-width: 24px !important;
+    min-height: 24px !important;
+    margin-right: 12px !important;
+  }
+  
+  /* Better spacing for mobile */
+  #shopSettingsForm .flex.flex-col {
+    margin-bottom: 16px !important;
+  }
+  
+  /* Enhanced dropdown positioning */
+  #cityDropdown,
+  #areaDropdown {
+    max-height: 200px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  /* Smooth scrolling for mobile */
+  #shopSettingsSec {
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  /* Enhanced loading states */
+  #shopSettingsLoadingOverlay {
+    background: rgba(0, 0, 0, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
+  }
+  
+  #shopSettingsLoadingOverlay .bg-neutral-900\/95 {
+    padding: 24px !important;
+    border-radius: 16px !important;
+  }
+  
+  #shopSettingsLoadingOverlay p {
+    font-size: 16px !important;
+    margin-top: 16px !important;
+  }
+}
+
+/* Disable text selection on buttons */
+#shopSettingsForm button {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
+/* Mobile Loading States */
+#shopSettingsLoadingOverlay {
+  background: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+/* Mobile Change Password Button */
+#openChangePassword {
+  min-height: 48px !important;
+  font-size: 16px !important;
+  padding: 12px 20px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Enhanced Mobile Change Password Modal */
+@media (max-width: 768px) {
+  #changePasswordModal {
+    padding: 16px !important;
+  }
+  
+  #changePasswordModalContent {
+    width: calc(100% - 32px) !important;
+    max-width: 400px !important;
+    padding: 20px !important;
+    border-radius: 16px !important;
+    max-height: calc(100vh - 32px) !important;
+  }
+  
+  #changePasswordModal .w-20.h-20 {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  
+  #changePasswordModal .w-10.h-10 {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  
+  #changePasswordModal h3 {
+    font-size: 20px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  #changePasswordModal p {
+    font-size: 14px !important;
+    margin-bottom: 20px !important;
+  }
+  
+  #changePasswordForm {
+    gap: 16px !important;
+  }
+  
+  #changePasswordForm .flex.flex-col {
+    gap: 8px !important;
+  }
+  
+  #changePasswordForm label {
+    font-size: 14px !important;
+    margin-bottom: 6px !important;
+  }
+  
+  #changePasswordForm input {
+    min-height: 48px !important;
+    font-size: 16px !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+  }
+  
+  #changePasswordForm input:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  }
+}
+
+#openChangePassword:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+}
+
+#openChangePassword:active {
+  transform: translateY(0) !important;
+}
+
+@media (max-width: 480px) {
+  #openChangePassword {
+    width: 100% !important;
+    min-height: 52px !important;
+    font-size: 18px !important;
+  }
+}
+
+/* Mobile Clear Cache Button */
+#clearCacheBtn {
+  min-height: 40px !important;
+  min-width: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+}
+
+#clearCacheBtn:hover {
+  background-color: #dc2626 !important;
+  border-color: #dc2626 !important;
+  transform: scale(1.05) !important;
+}
+
+#clearCacheBtn:active {
+  transform: scale(0.95) !important;
+}
+
+@media (max-width: 768px) {
+  #clearCacheBtn {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #clearCacheBtn {
+    min-height: 48px !important;
+    min-width: 48px !important;
+  }
+}
+
+/* Enhanced Mobile Billing Button */
+#mobileBillingToggle {
+  position: relative !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+}
+
+#mobileBillingToggle::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent) !important;
+  transition: left 0.5s !important;
+  z-index: -1 !important;
+}
+
+#mobileBillingToggle:hover::before {
+  left: 100% !important;
+}
+
+#mobileBillingToggle .animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
+}
+
+/* Mobile Billing Banner */
+#mobileBillingBanner {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+#mobileBillingBanner::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%) !important;
+  animation: shimmer 3s ease-in-out infinite !important;
+  pointer-events: none !important;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+#mobileBillingBannerBtn {
+  position: relative !important;
+  z-index: 2 !important;
+  transition: all 0.3s ease !important;
+}
+
+#mobileBillingBannerBtn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+}
+
+/* Hide recent customers on mobile */
+@media (max-width: 768px) {
+  .recent-customers {
+    display: none !important;
+  }
+  
+  #recentCustomersContainer {
+    display: none !important;
+  }
+} 
+
+/* EXPENSE MANAGEMENT MOBILE OPTIMIZATIONS */
+@media (max-width: 768px) {
+  /* Expense cards mobile optimization - Updated for new modern UI */
+  #expensesContainer .bg-gradient-to-br {
+    padding: 16px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+  }
+
+  #expensesContainer .flex.justify-between {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  #expensesContainer .flex-1 {
+    width: 100%;
+  }
+
+  #expensesContainer .flex.items-center.space-x-3 {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  #expensesContainer .inline-flex.items-center.px-2\.5.py-0\.5 {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  #expensesContainer .text-lg.font-semibold {
+    font-size: 18px;
+    margin: 8px 0;
+  }
+
+  #expensesContainer .text-sm.text-slate-400 {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  #expensesContainer .flex.items-center.space-x-4 {
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  #expensesContainer .flex.space-x-2 {
+    gap: 8px;
+  }
+
+  #expensesContainer button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 8px;
+    border-radius: 8px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Category cards mobile optimization - Updated for new modern UI */
+  #categoriesContainer .bg-gradient-to-br {
+    padding: 16px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+  }
+
+  #categoriesContainer .flex.justify-between {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  #categoriesContainer h3 {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  #categoriesContainer p {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  #categoriesContainer .flex.space-x-2 {
+    gap: 8px;
+  }
+
+  #categoriesContainer button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 8px;
+    border-radius: 8px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Filter section mobile optimization */
+  .bg-gradient-to-br.from-slate-800\/80 {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-4 {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* Statistics cards mobile optimization */
+  .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* Export button mobile optimization */
+  #exportExpensesBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  #expensesContainer .bg-gradient-to-br {
+    padding: 12px;
+  }
+
+  #categoriesContainer .bg-gradient-to-br {
+    padding: 12px;
+  }
+
+  .modal .relative.top-4.sm\:top-20 {
+    margin: 8px;
+  }
+
+  .modal .w-11\/12.sm\:w-96 {
+    width: calc(100% - 16px);
+  }
+
+  .tab-button {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .mobile-nav-item {
+    padding: 6px 8px;
+    min-height: 56px;
+  }
+
+  /* META section mobile optimization - 2 fields per row */
+  .compact-form .col-span-2 {
+    grid-column: span 6 !important; /* Change from 2 to 6 for 2 fields per row */
+  }
+
+  .mobile-nav-item svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .mobile-nav-item span {
+    font-size: 10px;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 360px) {
+  .container-mobile {
+    padding: 8px;
+  }
+
+  .card-mobile-body {
+    padding: 12px;
+  }
+
+  .modal-mobile-content {
+    margin: 4px;
+    padding: 12px;
+    max-height: calc(100vh - 8px);
+  }
+
+  #expensesContainer .bg-gradient-to-br {
+    padding: 8px;
+  }
+
+  #categoriesContainer .bg-gradient-to-br {
+    padding: 8px;
+  }
+
+  .mobile-nav-item {
+    padding: 4px 6px;
+    min-height: 52px;
+  }
+
+  .mobile-nav-item svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .mobile-nav-item span {
+    font-size: 9px;
+  }
+}
+
+/* === FINAL COMPACT HORIZONTAL NAV OVERRIDES (keep at end) === */
+@media (max-width: 768px) {
+  body, html, main, .mobile-container {
+    padding-bottom: 90px !important;
+  }
+
+  body nav.mobile-nav#mobile-navigation-bar {
+    position: fixed !important;
+    inset: auto 0 0 0 !important;
+    background: rgba(17, 24, 39, 0.96) !important;
+    border-top: 1px solid #374151 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    height: 64px !important;
+    min-height: 64px !important;
+    padding: 6px 4px !important;
+    z-index: 9999 !important;
+    box-shadow: 0 -6px 20px rgba(0,0,0,.35) !important;
+    gap: 0 !important;
+  }
+
+  body nav.mobile-nav#mobile-navigation-bar > a.mobile-nav-item {
+    display: inline-flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    padding: 4px 6px !important;
+    min-width: 56px !important;
+    min-height: 52px !important;
+    width: auto !important;
+    height: auto !important;
+    color: #9ca3af !important;
+    border-radius: 8px !important;
+    flex: 0 0 auto !important;
+  }
+
+  body nav.mobile-nav#mobile-navigation-bar > a.mobile-nav-item svg {
+    width: 22px !important;
+    height: 22px !important;
+    margin: 0 !important;
+    stroke-width: 2 !important;
+  }
+
+  body nav.mobile-nav#mobile-navigation-bar > a.mobile-nav-item span {
+    font-size: 11px !important;
+    line-height: 1.1 !important;
+    font-weight: 600 !important;
+  }
+
+  body nav.mobile-nav#mobile-navigation-bar > a.mobile-nav-item.active {
+    color: #8b5cf6 !important;
+    background: rgba(139, 92, 246, 0.16) !important;
+  }
+}
+
+/* Touch-friendly interactions for expense management */
+@media (max-width: 768px) {
+  /* META section mobile optimization - 2 fields per row for all mobile devices */
+  .compact-form .col-span-2 {
+    grid-column: span 6 !important; /* Change from 2 to 6 for 2 fields per row */
+  }
+
+  /* Improve META section spacing and touch targets on mobile */
+  .compact-form input,
+  .compact-form select,
+  .compact-form textarea {
+    min-height: 44px; /* Ensure touch-friendly height */
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+
+  .compact-form label {
+    font-size: 12px; /* Slightly larger labels for mobile */
+    margin-bottom: 4px;
+  }
+
+  /* Ensure all interactive elements are touch-friendly */
+  #expensesContainer button,
+  #categoriesContainer button,
+  .tab-button,
+  .modal button,
+  .btn-mobile {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+
+  /* Improve touch targets */
+  #expensesContainer svg,
+  #categoriesContainer svg {
+    pointer-events: none;
+  }
+
+  /* Smooth scrolling for mobile */
+  #expensesContainer,
+  #categoriesContainer,
+  .modal form {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent zoom on input focus */
+  .input-mobile {
+    font-size: 16px !important;
+  }
+
+  /* Better spacing for mobile */
+  .space-y-4 > * + * {
+    margin-top: 16px;
+  }
+
+  .space-y-2 > * + * {
+    margin-top: 8px;
+  }
+}
+
+/* Mobile Billing Styles - HIDDEN */
+#mobile-billing-container {
+  display: none !important;
+}
+
+#mobile-billing-container .card-mobile {
+  margin-bottom: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  background: #1f2937;
+  border: 1px solid #374151;
+}
+
+#mobile-billing-container .card-mobile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #1f2937;
+  border-bottom: 1px solid #374151;
+  border-radius: 12px 12px 0 0;
+  color: #f9fafb;
+}
+
+#mobile-billing-container .card-mobile-body {
+  padding: 20px;
+  background: #1f2937;
+  border-radius: 0 0 12px 12px;
+  color: #f9fafb;
+}
+
+/* Mobile Search Enhancement */
+#mobile-billing-container .search-mobile {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+#mobile-billing-container .search-mobile input {
+  background: #374151;
+  border: 2px solid #4b5563;
+  border-radius: 12px;
+  padding: 16px 16px 16px 48px;
+  font-size: 16px;
+  width: 100%;
+  transition: border-color 0.2s ease;
+  color: #f9fafb;
+}
+
+#mobile-billing-container .search-mobile input:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+#mobile-billing-container .search-mobile svg {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  width: 20px;
+  height: 20px;
+}
+
+/* Mobile Product Grid */
+#mobile-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 640px) {
+  #mobile-product-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Product Cards */
+.product-card-mobile {
+  background: #374151;
+  border: 1px solid #4b5563;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  color: #f9fafb;
+}
+
+.product-card-mobile:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+.product-card-mobile.added-to-bill {
+  background: #1e3a8a;
+  border-color: #3b82f6;
+  transform: scale(1.02);
+}
+
+.product-card-content {
+  flex: 1;
+}
+
+.product-name {
+  font-weight: 600;
+  color: #f9fafb;
+  margin-bottom: 4px;
+}
+
+.product-type {
+  font-size: 14px;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
+.product-price {
+  font-weight: 700;
+  color: #10b981;
+  font-size: 16px;
+}
+
+.add-to-bill-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: auto;
+  width: auto;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  min-height: 60px; /* h-15 equivalent */
+}
+
+.add-to-bill-btn:hover {
+  background: #2563eb;
+  transform: scale(1.1);
+}
+
+.add-to-bill-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Mobile Bill Items */
+#mobile-bill-items {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+}
+
+#mobile-bill-items .list-item-mobile {
+  background: #374151;
+  border: 1px solid #4b5563;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  color: #f9fafb;
+}
+
+#mobile-bill-items .list-item-mobile:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+.remove-item-btn-mobile {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: auto;
+  width: auto;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 60px; /* h-15 equivalent */
+}
+
+.remove-item-btn-mobile:hover {
+  background: #dc2626;
+}
+
+/* Mobile Bill Summary Enhancement */
+#mobile-billing-container .bill-summary-mobile {
+  background: #374151;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #4b5563;
+}
+
+#mobile-billing-container .bill-summary-row-mobile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #4b5563;
+}
+
+#mobile-billing-container .bill-summary-row-mobile:last-child {
+  border-bottom: none;
+  font-weight: 700;
+  font-size: 18px;
+  color: #f9fafb;
+  padding-top: 16px;
+  margin-top: 8px;
+  border-top: 2px solid #4b5563;
+}
+
+#mobile-billing-container .bill-summary-label {
+  color: #9ca3af;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+#mobile-billing-container .bill-summary-value {
+  font-weight: 600;
+  color: #f9fafb;
+  font-size: 14px;
+}
+
+#mobile-billing-container .bill-summary-total {
+  font-size: 18px;
+  color: #10b981;
+  font-weight: 700;
+}
+
+/* Mobile Action Buttons Enhancement */
+#mobile-billing-container .billing-actions-mobile {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  left: 20px;
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  pointer-events: none;
+}
+
+#mobile-billing-container .billing-actions-mobile .billing-action-btn {
+  pointer-events: auto;
+  min-width: auto;
+  width: auto;
+  padding: 12px 20px;
+  white-space: nowrap;
+  font-size: 14px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+  min-height: 60px; /* h-15 equivalent */
+}
+
+#mobile-billing-container .billing-actions-mobile .billing-action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+#mobile-billing-container .billing-actions-mobile .billing-action-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Clear button styling */
+#mobile-billing-container #clear-mobile-bill {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: auto;
+  width: auto;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 60px; /* h-15 equivalent */
+}
+
+#mobile-billing-container #clear-mobile-bill:hover {
+  background: #dc2626;
+  transform: scale(1.05);
+}
+
+#mobile-billing-container .billing-action-btn {
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  min-height: 60px; /* h-15 equivalent */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+  cursor: pointer;
+}
+
+#mobile-billing-container .billing-action-btn.primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+}
+
+#mobile-billing-container .billing-action-btn.primary:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+}
+
+#mobile-billing-container .billing-action-btn.primary:active {
+  transform: translateY(0);
+}
+
+#mobile-billing-container .billing-action-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Mobile Notification Enhancement */
+.mobile-notification {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  background: #1f2937;
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  z-index: 3000;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-left: 4px solid #3b82f6;
+  color: #f9fafb;
+}
+
+.mobile-notification.show {
+  transform: translateY(0);
+}
+
+.mobile-notification.success {
+  border-left-color: #10b981;
+}
+
+.mobile-notification.error {
+  border-left-color: #ef4444;
+}
+
+.mobile-notification.warning {
+  border-left-color: #f59e0b;
+}
+
+.mobile-notification.info {
+  border-left-color: #10b981;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+
+
+/* Mobile Billing Animations */
+.fade-in-mobile {
+  animation: fadeInMobile 0.3s ease-out;
+}
+
+.slide-up-mobile {
+  animation: slideUpMobile 0.3s ease-out;
+}
+
+@keyframes fadeInMobile {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUpMobile {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+/* Mobile Recent Customers Styling */
+#mobileRecentCustomersIcon {
+  transition: all 0.3s ease;
+}
+
+#mobileRecentCustomersBtn {
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+}
+
+#mobileRecentCustomersBtn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+}
+
+#mobileRecentCustomersBtn:active {
+  transform: scale(0.95);
+}
+
+#mobileRecentCustomersDropdown {
+  animation: slideInFromBottom 0.3s ease-out;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.mobile-customer-item {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(75, 85, 99, 0.3);
+  color: #e5e7eb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.mobile-customer-item:last-child {
+  border-bottom: none;
+}
+
+.mobile-customer-item:hover {
+  background: rgba(99, 102, 241, 0.1);
+  color: #f3f4f6;
+}
+
+.mobile-customer-item:active {
+  background: rgba(99, 102, 241, 0.2);
+  transform: scale(0.98);
+}
+
+.mobile-customer-item svg {
+  flex-shrink: 0;
+}
+
+/* Mobile Sticky Icons Styling */
+@media (max-width: 768px) {
+  #mobileRecentCustomersIcon,
+  #mobileWhatsAppIcon {
+    z-index: 40;
+  }
+  
+  #mobileRecentCustomersDropdown {
+    z-index: 50;
+  }
+  
+  /* WhatsApp icon specific styling */
+  #mobileWhatsAppIcon {
+    transition: all 0.3s ease;
+  }
+  
+  #mobileWhatsAppBtn {
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+  }
+  
+  #mobileWhatsAppBtn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+  }
+  
+  #mobileWhatsAppBtn:active {
+    transform: scale(0.95);
+  }
+}
+
+/* COMPACT HORIZONTAL NAVIGATION - DESIRED STYLE */
+@media (max-width: 768px) {
+  .mobile-nav {
+    height: 64px !important; /* Fixed compact height */
+    padding: 4px 0 !important; /* Reduced padding */
+    min-height: 64px !important; /* Ensure minimum height */
+  }
+
+  .mobile-nav-item {
+    padding: 4px 8px !important; /* Smaller padding for items */
+    min-height: 56px !important; /* Adjusted min-height */
+    min-width: 50px !important; /* Ensure minimum width */
+  }
+
+  .mobile-nav-item svg {
+    width: 20px !important; /* Smaller icons */
+    height: 20px !important;
+    margin-bottom: 2px !important; /* Reduced margin */
+  }
+
+  .mobile-nav-item span {
+    font-size: 10px !important; /* Smaller font size for labels */
+    line-height: 1.1 !important; /* Tighter line height */
+  }
+
+  /* Ensure content doesn't overlap the fixed nav */
+  body, html, .mobile-container, main {
+    padding-bottom: 64px !important; /* Add padding to body/main content */
+  }
+  
+  /* EXCEPTION: Don't add bottom padding when mobile billing is active */
+  body.mobile-billing-active,
+  .mobile-billing-v3-overlay.active ~ body,
+  .mobile-billing-v3-overlay.active + body {
+    padding-bottom: 0 !important;
+  }
+  
+  /* BUT: Keep mobile billing navigation visible */
+  body.mobile-billing-active #mobile-billing-v3-overlay .p-4.border-t.border-neutral-700.bg-neutral-800,
+  .mobile-billing-v3-overlay.active #mobile-billing-v3-overlay .p-4.border-t.border-neutral-700.bg-neutral-800 {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 99999 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}

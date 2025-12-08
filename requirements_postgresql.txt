@@ -1,0 +1,11 @@
+# PostgreSQL Migration Dependencies
+psycopg2-binary==2.9.7
+psycopg2-pool==1.1
+
+# Existing dependencies (keep these)
+Flask==2.3.3
+Flask-Limiter==3.5.0
+bcrypt==4.0.1
+Pillow==10.0.1
+pytesseract==0.3.10
+python-dotenv==1.0.0

@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block title %}PWA Status - Tajir POS{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h1 class="text-3xl font-bold text-gray-900 mb-6">PWA Status Dashboard</h1>
+      
+      <!-- PWA Status -->
+             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-blue-50 p-4 rounded-lg">
+          <h3 class="text-lg font-semibold text-blue-900 mb-2">Installation Status</h3>
+          <div id="install-status" class="text-sm text-blue-700">Loading...</div>
+        </div>
+        
+        <div class="bg-green-50 p-4 rounded-lg">
+          <h3 class="text-lg font-semibold text-green-900 mb-2">Online Status</h3>
+          <div id="online-status" class="text-sm text-green-700">Loading...</div>
+        </div>
+        
+        <div class="bg-purple-50 p-4 rounded-lg">
+          <h3 class="text-lg font-semibold text-purple-900 mb-2">Service Worker</h3>
+          <div id="sw-status" class="text-sm text-purple-700">Loading...</div>
+        </div>
+        
+        <div class="bg-yellow-50 p-4 rounded-lg">
+          <h3 class="text-lg font-semibold text-yellow-900 mb-2">Offline Data</h3>
+          <div id="offline-data" class="text-sm text-yellow-700">Loading...</div>
+        </div>
+        
+        <div class="bg-red-50 p-4 rounded-lg">
+          <h3 class="text-lg font-semibold text-red-900 mb-2">Sync Status</h3>
+          <div id="sync-status" class="text-sm text-red-700">Loading...</div>
+        </div>
+        
+                 <div class="bg-indigo-50 p-4 rounded-lg">
+           <h3 class="text-lg font-semibold text-indigo-900 mb-2">Display Mode</h3>
+           <div id="display-mode" class="text-sm text-indigo-700">Loading...</div>
+         </div>
+         
+         <div class="bg-pink-50 p-4 rounded-lg">
+           <h3 class="text-lg font-semibold text-pink-900 mb-2">Notifications</h3>
+           <div id="notification-status" class="text-sm text-pink-700">Loading...</div>
+         </div>
+      </div>
+      
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap gap-4 mb-8">
+        <button id="install-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+          Install App
+        </button>
+                 <button id="request-permission-btn" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+           Request Permission
+         </button>
+         <button id="test-notification-btn" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+           Test Notification
+         </button>
+        <button id="test-offline-btn" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors">
+          Test Offline
+        </button>
+        <button id="sync-now-btn" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+          Sync Now
+        </button>
+        <button id="refresh-status-btn" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+          Refresh Status
+        </button>
+      </div>
+      
+      <!-- Detailed Status -->
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Detailed Status</h3>
+        <pre id="detailed-status" class="text-sm text-gray-700 bg-white p-4 rounded border overflow-auto max-h-96">Loading...</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// PWA Status Dashboard
+class PWAStatusDashboard {
+  constructor() {
+    this.init();
+  }
+  
+  async init() {
+    this.setupEventListeners();
+    await this.updateStatus();
+    
+    // Update status every 5 seconds
+    setInterval(() => this.updateStatus(), 5000);
+  }
+  
+  setupEventListeners() {
+    document.getElementById('install-btn').addEventListener('click', () => {
+      if (window.TajirPWA) {
+        window.TajirPWA.promptInstall();
+      }
+    });
+    
+    document.getElementById('request-permission-btn').addEventListener('click', async () => {
+      if ('Notification' in window) {
+        const permission = await Notification.requestPermission();
+        alert(`Notification permission: ${permission}`);
+        this.updateStatus();
+      } else {
+        alert('Notifications not supported in this browser');
+      }
+    });
+    
+    document.getElementById('test-notification-btn').addEventListener('click', async () => {
+      if (window.TajirPWA) {
+        const success = await window.TajirPWA.showNotification('Test Notification', {
+          body: 'This is a test notification from Tajir POS',
+          icon: '/static/icons/icon-192.png'
+        });
+        
+        if (!success) {
+          alert('Failed to show notification. Please check permissions.');
+        }
+      }
+    });
+    
+    document.getElementById('test-offline-btn').addEventListener('click', () => {
+      this.testOfflineFunctionality();
+    });
+    
+    document.getElementById('sync-now-btn').addEventListener('click', () => {
+      if (window.TajirPWA && window.TajirPWA.syncManager) {
+        window.TajirPWA.syncManager.syncPendingData();
+      }
+    });
+    
+    document.getElementById('refresh-status-btn').addEventListener('click', () => {
+      this.updateStatus();
+    });
+  }
+  
+  async updateStatus() {
+    try {
+      const status = await this.getPWAStatus();
+      this.updateUI(status);
+    } catch (error) {
+      console.error('Failed to update status:', error);
+    }
+  }
+  
+  async getPWAStatus() {
+    if (window.TajirPWA) {
+      return await window.TajirPWA.getStatus();
+    }
+    
+    // Fallback status
+    return {
+      isInstalled: false,
+      isOnline: navigator.onLine,
+      hasServiceWorker: 'serviceWorker' in navigator,
+      hasPushSupport: 'PushManager' in window,
+      hasBackgroundSync: 'serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype,
+      displayMode: this.getDisplayMode(),
+      isInitialized: false,
+      pendingSyncCount: 0,
+      databaseSize: 0,
+      offlineDataCount: { customers: 0, products: 0, bills: 0 }
+    };
+  }
+  
+  getDisplayMode() {
+    if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+      return 'standalone';
+    } else if (window.matchMedia && window.matchMedia('(display-mode: minimal-ui)').matches) {
+      return 'minimal-ui';
+    } else if (window.matchMedia && window.matchMedia('(display-mode: fullscreen)').matches) {
+      return 'fullscreen';
+    } else {
+      return 'browser';
+    }
+  }
+  
+  updateUI(status) {
+    // Installation Status
+    document.getElementById('install-status').innerHTML = `
+      <div class="flex items-center">
+        <span class="w-2 h-2 rounded-full ${status.isInstalled ? 'bg-green-500' : 'bg-yellow-500'} mr-2"></span>
+        ${status.isInstalled ? 'Installed' : 'Not Installed'}
+      </div>
+    `;
+    
+    // Online Status
+    document.getElementById('online-status').innerHTML = `
+      <div class="flex items-center">
+        <span class="w-2 h-2 rounded-full ${status.isOnline ? 'bg-green-500' : 'bg-red-500'} mr-2"></span>
+        ${status.isOnline ? 'Online' : 'Offline'}
+      </div>
+    `;
+    
+    // Service Worker Status
+    document.getElementById('sw-status').innerHTML = `
+      <div class="flex items-center">
+        <span class="w-2 h-2 rounded-full ${status.hasServiceWorker ? 'bg-green-500' : 'bg-red-500'} mr-2"></span>
+        ${status.hasServiceWorker ? 'Available' : 'Not Available'}
+      </div>
+    `;
+    
+    // Offline Data
+    const offlineData = status.offlineDataCount || { customers: 0, products: 0, bills: 0 };
+    document.getElementById('offline-data').innerHTML = `
+      <div class="text-xs">
+        <div>Customers: ${offlineData.customers}</div>
+        <div>Products: ${offlineData.products}</div>
+        <div>Bills: ${offlineData.bills}</div>
+      </div>
+    `;
+    
+    // Sync Status
+    document.getElementById('sync-status').innerHTML = `
+      <div class="text-xs">
+        <div>Pending: ${status.pendingSyncCount || 0}</div>
+        <div>DB Size: ${this.formatBytes(status.databaseSize || 0)}</div>
+      </div>
+    `;
+    
+         // Display Mode
+     document.getElementById('display-mode').innerHTML = `
+       <div class="capitalize">${status.displayMode}</div>
+     `;
+     
+     // Notification Status
+     const notificationStatus = 'Notification' in window ? Notification.permission : 'not-supported';
+     document.getElementById('notification-status').innerHTML = `
+       <div class="flex items-center">
+         <span class="w-2 h-2 rounded-full ${notificationStatus === 'granted' ? 'bg-green-500' : notificationStatus === 'denied' ? 'bg-red-500' : 'bg-yellow-500'} mr-2"></span>
+         <span class="capitalize">${notificationStatus}</span>
+       </div>
+     `;
+    
+    // Detailed Status
+    document.getElementById('detailed-status').textContent = JSON.stringify(status, null, 2);
+  }
+  
+  formatBytes(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+  
+  async testOfflineFunctionality() {
+    if (!window.TajirPWA) {
+      alert('PWA not initialized');
+      return;
+    }
+    
+    try {
+      // Test saving offline data
+      const testBill = {
+        customer_id: 1,
+        items: [
+          { product_id: 1, quantity: 2, price: 100 }
+        ],
+        total: 200,
+        status: 'pending'
+      };
+      
+      const billId = await window.TajirPWA.saveOfflineBill(testBill);
+      alert(`Test bill saved with ID: ${billId}`);
+      
+      // Update status
+      this.updateStatus();
+    } catch (error) {
+      alert('Offline test failed: ' + error.message);
+    }
+  }
+}
+
+// Initialize dashboard when PWA is ready
+window.addEventListener('pwaInitialized', () => {
+  new PWAStatusDashboard();
+});
+
+// Initialize dashboard immediately if PWA is already ready
+if (window.TajirPWA) {
+  new PWAStatusDashboard();
+} else {
+  // Wait for PWA to initialize
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      if (window.TajirPWA) {
+        new PWAStatusDashboard();
+      }
+    }, 1000);
+  });
+}
+</script>
+{% endblock %} 
