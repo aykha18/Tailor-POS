@@ -2409,6 +2409,7 @@ def print_bill(bill_id):
     else:
         # Recalculate VAT for display
         actual_subtotal = float(sum(item['total_amount'] for item in items))
+        logger.info(f"DEBUG: actual_subtotal type: {type(actual_subtotal)}, value: {actual_subtotal}")
         # Recalculate VAT
         correct_vat_amount = actual_subtotal * (vat_percent / 100)
         correct_total_amount = actual_subtotal + correct_vat_amount
