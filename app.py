@@ -128,6 +128,7 @@ def setup_logging():
 
 # Initialize logging
 logger = setup_logging()
+logger.info("Application Startup - Version Fix-NameError-2026-01-22-v2")
 
 def log_dml_error(operation, table, error, user_id=None, data=None):
     """Log DML failures to both file and database."""
