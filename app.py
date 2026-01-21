@@ -2397,10 +2397,12 @@ def print_bill(bill_id):
     shop_settings = dict(shop_settings) if shop_settings else {}
 
     # Handle VAT calculation based on include_vat_in_price setting
+    vat_percent = 5.0
+    advance_paid = float(bill.get('advance_paid', 0))
     if include_vat_in_price:
         # For include_vat_in_price, ensure correct VAT calculation from total
         total_amount = float(bill.get('total_amount', 0))
-        vat_rate = 0.05  # 5%
+        vat_rate = vat_percent / 100  # 5%
         bill['vat_amount'] = round(total_amount * vat_rate, 2)
         bill['subtotal'] = round(total_amount - bill['vat_amount'], 2)
     else:
