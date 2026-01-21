@@ -2408,7 +2408,7 @@ def print_bill(bill_id):
         bill['subtotal'] = round(total_amount - bill['vat_amount'], 2)
     else:
         # Recalculate VAT for display
-        actual_subtotal = sum(item['total_amount'] for item in items)
+        actual_subtotal = float(sum(item['total_amount'] for item in items))
         # Recalculate VAT
         correct_vat_amount = actual_subtotal * (vat_percent / 100)
         correct_total_amount = actual_subtotal + correct_vat_amount
