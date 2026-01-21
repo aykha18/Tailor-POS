@@ -2342,7 +2342,6 @@ def get_dashboard_data():
 @app.route('/api/bills/<int:bill_id>/print', methods=['GET'])
 def print_bill(bill_id):
     user_id = get_current_user_id()
-    logger.info(f"DEBUG: print_bill called for bill_id: {bill_id}")
     
     conn = get_db_connection()
     placeholder = get_placeholder()
@@ -2409,7 +2408,6 @@ def print_bill(bill_id):
     else:
         # Recalculate VAT for display
         actual_subtotal = float(sum(item['total_amount'] for item in items))
-        logger.info(f"DEBUG: actual_subtotal type: {type(actual_subtotal)}, value: {actual_subtotal}")
         # Recalculate VAT
         correct_vat_amount = actual_subtotal * (vat_percent / 100)
         correct_total_amount = actual_subtotal + correct_vat_amount
